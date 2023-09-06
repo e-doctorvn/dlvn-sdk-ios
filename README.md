@@ -32,7 +32,7 @@
 - Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
 - Chọn Add Other...
 - Chọn Add Package Dependency
-- Nhập "https://github.com/kidfire/dlvn-sdk-ios" vào ô tìm kiếm
+- Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
 - Nhập userName và access token được tạo ở bước trên
 - ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
 - Nhấn Add Package
