@@ -19,7 +19,7 @@
 - Thêm đoạn mã vào podfile dự án :
     ```swift
     target 'MyApp' do
-      pod 'DlvnSdk', '~> 1.0' 
+      pod 'EdoctorDlvnSdk', '~> 1.0' 
     end
     ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -27,7 +27,7 @@
 - Nhập password là access token đã tạo ở bước trên  (không phải nhập password git)
 * lưu ý: Nếu dùng cách này thì phải mở file  .xcworkspace 
 
--- Cách 2 Packafe Dependency:
+-- Cách 2 Package Dependency:
 -
 - Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
 - Chọn Add Other...
@@ -42,7 +42,7 @@
 Import:
 
 ```swift
-import DlvnSdk
+import EdoctorDlvnSdk
 ```
 
 mở webView
