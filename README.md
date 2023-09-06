@@ -19,7 +19,7 @@
 - Thêm đoạn mã vào podfile dự án :
     ```swift
     target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.0' 
+      pod 'EdoctorDlvnSdk', '~> 1.0.2' 
     end
     ```
 - sau đó chạy lệnh "pod install" để cài đặt
