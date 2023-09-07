@@ -1,7 +1,6 @@
 import SwiftUI
 import WebKit
 
-@available(iOS 13.0, *)
 struct FullScreenWebView: View {
     @Environment(\.presentationMode) var presentationMode
     let urlString: String
@@ -21,7 +20,6 @@ struct FullScreenWebView: View {
     }
 }
 
-@available(iOS 13.0, *)
 struct WebViewLayout: View, Equatable {
     static func == (lhs: WebViewLayout, rhs: WebViewLayout) -> Bool {
         return true
@@ -88,7 +86,6 @@ struct WebViewLayout: View, Equatable {
     }
 }
 
-@available(iOS 13.0, *)
 struct WebView: UIViewRepresentable {
     var webView: WKWebView
     var urlString: String
