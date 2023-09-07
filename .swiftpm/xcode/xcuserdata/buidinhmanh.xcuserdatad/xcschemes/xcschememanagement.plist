@@ -22,6 +22,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>EdoctorDlvnSdk</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EdoctorDlvnSdkTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>dlvn-sdk-ios</key>
 		<dict>
 			<key>primary</key>
