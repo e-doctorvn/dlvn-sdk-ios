@@ -60,6 +60,10 @@ private func openAlert(from viewController: UIViewController) {
         openWebView(currentViewController: currentViewController)
     }
     
+    @objc public func openWebViewOC() {
+        openWebView()
+    }
+    
     @objc public func sampleFuncOC(data: String) -> String{
          return "data của bạn gửi là \(data)"
     }
