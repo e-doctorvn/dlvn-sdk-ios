@@ -19,7 +19,7 @@
 - Thêm đoạn mã vào podfile dự án :
     ```swift
     target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.0.2' 
+      pod 'EdoctorDlvnSdk', '~> 1.0.4' 
     end
     ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -66,4 +66,19 @@ let data: String = sampleFunc(data: "Data")
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | data      | string | Required|
+
+--Gọi mở webView cho objective-C
+-
+
+
+```sh
+    @import EdoctorDlvnSdk;
+
+    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
+    // Dùng hàm này nếu muốn truyền vào curentViewController để hiện thị
+    [dlvn openWebViewOCWithCurrentViewController:self];
+    
+    // Dùng hàm này thì mặc định lấy lớp view đầu tiên của rootViewController
+    [dlvn openWebViewOC];  
+```
 
