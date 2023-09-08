@@ -56,21 +56,11 @@ private func openAlert(from viewController: UIViewController) {
 
 
 @objc public class DlvnSdk: NSObject {
-    @objc public func openWebView(currentViewController: UIViewController? = nil) {
-        let fullScreenWebView = FullScreenWebView(urlString: "https://e-doctor.dev/tu-van-suc-khoe")
-        
-        // Tạo một UIHostingController chứa fullScreenWebView
-        let hostingController = UIHostingController(rootView: fullScreenWebView)
-        hostingController.modalPresentationStyle = .fullScreen
-        // Hiển thị UIHostingController fullscreen
-        if currentViewController != nil {
-            currentViewController!.present(hostingController, animated: true, completion: nil)
-        } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
-            currentViewController2.present(hostingController, animated: true, completion: nil)
-        }
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil) {
+        openWebView(currentViewController: currentViewController)
     }
     
-    @objc public func sampleFunc(data: String) -> String{
+    @objc public func sampleFuncOC(data: String) -> String{
          return "data của bạn gửi là \(data)"
     }
     
