@@ -80,5 +80,9 @@ let data: String = sampleFunc(data: "Data")
     
     // Dùng hàm này thì mặc định lấy lớp view đầu tiên của rootViewController
     [dlvn openWebViewOC];  
+    
+    // Gọi hàm sample
+    NSString *data = nil;
+    data = [dlvn sampleFuncOCWithData:@"data input"];
 ```
 
