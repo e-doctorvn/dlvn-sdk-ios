@@ -77,8 +77,12 @@ struct WebViewLayout: View, Equatable {
             ZStack {
 
                 WebView(webView: webView, urlString: urlString, isLoading: $isLoading).padding(.top, -10)
-                if #available(iOS 14.0, *), isLoading {
-                    ProgressView("Đang tải...").padding()
+                if isLoading {
+                    if #available(iOS 14.0, *) {
+                        ProgressView("Đang tải...").padding()
+                    } else {
+                        Text("Đang tải...").padding().foregroundColor(.gray)
+                    }
                 }
             }
 
