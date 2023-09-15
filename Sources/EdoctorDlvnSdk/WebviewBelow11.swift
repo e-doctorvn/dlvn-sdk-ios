@@ -106,9 +106,9 @@ class WebViewController: UIViewController, WKUIDelegate {
     let reloadButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let icon = UIImage(named: "backImage")
+        let reloadIcon = UIImage(named: "reloadImage", in: Bundle.module, compatibleWith: nil)
         
-        button.setImage(icon, for: .normal)
+        button.setImage(reloadIcon, for: .normal)
         return button
     }()
     
