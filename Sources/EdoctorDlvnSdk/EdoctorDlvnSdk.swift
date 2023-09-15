@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 import WebKit
-
+import SafariServices
 
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String) {
@@ -52,6 +52,16 @@ public func openWebViewTest(currentViewController: UIViewController) {
     webview.modalPresentationStyle = .fullScreen
     
     currentViewController.present(webview, animated: true)
+}
+
+public func openWebviewSafari(currentViewController: UIViewController) {
+    let safariViewController = SFSafariViewController(url: URL(string: "https://e-doctor.dev/tu-van-suc-khoe")!)
+    safariViewController.preferredBarTintColor = .gray
+    safariViewController.preferredControlTintColor = .white
+                safariViewController.dismissButtonStyle = .close
+                safariViewController.modalPresentationStyle = .fullScreen
+                currentViewController.present(safariViewController, animated: true)
+
 }
 
 public func sampleFunc(data: String, completion: @escaping (Result<String, Error>) -> Void) {
