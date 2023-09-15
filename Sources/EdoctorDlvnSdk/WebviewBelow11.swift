@@ -98,7 +98,7 @@ class WebViewController: UIViewController, WKUIDelegate {
     let closeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let closeIcon = UIImage(named: "backImage")
+        let closeIcon = UIImage(named: "backImage", in: Bundle.module, compatibleWith: nil)
         button.setImage(closeIcon, for: .normal)
         return button
     }()

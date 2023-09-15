@@ -48,7 +48,7 @@ public func openWebView(currentViewController: UIViewController? = nil) {
 }
 
 public func openWebViewTest(currentViewController: UIViewController) {
-    let webview = WebViewController(brandColor: .blue, textColor: .white)
+    let webview = WebViewController(brandColor: .white, textColor: .gray)
     webview.modalPresentationStyle = .fullScreen
     
     currentViewController.present(webview, animated: true)
