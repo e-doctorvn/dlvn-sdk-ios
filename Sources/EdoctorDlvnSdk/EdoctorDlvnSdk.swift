@@ -47,6 +47,13 @@ public func openWebView(currentViewController: UIViewController? = nil) {
     }
 }
 
+public func openWebViewTest(currentViewController: UIViewController) {
+    let webview = WebViewController(brandColor: UIColor(red: 239/255, green: 23/255, blue: 23/255, alpha: 1), textColor: .white)
+    webview.modalPresentationStyle = .fullScreen
+    
+    currentViewController.present(webview, animated: true)
+}
+
 public func sampleFunc(data: String, completion: @escaping (Result<String, Error>) -> Void) {
     completion(.success("data của bạn gửi là \(data)"))
 }
