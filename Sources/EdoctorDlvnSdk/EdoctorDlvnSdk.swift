@@ -6,32 +6,44 @@ import WebKit
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String) {
     // Tạo một SwiftUI View chứa WebView và nút "Close"
-    let fullScreenWebView = FullScreenWebView(urlString: urlString)
-    
-    // Tạo một UIHostingController chứa fullScreenWebView
-    let hostingController = UIHostingController(rootView: fullScreenWebView)
-    hostingController.modalPresentationStyle = .fullScreen
-    // Hiển thị UIHostingController fullscreen
-    if currentViewController != nil {
-        currentViewController!.present(hostingController, animated: true, completion: nil)
-    } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController2.present(hostingController, animated: true, completion: nil)
+    if #available(iOS 13.0, *) {
+        let fullScreenWebView = FullScreenWebView(urlString: urlString)
+        // Tạo một UIHostingController chứa fullScreenWebView
+        let hostingController = UIHostingController(rootView: fullScreenWebView)
+        hostingController.modalPresentationStyle = .fullScreen
+        // Hiển thị UIHostingController fullscreen
+        if currentViewController != nil {
+            currentViewController!.present(hostingController, animated: true, completion: nil)
+        } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
+            currentViewController2.present(hostingController, animated: true, completion: nil)
+        }
+    } else {
+        let webview = WebViewController(brandColor: UIColor(red: 239/255, green: 23/255, blue: 23/255, alpha: 1), textColor: .white)
+        webview.modalPresentationStyle = .fullScreen
+        
+        currentViewController!.present(webview, animated: true)
     }
 }
 
 
 public func openWebView(currentViewController: UIViewController? = nil) {
     // Tạo một SwiftUI View chứa WebView và nút "Close"
-    let fullScreenWebView = FullScreenWebView(urlString: "https://e-doctor.dev/tu-van-suc-khoe")
-    
-    // Tạo một UIHostingController chứa fullScreenWebView
-    let hostingController = UIHostingController(rootView: fullScreenWebView)
-    hostingController.modalPresentationStyle = .fullScreen
-    // Hiển thị UIHostingController fullscreen
-    if currentViewController != nil {
-        currentViewController!.present(hostingController, animated: true, completion: nil)
-    } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController2.present(hostingController, animated: true, completion: nil)
+    if #available(iOS 13.0, *) {
+        let fullScreenWebView = FullScreenWebView(urlString: "https://e-doctor.dev/tu-van-suc-khoe")
+        // Tạo một UIHostingController chứa fullScreenWebView
+        let hostingController = UIHostingController(rootView: fullScreenWebView)
+        hostingController.modalPresentationStyle = .fullScreen
+        // Hiển thị UIHostingController fullscreen
+        if currentViewController != nil {
+            currentViewController!.present(hostingController, animated: true, completion: nil)
+        } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
+            currentViewController2.present(hostingController, animated: true, completion: nil)
+        }
+    } else {
+        let webview = WebViewController(brandColor: UIColor(red: 239/255, green: 23/255, blue: 23/255, alpha: 1), textColor: .white)
+        webview.modalPresentationStyle = .fullScreen
+        
+        currentViewController!.present(webview, animated: true)
     }
 }
 
