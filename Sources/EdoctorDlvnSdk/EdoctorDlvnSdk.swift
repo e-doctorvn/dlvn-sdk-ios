@@ -56,8 +56,8 @@ public func openWebViewTest(currentViewController: UIViewController) {
 
 public func openWebviewSafari(currentViewController: UIViewController) {
     let safariViewController = SFSafariViewController(url: URL(string: "https://e-doctor.dev/tu-van-suc-khoe")!)
-    safariViewController.preferredBarTintColor = .gray
-    safariViewController.preferredControlTintColor = .white
+    safariViewController.preferredBarTintColor = .white
+    safariViewController.preferredControlTintColor = .gray
                 safariViewController.dismissButtonStyle = .close
                 safariViewController.modalPresentationStyle = .fullScreen
                 currentViewController.present(safariViewController, animated: true)
