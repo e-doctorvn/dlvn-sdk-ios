@@ -5,33 +5,25 @@ import WebKit
 
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String) {
-    // Tạo một SwiftUI View chứa WebView và nút "Close"
-    let fullScreenWebView = FullScreenWebView(urlString: urlString)
-    
-    // Tạo một UIHostingController chứa fullScreenWebView
-    let hostingController = UIHostingController(rootView: fullScreenWebView)
-    hostingController.modalPresentationStyle = .fullScreen
-    // Hiển thị UIHostingController fullscreen
-    if currentViewController != nil {
-        currentViewController!.present(hostingController, animated: true, completion: nil)
-    } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController2.present(hostingController, animated: true, completion: nil)
+    let webview = WebViewController(urlString: urlString, onClose: nil)
+    webview.modalPresentationStyle = .fullScreen
+
+    if (currentViewController != nil) {
+        currentViewController!.present(webview, animated: true)
+    } else if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
+        currentViewController.present(webview, animated: true)
     }
 }
 
 
 public func openWebView(currentViewController: UIViewController? = nil) {
-    // Tạo một SwiftUI View chứa WebView và nút "Close"
-    let fullScreenWebView = FullScreenWebView(urlString: "https://e-doctor.dev/tu-van-suc-khoe")
-    
-    // Tạo một UIHostingController chứa fullScreenWebView
-    let hostingController = UIHostingController(rootView: fullScreenWebView)
-    hostingController.modalPresentationStyle = .fullScreen
-    // Hiển thị UIHostingController fullscreen
-    if currentViewController != nil {
-        currentViewController!.present(hostingController, animated: true, completion: nil)
-    } else if let currentViewController2 = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController2.present(hostingController, animated: true, completion: nil)
+    let webview = WebViewController(urlString: urlDefault, onClose: nil)
+    webview.modalPresentationStyle = .fullScreen
+
+    if (currentViewController != nil) {
+        currentViewController!.present(webview, animated: true)
+    } else if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
+        currentViewController.present(webview, animated: true)
     }
 }
 
@@ -43,8 +35,8 @@ public func sampleFunc(data: String) -> String{
      return "data của bạn gửi là \(data)"
 }
 
-private func openAlert(from viewController: UIViewController) {
-    let alertController = UIAlertController(title: "Thông báo", message: "Vui Lòng upgrade OS để xử dụng chức năng này!", preferredStyle: .alert)
+public func openAlert(from viewController: UIViewController, content: String?) {
+    let alertController = UIAlertController(title: "Thông báo", message: "\(content ?? "Vui Lòng upgrade OS 13++ để xử dụng chức năng này!")", preferredStyle: .alert)
 
     let okAction = UIAlertAction(title: "Đồng ý", style: .default) { (action) in
         
