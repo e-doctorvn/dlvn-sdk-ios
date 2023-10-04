@@ -10,6 +10,6 @@ spec.platform = :ios, "11.0"
 spec.swift_version = '5.0'
 spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.0.6' }
 spec.source_files = "Sources/EdoctorDlvnSdk/*.{swift}"
-spec.resources: "Sources/EdoctorDlvnSdk/*.xcassets",
+spec.resources = "Sources/EdoctorDlvnSdk/*.xcassets"
 spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.0.6/README.md"
 end
