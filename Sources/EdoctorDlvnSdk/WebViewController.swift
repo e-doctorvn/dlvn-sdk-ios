@@ -28,6 +28,12 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         pageTitleObservation?.invalidate()
     }
     
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,6 +44,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         let myRequest = URLRequest(url: URL(string:urlString)!)
         webView.load(myRequest)
+        
+
         
         pageTitleObservation = webView.observe(\.title, options: [.new]) { [weak self] webView, change in
             if let newTitle = change.newValue {
@@ -145,8 +153,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 85)
         let layer0 = CAGradientLayer()
         layer0.colors = [
-            UIColor(red: 0.686, green: 0.224, blue: 0.239, alpha: 1).cgColor,
-            UIColor(red: 0.886, green: 0.38, blue: 0.255, alpha: 1).cgColor
+            UIColor(red: 0.812, green: 0.322, blue: 0.251, alpha: 1).cgColor,
+            UIColor(red: 0.886, green: 0.38, blue: 0.255, alpha: 1).cgColor,
         ]
         layer0.locations = [0, 1]
 
@@ -161,7 +169,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         return view
     }()
     let closeButton: UIButton = {
-
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let closeIcon = UIImage(named: "backImage", in: Bundle.module, compatibleWith: nil)
