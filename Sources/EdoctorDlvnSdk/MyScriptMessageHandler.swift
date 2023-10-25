@@ -12,6 +12,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
                 print("Dữ liệu từ webview: \(data)")
+//                ControlerAlert.shared.viewController?.dismiss(animated: true)
             }
         }
     }
@@ -26,12 +27,12 @@ class MyWebView: WKWebView {
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
-
+        
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent() // no cache
+        
         
         super.init(frame: CGRect.zero, configuration: configuration)
-        
-//        super.evaluateJavaScript("javascript:window.webkit.messageHandlers.myMessageHandler.postMessage(`okok`)")
-        super.evaluateJavaScript("javascript:(window.ios = `{\"oke\": \"data ios\"}`)")
+
     }
 
     required init?(coder: NSCoder) {

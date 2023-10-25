@@ -18,6 +18,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         self.urlString = urlString
         super.init(nibName: nil, bundle: nil)
         self.onClose = onClose
+
     }
     
     required init?(coder: NSCoder) {
@@ -42,7 +43,9 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         ControlerAlert.shared.setViewController(value: self)
         
-        let myRequest = URLRequest(url: URL(string:urlString)!)
+        let myRequest = URLRequest(url: URL(string:urlString)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+        
+
         webView.load(myRequest)
         
 
@@ -52,6 +55,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                 self?.titleLabel.text = (newTitle ?? "").replacingOccurrences(of: "- Dai-ichi Life Việt Nam", with: "").replacingOccurrences(of: "Homepage", with: "")
             }
         }
+        
     }
     
     private func _setUpWebView(){
@@ -65,6 +69,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.scrollView.bounces = false
   
         webView.navigationDelegate = self
+        
+
     }
     
     private func _setUpUI(){
@@ -84,6 +90,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         navigationBar.addSubview(reloadButton)
         navigationBar.addSubview(titleLabel)
         navigationBar.addSubview(urlLabel)
+        
         
         navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -145,11 +152,14 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     @objc func onPressReload(){
         activityIndicator.startAnimating()
         webView.reload()
+        
+        DLVNAccessToken.deleteData()
     }
     
     let navigationBar: UIView = {
         let view = UIView()
-        
+//        let window = UIApplication.shared.keyWindow
+//        let topPadding = window?.safeAreaInsets.top
         view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 85)
         let layer0 = CAGradientLayer()
         layer0.colors = [
@@ -171,7 +181,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     let closeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let closeIcon = UIImage(named: "backImage", in: Bundle.module, compatibleWith: nil)
+        let closeIcon = UIImage(named: "backImage", in: Bundle.main, compatibleWith: nil)
         button.setImage(closeIcon, for: .normal)
         return button
     }()
@@ -179,7 +189,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     let reloadButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let reloadIcon = UIImage(named: "reloadImage", in: Bundle.module, compatibleWith: nil)
+        let reloadIcon = UIImage(named: "reloadImage", in: Bundle.main, compatibleWith: nil)
         
         button.setImage(reloadIcon, for: .normal)
         return button
@@ -214,21 +224,42 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
         
+
+
     }
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        let dlvnToken = DLVNAccessToken.getData()
+        if ((dlvnToken?.accessToken) != nil) {
+            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+        }
+    }
+    
+//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+
+//    }
 
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         // Xử lý lỗi tải trang web nếu cần
+        print("okok", error.localizedDescription)
     }
+    
+    private func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.allow)
+    }
+
     
     // WKNavigationDelegate method - Được gọi khi cần quyết định việc tải một URL
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
         if #available(iOS 14.3, *) {
             decisionHandler(.allow)
         } else {
             if let url = navigationAction.request.url {
                 if url.absoluteString == "https://e-doctor.dev/tu-van-suc-khoe/bac-si/64990cb2f69a630038ba6c9d" {
-                    // Chặn việc tải URL cụ thể (ở đây là "https://example.com")
+
                     decisionHandler(.cancel)
                     activityIndicator.stopAnimating()
                     openAlert(from: self, content: nil)
