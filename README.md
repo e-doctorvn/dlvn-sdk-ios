@@ -60,16 +60,41 @@ openWebView(currentViewController: self)
 Gọi hàm:
 
 ```sh
-let data: String = sampleFunc(data: "Data")
+let data : [String: Any] = [
+                    "company": "",
+                    "partner_code": "",
+                    "partnerid": "45f63H33771b42f1b08b7f9a50e6bd8a",
+                    "deviceid": "3e030eb9-63e6-4be1-ae0e-940f6b7e2c61",
+                    "dcId": "19E2ADB7-91A8-4C32-821B-31A03AD32C89",
+                    "token": "26f63593771b42f1b08b7f9a50e6dc7c"
+                ]
+DLVNSendData(data: data) { status, error in
+    print(status)
+}
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| data      | string | Required|
 
---Gọi mở webView cho objective-C
--
 
+| Parameter | Type          | Description                       |
+| :-------- | :----------- | :-------------------------------- |
+| data      | [String: Any] | Required|
+
+Kết quả:
+-- `true`: Lấy accesstoken thành công
+-- `false`: Gọi hàm không thành công
+
+
+```sh 
+// xóa accessToken
+deleteAccessToken()
+```
+
+```sh 
+// chuyển đổi môi trường
+changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
+```
+
+## Gọi mở webView cho objective-C
 
 ```sh
     @import EdoctorDlvnSdk;
@@ -85,4 +110,6 @@ let data: String = sampleFunc(data: "Data")
     NSString *data = nil;
     data = [dlvn sampleFuncOCWithData:@"data input"];
 ```
+
+
 
