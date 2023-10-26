@@ -106,9 +106,23 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
     // Dùng hàm này thì mặc định lấy lớp view đầu tiên của rootViewController
     [dlvn openWebViewOC];  
     
-    // Gọi hàm sample
-    NSString *data = nil;
-    data = [dlvn sampleFuncOCWithData:@"data input"];
+    // Gọi hàm lấy accessToken
+    NSDictionary *data = @{
+        @"partnerid": @"45f63H33771b42f1b08b7f9a50e6bd8a",
+        @"deviceid": @"3e030eb9-63e6-4be1-ae0e-940f6b7e2c61",
+        @"dcId": @"19E2ADB7-91A8-4C32-821B-31A03AD32C89",
+        @"token": @"26f63593771b42f1b08b7f9a50e6dc7c"
+    };
+    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
+
+    [dlvn DLVNSendDataOCWithData:data completion:^(BOOL status, NSError *error) {
+        NSLog(@"%@", status ? @"Success" : @"Error");}
+    ];
+    
+    //Gọi hàm xóa accessToken
+    
+    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
+    [dlvn deleteAccessTokenOC];
 ```
 
 
