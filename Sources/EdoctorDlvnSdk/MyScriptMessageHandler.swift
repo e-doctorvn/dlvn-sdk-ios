@@ -8,11 +8,37 @@
 import WebKit
 
 class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
+    
+    var onAuthenDataResult: ((AuthenData) -> Void)?
+    
+    init(onAuthenDataResult: ((AuthenData) -> Void)?) {
+        self.onAuthenDataResult = onAuthenDataResult
+    }
+    
+    func noHandle(data : AuthenData) {
+        
+    }
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
-                print("Dữ liệu từ webview: \(data)")
-//                ControlerAlert.shared.viewController?.dismiss(animated: true)
+                do {
+                    let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
+                    
+                    switch dataReceiveType.type {
+
+                    case closeWebView:
+                        ControlerAlert.shared.viewController?.dismiss(animated: true)
+  
+                    case authenDataResult:
+                        (onAuthenDataResult ?? noHandle)(dataReceiveType.data!)
+                    default:
+                        print("ok")
+                    }
+                } catch {
+                    print("error parse JSON: \(error)")
+                }
+
             }
         }
     }
@@ -20,9 +46,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
 class MyWebView: WKWebView {
 
-    init() {
+    init(onAuthenDataResult: ((AuthenData) -> Void)?) {
         
-        let scriptMessageHandler = MyScriptMessageHandler()
+        let scriptMessageHandler = MyScriptMessageHandler(onAuthenDataResult: onAuthenDataResult)
         let userContentController = WKUserContentController()
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
         let configuration = WKWebViewConfiguration()
@@ -39,4 +65,16 @@ class MyWebView: WKWebView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+struct DataReceiveType: Codable {
+    let type: String
+    let data: AuthenData?
+}
+
+@objc public class AuthenData: NSObject, Codable {
+    let edrToken: String?
+    let dlvnToken: String?
+    let dcid: String?
+}
+
 

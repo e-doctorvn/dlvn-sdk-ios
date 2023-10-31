@@ -4,8 +4,8 @@ import WebKit
 
 
 
-public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String) {
-    let webview = WebViewController(urlString: urlString, onClose: nil)
+public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault,data: [String: Any]? = nil, onAuthenDataResult: ((AuthenData) -> Void)? = nil) {
+    let webview = WebViewController(urlString: urlString ?? urlDefault, onClose: nil, data: data, onAuthenDataResult: onAuthenDataResult)
     webview.modalPresentationStyle = .fullScreen
 
     if (currentViewController != nil) {
@@ -15,17 +15,6 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
     }
 }
 
-
-public func openWebView(currentViewController: UIViewController? = nil) {
-    let webview = WebViewController(urlString: urlDefault, onClose: nil)
-    webview.modalPresentationStyle = .fullScreen
-
-    if (currentViewController != nil) {
-        currentViewController!.present(webview, animated: true)
-    } else if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController.present(webview, animated: true)
-    }
-}
 
 public func deleteAccessToken() {
     DLVNAccessToken.deleteData()
@@ -140,12 +129,12 @@ public func changeEnv(envUpdate: Env) {
 
 
 @objc public class DlvnSdk: NSObject {
-    @objc public func openWebViewOC(currentViewController: UIViewController? = nil) {
-        openWebView(currentViewController: currentViewController)
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil) {
+        openWebView(currentViewController: currentViewController, withURL: urlString, data: data)
     }
     
-    @objc public func openWebViewOC() {
-        openWebView()
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil, onAuthenDataResult: @escaping ((AuthenData) -> Void)) {
+        openWebView(currentViewController: currentViewController, withURL: urlString, data: data, onAuthenDataResult: onAuthenDataResult)
     }
     
     @objc public func DLVNSendDataOC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {

@@ -1,32 +1,32 @@
 import UIKit
+import SwiftUI
 import WebKit
 
 class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var webView: MyWebView!
     var urlString: String = urlDefault
-    
-    private var titleString: String = "Daiichi"
-    
+    var data: [String: Any]? = nil
     var onClose: (() -> Void)?
+    
+    var onAuthenDataResult: ((AuthenData) -> Void)?
     
     private var activityIndicator: UIActivityIndicatorView!
     
-    var pageTitleObservation: NSKeyValueObservation?
     
-    init(urlString: String, onClose: (() -> Void)?) {
+    var loaded: Bool = false
+    
+    init(urlString: String, onClose: (() -> Void)?, data: [String: Any]? = nil, onAuthenDataResult: ((AuthenData) -> Void)? = nil) {
         self.urlString = urlString
+        self.data = data
         super.init(nibName: nil, bundle: nil)
         self.onClose = onClose
-
+        self.onAuthenDataResult = onAuthenDataResult
+        self.loaded = false
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        pageTitleObservation?.invalidate()
     }
     
     
@@ -45,21 +45,12 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         let myRequest = URLRequest(url: URL(string:urlString)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         
-
         webView.load(myRequest)
-        
-
-        
-        pageTitleObservation = webView.observe(\.title, options: [.new]) { [weak self] webView, change in
-            if let newTitle = change.newValue {
-                self?.titleLabel.text = (newTitle ?? "").replacingOccurrences(of: "- Dai-ichi Life Việt Nam", with: "").replacingOccurrences(of: "Homepage", with: "")
-            }
-        }
         
     }
     
     private func _setUpWebView(){
-        webView = MyWebView()
+        webView = MyWebView(onAuthenDataResult: onAuthenDataResult)
         webView.uiDelegate = self
   
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -86,16 +77,14 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         view.addSubview(activityIndicator)
         
         
-        navigationBar.addSubview(closeButton)
-        navigationBar.addSubview(reloadButton)
-        navigationBar.addSubview(titleLabel)
-        navigationBar.addSubview(urlLabel)
+        let window = UIApplication.shared.windows.last
+        let topPadding = window?.safeAreaInsets.top
         
         
         navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         navigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        navigationBar.heightAnchor.constraint(equalToConstant: view.safeAreaInsets.top + 85).isActive = true
+        navigationBar.heightAnchor.constraint(equalToConstant: view.safeAreaInsets.top + topPadding!).isActive = true
         
         
         NSLayoutConstraint.activate([
@@ -107,60 +96,15 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        closeButton.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor, constant: 16).isActive = true
-        closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        closeButton.heightAnchor.constraint(equalToConstant: 24).isActive=true
-        closeButton.widthAnchor.constraint(equalToConstant: 24).isActive=true
-        closeButton.addTarget(self, action: #selector(onPressClose), for: .touchUpInside)
-        
-
-        reloadButton.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor, constant: -16).isActive = true
-        reloadButton.topAnchor.constraint(equalTo:view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        reloadButton.heightAnchor.constraint(equalToConstant: 24).isActive=true
-        reloadButton.widthAnchor.constraint(equalToConstant: 24).isActive=true
-        reloadButton.addTarget(self, action: #selector(onPressReload), for: .touchUpInside)
-        
-        
-        titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60).isActive = true
-        titleLabel.text = titleString
-
-        
-//        urlLabel.topAnchor.constraint(equalTo: navigationBar.bottomAnchor, constant: 50).isActive = true
-//        urlLabel.text = urlString
-        
 
     }
-    
-    @objc func onPressClose(){
-        
-        if onClose != nil {
-            onClose!()
-        } else {
-            if webView.canGoBack {
-                webView.goBack()
-            } else {
-                self.dismiss(animated: true)
-            }
-        }
-        ControlerAlert.shared.reSetViewController()
 
-    }
-    
-    @objc func onPressReload(){
-        activityIndicator.startAnimating()
-        webView.reload()
-        
-        DLVNAccessToken.deleteData()
-    }
     
     let navigationBar: UIView = {
         let view = UIView()
-//        let window = UIApplication.shared.keyWindow
-//        let topPadding = window?.safeAreaInsets.top
-        view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 85)
+        let window = UIApplication.shared.windows.last
+        let topPadding = window?.safeAreaInsets.top
+        view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: topPadding ?? 0)
         let layer0 = CAGradientLayer()
         layer0.colors = [
             UIColor(red: 0.812, green: 0.322, blue: 0.251, alpha: 1).cgColor,
@@ -178,62 +122,38 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    let closeButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let closeIcon = UIImage(named: "backImage", in: Bundle.module, compatibleWith: nil)
-        button.setImage(closeIcon, for: .normal)
-        return button
-    }()
-    
-    let reloadButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let reloadIcon = UIImage(named: "reloadImage", in: Bundle.module, compatibleWith: nil)
-        
-        button.setImage(reloadIcon, for: .normal)
-        return button
-    }()
-    
-    let titleLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 20))
-        label.textAlignment = .center
-        label.textColor = .white
-        label.font = UIFont(name: "Mulish-Bold", size: 16)
-        label.font = label.font.withSize(16)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let urlLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 20, width: UIScreen.main.bounds.size.width, height: 18))
-        label.font = UIFont(name: "Mulish-Regular", size: 10)
-        label.textAlignment = .center
-        label.textColor = UIColor(red: 0.549, green: 0.561, blue: 0.624, alpha: 1)
-        label.font = label.font.withSize(10)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-   
-    func onCloseWebView() {
 
-    }
+
     
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
-        
-
 
     }
+
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        let dlvnToken = DLVNAccessToken.getData()
-        if ((dlvnToken?.accessToken) != nil) {
-            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+        if (!loaded && (data != nil)) {
+            webView.stopLoading()
+            DLVNSendData(data: data!) { status, error in
+                print(status)
+                DispatchQueue.main.async {
+                    if status {
+                        let dlvnToken = DLVNAccessToken.getData()
+                            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+
+                        self.loaded = true
+                        webView.reload()
+
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                        self.alertErrorWebView(from: self, content: error?.localizedDescription)
+                    }
+                }
+            }
         }
+        
     }
     
 //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -242,8 +162,13 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        // Xử lý lỗi tải trang web nếu cần
-        print("okok", error.localizedDescription)
+//        self.activityIndicator.stopAnimating()
+//        self.alertErrorWebView(from: self, content: error.localizedDescription)
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        self.activityIndicator.stopAnimating()
+        self.alertErrorWebView(from: self, content: error.localizedDescription)
     }
     
     private func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
@@ -252,27 +177,47 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
     
     // WKNavigationDelegate method - Được gọi khi cần quyết định việc tải một URL
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        
-        if #available(iOS 14.3, *) {
-            decisionHandler(.allow)
-        } else {
-            if let url = navigationAction.request.url {
-                if url.absoluteString == "https://e-doctor.dev/tu-van-suc-khoe/bac-si/64990cb2f69a630038ba6c9d" {
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//
+//        if #available(iOS 14.3, *) {
+//            decisionHandler(.allow)
+//        } else {
+//            if let url = navigationAction.request.url {
+//                if url.absoluteString == "https://khuat.dai-ichi-life.com.vn:8082/login" {
+//
+//                    decisionHandler(.cancel)
+//                    activityIndicator.stopAnimating()
+//                    openAlert(from: self, content: nil)
+//                    return
+//                }
+//            }
+//
+//            decisionHandler(.allow)
+//        }
+//
+//    }
+    
+    public func alertErrorWebView(from viewController: UIViewController, content: String?) {
+        let alertController = UIAlertController(title: "Thông báo", message: "\(content ?? "Đã có lỗi xãy ra!")", preferredStyle: .alert)
 
-                    decisionHandler(.cancel)
-                    activityIndicator.stopAnimating()
-                    openAlert(from: self, content: nil)
-                    return
-                }
-            }
-            
-            decisionHandler(.allow)
+        let okAction = UIAlertAction(title: "Trở về", style: .default) { (action) in
+           self.dismiss(animated: true)
         }
+        
+        let okReload = UIAlertAction(title: "Thử lại", style: .default) { (action) in
+            self.activityIndicator.startAnimating()
+            let myRequest = URLRequest(url: URL(string:self.urlString)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+            
+            self.webView.load(myRequest)
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(okReload)
 
+        viewController.present(alertController, animated: true, completion: nil)
     }
     
-    
-    
 }
+
+
+
 
