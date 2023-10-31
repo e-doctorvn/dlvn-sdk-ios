@@ -8,7 +8,7 @@
 import Foundation
 
 //config
-public var env: Env = Env.TEST
+public var env: Env = Env.SANDBOX
 
 
 public let eDoctorAppId: String = "E8DBD7BE-354E-4E88-AE17-A43A4726FC52"
