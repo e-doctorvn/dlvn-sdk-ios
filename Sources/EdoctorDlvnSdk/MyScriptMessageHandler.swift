@@ -72,9 +72,10 @@ struct DataReceiveType: Codable {
 }
 
 @objc public class AuthenData: NSObject, Codable {
-    let edrToken: String?
-    let dlvnToken: String?
-    let dcid: String?
+    @objc public let edrToken: String?
+    @objc public let dlvnToken: String?
+    @objc public let dcid: String?
 }
+
 
 
