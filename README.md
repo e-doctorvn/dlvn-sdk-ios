@@ -19,7 +19,7 @@
 - Thêm đoạn mã vào podfile dự án :
     ```swift
     target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.0.8' 
+      pod 'EdoctorDlvnSdk', '~> 1.0.10' 
     end
     ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -98,15 +98,11 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 
 ```sh
     @import EdoctorDlvnSdk;
+    
+    - (void)myFunction:(AuthenData *)assesToken {
+    NSLog(@"acc %@", assesToken.edrToken);
+    }
 
-    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
-    // Dùng hàm này nếu muốn truyền vào curentViewController để hiện thị
-    [dlvn openWebViewOCWithCurrentViewController:self];
-    
-    // Dùng hàm này thì mặc định lấy lớp view đầu tiên của rootViewController
-    [dlvn openWebViewOC];  
-    
-    // Gọi hàm lấy accessToken
     NSDictionary *data = @{
         @"partnerid": @"45f63H33771b42f1b08b7f9a50e6bd8a",
         @"deviceid": @"3e030eb9-63e6-4be1-ae0e-940f6b7e2c61",
@@ -115,15 +111,15 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
     };
     DlvnSdk *dlvn = [[DlvnSdk alloc] init];
 
-    [dlvn DLVNSendDataOCWithData:data completion:^(BOOL status, NSError *error) {
-        NSLog(@"%@", status ? @"Success" : @"Error");}
-    ];
-    
-    //Gọi hàm xóa accessToken
-    
-    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
-    [dlvn deleteAccessTokenOC];
+
+    [dlvn openWebViewOCWithCurrentViewController:self withURL:nil data:nil onAuthenDataResult:^(AuthenData *accessToken) {
+        [self myFunction:accessToken];
+    }];
 ```
 
+- CurrentViewController == nil thì sẽ lấy "first view of rootViewController"
+- withURL == nil thì sẽ lấy url mặc định  (truyền url để xử lý  phần notification)
+- data == nil thì sẽ ko login được
+- onAuthenDataResult: hàm này sẽ callback lại khi request login thành công giá trị trả về là AuthenData (gồm dcid : String, dlvnToken: String, edrToken: String)
 
 
