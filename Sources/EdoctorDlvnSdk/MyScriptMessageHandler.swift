@@ -31,8 +31,8 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
   
                     case requestLoginNative:
-                        ControlerAlert.shared.viewController?.dismiss(animated: true)
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
+                        ControlerAlert.shared.viewController?.dismiss(animated: true)
                     default:
                         print("ok")
                     }
