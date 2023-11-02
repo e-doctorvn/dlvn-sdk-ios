@@ -31,7 +31,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
   
                     case requestLoginNative:
-                        (onSdkRequestLogin ?? noHandle)(dataReceiveType.data ?? "")
+                        (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
                     default:
                         print("ok")
                     }
@@ -68,7 +68,10 @@ class MyWebView: WKWebView {
 
 struct DataReceiveType: Codable {
     let type: String
-    let data: String?
+    let data: URLData?
+}
+struct URLData: Codable{
+    let currentUrl: String?
 }
 
 
