@@ -99,8 +99,8 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ```sh
     @import EdoctorDlvnSdk;
     
-    - (void)myFunction:(AuthenData *)assesToken {
-    NSLog(@"acc %@", assesToken.edrToken);
+    - (void)myFunction:(String *)urlString {
+    NSLog(@"urlString %@", urlString);
     }
 
     NSDictionary *data = @{
@@ -112,14 +112,14 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
     DlvnSdk *dlvn = [[DlvnSdk alloc] init];
 
 
-    [dlvn openWebViewOCWithCurrentViewController:self withURL:nil data:nil onAuthenDataResult:^(AuthenData *accessToken) {
-        [self myFunction:accessToken];
+    [dlvn openWebViewOCWithCurrentViewController:self withURL:nil data:nil onSdkRequestLogin:^(String *urlString) {
+        [self myFunction:urlString];
     }];
 ```
 
 - CurrentViewController == nil thì sẽ lấy "first view of rootViewController"
 - withURL == nil thì sẽ lấy url mặc định  (truyền url để xử lý  phần notification)
 - data == nil thì sẽ ko login được
-- onAuthenDataResult: hàm này sẽ callback lại khi request login thành công giá trị trả về là AuthenData (gồm dcid : String, dlvnToken: String, edrToken: String)
+- onSdkRequestLogin: hàm này sẽ callback lại khi request login data là url
 
 
