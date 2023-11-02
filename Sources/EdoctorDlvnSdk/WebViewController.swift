@@ -9,19 +9,19 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var data: [String: Any]? = nil
     var onClose: (() -> Void)?
     
-    var onAuthenDataResult: ((AuthenData) -> Void)?
+    var onSdkRequestLogin: ((String) -> Void)?
     
     private var activityIndicator: UIActivityIndicatorView!
     
     
     var loaded: Bool = false
     
-    init(urlString: String, onClose: (() -> Void)?, data: [String: Any]? = nil, onAuthenDataResult: ((AuthenData) -> Void)? = nil) {
+    init(urlString: String, onClose: (() -> Void)?, data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
         self.urlString = urlString
         self.data = data
         super.init(nibName: nil, bundle: nil)
         self.onClose = onClose
-        self.onAuthenDataResult = onAuthenDataResult
+        self.onSdkRequestLogin = onSdkRequestLogin
         self.loaded = false
     }
     
@@ -50,7 +50,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     private func _setUpWebView(){
-        webView = MyWebView(onAuthenDataResult: onAuthenDataResult)
+        webView = MyWebView(onSdkRequestLogin: onSdkRequestLogin)
         webView.uiDelegate = self
   
         webView.translatesAutoresizingMaskIntoConstraints = false

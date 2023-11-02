@@ -4,8 +4,10 @@ import WebKit
 
 
 
-public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault,data: [String: Any]? = nil, onAuthenDataResult: ((AuthenData) -> Void)? = nil) {
-    let webview = WebViewController(urlString: urlString ?? urlDefault, onClose: nil, data: data, onAuthenDataResult: onAuthenDataResult)
+public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
+    
+    let webview = WebViewController(urlString: urlString ?? urlDefault, onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin)
+    
     webview.modalPresentationStyle = .fullScreen
 
     if (currentViewController != nil) {
@@ -133,8 +135,8 @@ public func changeEnv(envUpdate: Env) {
         openWebView(currentViewController: currentViewController, withURL: urlString, data: data)
     }
     
-    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil, onAuthenDataResult: @escaping ((AuthenData) -> Void)) {
-        openWebView(currentViewController: currentViewController, withURL: urlString, data: data, onAuthenDataResult: onAuthenDataResult)
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil, onSdkRequestLogin: @escaping ((String) -> Void)) {
+        openWebView(currentViewController: currentViewController, withURL: urlString, data: data, onSdkRequestLogin: onSdkRequestLogin)
     }
     
     @objc public func DLVNSendDataOC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {

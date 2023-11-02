@@ -9,13 +9,13 @@ import WebKit
 
 class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
-    var onAuthenDataResult: ((AuthenData) -> Void)?
+    var onSdkRequestLogin: ((String) -> Void)?
     
-    init(onAuthenDataResult: ((AuthenData) -> Void)?) {
-        self.onAuthenDataResult = onAuthenDataResult
+    init(onSdkRequestLogin: ((String) -> Void)?) {
+        self.onSdkRequestLogin = onSdkRequestLogin
     }
     
-    func noHandle(data : AuthenData) {
+    func noHandle(data : String) {
         
     }
     
@@ -30,8 +30,8 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                     case closeWebView:
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
   
-                    case authenDataResult:
-                        (onAuthenDataResult ?? noHandle)(dataReceiveType.data!)
+                    case requestLoginNative:
+                        (onSdkRequestLogin ?? noHandle)(dataReceiveType.data ?? "")
                     default:
                         print("ok")
                     }
@@ -46,9 +46,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
 class MyWebView: WKWebView {
 
-    init(onAuthenDataResult: ((AuthenData) -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?) {
         
-        let scriptMessageHandler = MyScriptMessageHandler(onAuthenDataResult: onAuthenDataResult)
+        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin)
         let userContentController = WKUserContentController()
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
         let configuration = WKWebViewConfiguration()
@@ -68,13 +68,8 @@ class MyWebView: WKWebView {
 
 struct DataReceiveType: Codable {
     let type: String
-    let data: AuthenData?
+    let data: String?
 }
 
-@objc public class AuthenData: NSObject, Codable {
-    @objc public let edrToken: String?
-    @objc public let dlvnToken: String?
-    @objc public let dcid: String?
-}
 
 

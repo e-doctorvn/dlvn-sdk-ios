@@ -31,6 +31,6 @@ public enum Env {
 }
 
 public let closeWebView = "close-webview"
-public let authenDataResult = "authen-data-result"
+public let requestLoginNative = "request-login-native"
 
 
