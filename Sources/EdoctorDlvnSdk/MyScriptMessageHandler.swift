@@ -55,7 +55,7 @@ class MyWebView: WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         
-        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent() // no cache
+//        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent() // no cache
         
         
         super.init(frame: CGRect.zero, configuration: configuration)

@@ -43,7 +43,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         ControlerAlert.shared.setViewController(value: self)
         
-        let myRequest = URLRequest(url: URL(string:urlString)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+        let myRequest = URLRequest(url: URL(string:urlString)!)
         
         webView.load(myRequest)
         
