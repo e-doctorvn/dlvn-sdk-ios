@@ -137,11 +137,12 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
             webView.stopLoading()
             DLVNSendData(data: data!) { status, error in
                 print(status)
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     if status {
                         let dlvnToken = DLVNAccessToken.getData()
                             webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
                             webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
 
                         self.loaded = true
                         webView.reload()
