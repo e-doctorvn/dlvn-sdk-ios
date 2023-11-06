@@ -22,6 +22,30 @@ public func deleteAccessToken() {
     DLVNAccessToken.deleteData()
 }
 
+public func clearWebViewCache() {
+    deleteAccessToken()
+    deleteCache()
+}
+
+private func deleteCache() {
+    let websiteDataStore = WKWebsiteDataStore.default()
+    
+    let targetURLString = urlDefault
+
+    let dataTypes = Set([WKWebsiteDataTypeCookies,WKWebsiteDataTypeLocalStorage])
+
+    if URL(string: targetURLString) != nil {
+        websiteDataStore.fetchDataRecords(ofTypes: dataTypes ) { records in
+            for record in records {
+                websiteDataStore.removeData(ofTypes: dataTypes, for: [record]) {
+                    print("Cache cho \(targetURLString) đã được xóa.")
+                }
+            }
+        }
+    }
+
+}
+
 public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     
     do {
@@ -149,8 +173,8 @@ public func changeEnv(envUpdate: Env) {
         }
     }
     
-    @objc public func deleteAccessTokenOC() {
-        deleteAccessToken()
+    @objc public func clearWebViewCacheOC() {
+        clearWebViewCache()
     }
     
     @objc public func changeLiveEnv() {
