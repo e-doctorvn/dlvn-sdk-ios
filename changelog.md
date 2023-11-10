@@ -2,7 +2,11 @@
 
 EDR - DLVN Android SDK 
 
-Latest version: 1.0.13 (Updated: 06/11/2023)
+Latest version: 1.0.14 (Updated: 10/11/2023)
+
+## Version 1.0.14
+- handle event back click + share from dlvn
+- disable zoom in webview
 
 ## Version 1.0.13
 - update function to clearWebViewCache call when logout app
