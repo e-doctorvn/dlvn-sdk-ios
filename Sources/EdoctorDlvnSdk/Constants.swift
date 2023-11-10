@@ -32,5 +32,7 @@ public enum Env {
 
 public let closeWebView = "close-webview"
 public let requestLoginNative = "request-login-native"
+public let goBack = "go-back"
+public let sharedArticle = "shared-article"
 
 

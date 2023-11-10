@@ -10,12 +10,18 @@ import WebKit
 class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     var onSdkRequestLogin: ((String) -> Void)?
+    var onGoBack: (() -> Void)?
     
-    init(onSdkRequestLogin: ((String) -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?) {
         self.onSdkRequestLogin = onSdkRequestLogin
+        self.onGoBack = onGoBack
     }
     
     func noHandle(data : String) {
+        
+    }
+    
+    func noHandle() {
         
     }
     
@@ -34,7 +40,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                     default:
-                        print("ok")
+                        print("default")
                     }
                 } catch {
                     print("error parse JSON: \(error)")
@@ -42,23 +48,67 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
             }
         }
+        
+        if message.name == "edoctorEventHandler" {
+            if let data = message.body as? String {
+                print(data)
+                do {
+                    let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
+                    
+                    switch dataReceiveType.type {
+
+                    case goBack:
+                        (onGoBack ?? noHandle)()
+                    case sharedArticle:
+                        if ((dataReceiveType.url) != nil) {
+                            let urlToShare = URL(string: dataReceiveType.url ?? "")!
+                              let items = [urlToShare]
+                              let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+                            ControlerAlert.shared.viewController?.present(activityViewController, animated: true, completion: nil)
+                        }
+
+                    default:
+                        print("default")
+                    }
+                } catch {
+                    print("error parse JSON: \(error)")
+                }
+            }
+        }
     }
 }
 
 class MyWebView: WKWebView {
 
-    init(onSdkRequestLogin: ((String) -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?) {
         
-        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin)
+        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoBack)
         let userContentController = WKUserContentController()
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
+        userContentController.add(scriptMessageHandler, name: "edoctorEventHandler")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         
 //        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent() // no cache
         
         
+        
+        // disable zoom webview
+        let source: String = "var meta = document.createElement('meta');" +
+            "meta.name = 'viewport';" +
+            "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+            "var head = document.getElementsByTagName('head')[0];" +
+            "head.appendChild(meta);"
+
+        let script: WKUserScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        let conf = WKWebViewConfiguration()
+        conf.userContentController = userContentController
+        userContentController.addUserScript(script)
+        
+        
+        
         super.init(frame: CGRect.zero, configuration: configuration)
+        
 
     }
 
@@ -70,6 +120,7 @@ class MyWebView: WKWebView {
 struct DataReceiveType: Codable {
     let type: String
     let data: URLData?
+    let url: String?
 }
 struct URLData: Codable{
     let currentUrl: String?

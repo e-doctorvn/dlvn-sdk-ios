@@ -29,19 +29,12 @@ public func clearWebViewCache() {
 
 private func deleteCache() {
     let websiteDataStore = WKWebsiteDataStore.default()
-    
-    let targetURLString = urlDefault
 
     let dataTypes = Set([WKWebsiteDataTypeCookies,WKWebsiteDataTypeLocalStorage])
 
-    if URL(string: targetURLString) != nil {
-        websiteDataStore.fetchDataRecords(ofTypes: dataTypes ) { records in
-            for record in records {
-                websiteDataStore.removeData(ofTypes: dataTypes, for: [record]) {
-                    print("Cache cho \(targetURLString) đã được xóa.")
-                }
-            }
-        }
+    let date = Date(timeIntervalSince1970: 0)
+    websiteDataStore.removeData(ofTypes: dataTypes, modifiedSince: date) {
+        print("Cache đã được xóa.")
     }
 
 }

@@ -49,8 +49,12 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
     }
     
+    public func onGoback() {
+        webView.goBack()
+    }
+    
     private func _setUpWebView(){
-        webView = MyWebView(onSdkRequestLogin: onSdkRequestLogin)
+        webView = MyWebView(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoback)
         webView.uiDelegate = self
   
         webView.translatesAutoresizingMaskIntoConstraints = false
