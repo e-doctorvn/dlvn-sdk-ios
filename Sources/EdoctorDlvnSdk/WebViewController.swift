@@ -5,7 +5,7 @@ import WebKit
 class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var webView: MyWebView!
-    var urlString: String = urlDefault
+    var urlString: String = getUrlDefault()
     var data: [String: Any]? = nil
     var onClose: (() -> Void)?
     

@@ -7,32 +7,33 @@
 
 import Foundation
 
-//config
 public var env: Env = Env.SANDBOX
 
 
-public let eDoctorAppId: String = "E8DBD7BE-354E-4E88-AE17-A43A4726FC52"
-public let urlDefault: String = env == Env.SANDBOX ? urlDev : env == Env.LIVE ? urlPrd : urlTest
-public let urlApiDefault: String = env == Env.LIVE ? urlapiPrd : urlApiDev
+public let eDoctorAppId: String = "0BEF9C57-BA3B-474E-A40F-62B027AA47F6"
+private let urlDev: String = "https://khuat.dai-ichi-life.com.vn/tu-van-suc-khoe"
+private let urlPrd: String = "https://kh.dai-ichi-life.com.vn/tu-van-suc-khoe"
 
-//public let urlDefault: String = "http://localhost:3000/"
+private let urlApiDev: String = "https://virtual-clinic.api.e-doctor.dev/"
+private let urlapiPrd: String = "https://virtual-clinic.api.edoctor.io/"
 
-private let urlDev = "https://khuat.dai-ichi-life.com.vn/tu-van-suc-khoe"
-private let urlPrd = "https://kh.dai-ichi-life.com.vn/tu-van-suc-khoe"
-private let urlTest = "https://e-doctor.dev/tu-van-suc-khoe"
 
-private let urlApiDev = "https://virtual-clinic.api.e-doctor.dev/"
-private let urlapiPrd = "https://virtual-clinic.api.edoctor.io/"
+public func getUrlDefault() -> String {
+    return env == Env.SANDBOX ? urlDev : urlPrd
+}
+
+public func getApiDefault() -> String {
+    return env == Env.SANDBOX ? urlApiDev : urlapiPrd
+}
 
 public enum Env {
     case SANDBOX
     case LIVE
-    case TEST
 }
 
 public let closeWebView = "close-webview"
-public let requestLoginNative = "request-login-native"
 public let goBack = "go-back"
 public let sharedArticle = "shared-article"
+public let requestLoginNative = "request-login-native"
 
 

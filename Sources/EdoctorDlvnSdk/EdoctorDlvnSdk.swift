@@ -4,9 +4,9 @@ import WebKit
 
 
 
-public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
+public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault() ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
     
-    let webview = WebViewController(urlString: urlString ?? urlDefault, onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin)
+    let webview = WebViewController(urlString: urlString ?? getUrlDefault(), onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin)
     
     webview.modalPresentationStyle = .fullScreen
 
@@ -69,7 +69,7 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
 
 func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputResult?, Error?) -> Void) {
 
-    let apiUrlString = "\(urlApiDefault)graphql"
+    let apiUrlString = "\(getApiDefault())graphql"
     
     guard let apiUrl = URL(string: apiUrlString) else {
         print("URL không hợp lệ")
@@ -148,11 +148,11 @@ public func changeEnv(envUpdate: Env) {
 
 
 @objc public class DlvnSdk: NSObject {
-    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil) {
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault(), data: [String: Any]? = nil) {
         openWebView(currentViewController: currentViewController, withURL: urlString, data: data)
     }
     
-    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = urlDefault, data: [String: Any]? = nil, onSdkRequestLogin: @escaping ((String) -> Void)) {
+    @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault(), data: [String: Any]? = nil, onSdkRequestLogin: @escaping ((String) -> Void)) {
         openWebView(currentViewController: currentViewController, withURL: urlString, data: data, onSdkRequestLogin: onSdkRequestLogin)
     }
     
