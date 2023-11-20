@@ -11,10 +11,12 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     var onSdkRequestLogin: ((String) -> Void)?
     var onGoBack: (() -> Void)?
+    var onCloseWebview: (() -> Void)?
     
-    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?) {
         self.onSdkRequestLogin = onSdkRequestLogin
         self.onGoBack = onGoBack
+        self.onCloseWebview = onCloseWebview
     }
     
     func noHandle(data : String) {
@@ -28,13 +30,15 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
+                
+                print(data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
                     switch dataReceiveType.type {
 
                     case closeWebView:
-                        ControlerAlert.shared.viewController?.dismiss(animated: true)
+                        (onCloseWebview ?? noHandle)()
   
                     case requestLoginNative:
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
@@ -51,6 +55,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         
         if message.name == "edoctorEventHandler" {
             if let data = message.body as? String {
+                
                 print(data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
@@ -80,9 +85,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
 class MyWebView: WKWebView {
 
-    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?) {
         
-        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoBack)
+        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoBack, onCloseWebview: onCloseWebview)
         let userContentController = WKUserContentController()
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
         userContentController.add(scriptMessageHandler, name: "edoctorEventHandler")
