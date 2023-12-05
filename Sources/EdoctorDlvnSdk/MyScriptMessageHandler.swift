@@ -31,7 +31,6 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
                 
-                print(data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
@@ -56,7 +55,6 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         if message.name == "edoctorEventHandler" {
             if let data = message.body as? String {
                 
-                print(data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     

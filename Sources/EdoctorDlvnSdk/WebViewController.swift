@@ -152,9 +152,13 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                 DispatchQueue.main.async { [self] in
                     if status {
                         let dlvnToken = DLVNAccessToken.getData()
-                            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
-                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
+//                            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+//                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+//                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
+                        
+                        webView.evaluateJavaScript("sessionStorage.setItem('accessToken', '\(dlvnToken?.accessToken ?? "")');");
+                        webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
+                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
 
                         self.loaded = true
                         webView.reload()
