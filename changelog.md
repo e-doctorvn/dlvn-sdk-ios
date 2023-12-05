@@ -2,7 +2,11 @@
 
 EDR - DLVN Android SDK 
 
-Latest version: 1.0.14 (Updated: 10/11/2023)
+Latest version: 1.0.17 (Updated: 5/12/2023)
+
+## Version 1.0.17
+- xử lý login theo session
+- thay đổi câu thông báo lỗi tiếng việt
 
 ## Version 1.0.14
 - handle event back click + share from dlvn
