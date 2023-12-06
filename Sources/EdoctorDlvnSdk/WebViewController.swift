@@ -156,7 +156,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 //                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
 //                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
                         
-                        webView.evaluateJavaScript("sessionStorage.setItem('accessToken', '\(dlvnToken?.accessToken ?? "")');");
+                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
 

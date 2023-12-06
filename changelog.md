@@ -2,7 +2,10 @@
 
 EDR - DLVN Android SDK 
 
-Latest version: 1.0.17 (Updated: 5/12/2023)
+Latest version: 1.0.18 (Updated: 6/12/2023)
+
+## Version 1.0.18
+- update lại key bị trùng trong sessionStorage
 
 ## Version 1.0.17
 - xử lý login theo session
