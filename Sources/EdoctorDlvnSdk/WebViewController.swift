@@ -119,7 +119,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: topPadding ?? 0)
         let layer0 = CAGradientLayer()
         layer0.colors = [
-            UIColor(red: 0.812, green: 0.322, blue: 0.251, alpha: 1).cgColor,
+            UIColor(red: 0.824, green: 0.333, blue: 0.251, alpha: 1).cgColor,
             UIColor(red: 0.886, green: 0.38, blue: 0.255, alpha: 1).cgColor,
         ]
         layer0.locations = [0, 1]
