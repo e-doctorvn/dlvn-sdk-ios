@@ -9,17 +9,25 @@ import Foundation
 
 public var env: Env = Env.SANDBOX
 
+public var targetVersionBooking: String = "14.3"
+
 
 public let eDoctorAppId: String = "0BEF9C57-BA3B-474E-A40F-62B027AA47F6"
-private let urlDev: String = "https://khuat.dai-ichi-life.com.vn/tu-van-suc-khoe"
-private let urlPrd: String = "https://kh.dai-ichi-life.com.vn/tu-van-suc-khoe"
+private let urlDev: String = "khuat.dai-ichi-life.com.vn"
+private let urlPrd: String = "kh.dai-ichi-life.com.vn"
 
 private let urlApiDev: String = "https://virtual-clinic.api.e-doctor.dev/"
 private let urlapiPrd: String = "https://virtual-clinic.api.edoctor.io/"
 
 
 public func getUrlDefault() -> String {
-    return env == Env.SANDBOX ? urlDev : urlPrd
+    let url = env == Env.SANDBOX ? urlDev : urlPrd
+    return "https://" + url + "/tu-van-suc-khoe"
+}
+
+public func getDomain() -> String {
+    let url = env == Env.SANDBOX ? urlDev : urlPrd
+    return url
 }
 
 public func getApiDefault() -> String {

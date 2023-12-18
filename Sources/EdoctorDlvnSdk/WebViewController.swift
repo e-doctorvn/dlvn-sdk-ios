@@ -142,9 +142,28 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         activityIndicator.stopAnimating()
 
     }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+         if navigationAction.navigationType == WKNavigationType.linkActivated {
+             if ((navigationAction.request.url!.host!.contains(getDomain()))) {
+                 
+                 webView.load( URLRequest(url: URL(string:(navigationAction.request.url!.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
+                 decisionHandler(.cancel)
+                 return
+
+             } else {
+                 UIApplication.shared.open(navigationAction.request.url!)
+             }
+
+         }
+         decisionHandler(.allow)
+    }
 
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        let value = checkEnableSdkBooking(currentIOS: UIDevice.current.systemVersion)
+        webView.evaluateJavaScript("sessionStorage.setItem('disableSdkBooking', '\(!value)');");
+        
         if (!loaded && (data != nil)) {
             webView.stopLoading()
             DLVNSendData(data: data!) { status, error in
@@ -152,10 +171,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                 DispatchQueue.main.async { [self] in
                     if status {
                         let dlvnToken = DLVNAccessToken.getData()
-//                            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
-                        
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
@@ -173,9 +188,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
     }
     
-//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-
-//    }
 
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -191,28 +203,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     private func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
         decisionHandler(.allow)
     }
-
-    
-    // WKNavigationDelegate method - Được gọi khi cần quyết định việc tải một URL
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//
-//        if #available(iOS 14.3, *) {
-//            decisionHandler(.allow)
-//        } else {
-//            if let url = navigationAction.request.url {
-//                if url.absoluteString == "https://khuat.dai-ichi-life.com.vn:8082/login" {
-//
-//                    decisionHandler(.cancel)
-//                    activityIndicator.stopAnimating()
-//                    openAlert(from: self, content: nil)
-//                    return
-//                }
-//            }
-//
-//            decisionHandler(.allow)
-//        }
-//
-//    }
     
     public func alertErrorWebView(from viewController: UIViewController, content: String?) {
         var errorMessage = "Đã có lỗi xãy ra. Vui lòng thử lại"

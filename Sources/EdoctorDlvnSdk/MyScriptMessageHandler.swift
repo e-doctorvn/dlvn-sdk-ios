@@ -129,5 +129,12 @@ struct URLData: Codable{
     let currentUrl: String?
 }
 
+func checkEnableSdkBooking(currentIOS: String)-> Bool {
+    if currentIOS == targetVersionBooking {
+        return true
+    }
+    return currentIOS.compare(targetVersionBooking, options: .numeric) == .orderedDescending
+}
+
 
 
