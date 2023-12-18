@@ -4,8 +4,8 @@ import WebKit
 
 class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
-    var webView: MyWebView!
-    var urlString: String = getUrlDefault()
+    public var webView: MyWebView!
+    var urlString: String
     var data: [String: Any]? = nil
     var onClose: (() -> Void)?
     
@@ -16,8 +16,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var loaded: Bool = false
     
-    init(urlString: String, onClose: (() -> Void)?, data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
-        self.urlString = urlString
+    init(urlString: String?, onClose: (() -> Void)?, data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
+        self.urlString = urlString ?? getUrlDefault()
         self.data = data
         super.init(nibName: nil, bundle: nil)
         self.onClose = onClose
@@ -27,6 +27,18 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func onGoback() {
+        webView.goBack()
+    }
+    
+    public func onCloseWebview() {
+        if webView.canGoBack {
+            // web handle
+        } else {
+            self.dismiss(animated: true)
+        }
     }
     
     
@@ -47,18 +59,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         webView.load(myRequest)
         
-    }
-    
-    public func onGoback() {
-        webView.goBack()
-    }
-    
-    public func onCloseWebview() {
-        if webView.canGoBack {
-            // web handle
-        } else {
-            self.dismiss(animated: true)
-        }
+        
     }
     
     private func _setUpWebView(){
@@ -145,15 +146,19 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        let value = checkEnableSdkBooking(currentIOS: UIDevice.current.systemVersion)
+        webView.evaluateJavaScript("sessionStorage.setItem('disableSdkBooking', '\(!value)');");
+        
         if (!loaded && (data != nil)) {
             webView.stopLoading()
             DLVNSendData(data: data!) { status, error in
                 print(status)
                 DispatchQueue.main.async { [self] in
                     if status {
-                        let dlvnToken = DLVNAccessToken.getData()
-//                            webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                            webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+                        let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
+                        
+//                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+//                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
 //                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
                         
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
@@ -191,6 +196,22 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     private func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
         decisionHandler(.allow)
     }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+         if navigationAction.navigationType == WKNavigationType.linkActivated {
+             if ((navigationAction.request.url!.host!.contains(getDomain()))) {
+                 
+                 webView.load( URLRequest(url: URL(string:(navigationAction.request.url!.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
+                 decisionHandler(.cancel)
+                 return
+
+             } else {
+                 UIApplication.shared.open(navigationAction.request.url!)
+             }
+
+         }
+         decisionHandler(.allow)
+    }
 
     
     // WKNavigationDelegate method - Được gọi khi cần quyết định việc tải một URL
@@ -214,13 +235,19 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 //
 //    }
     
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//            if let url = navigationAction.request.url {
+//                print("okok", url)
+//            }
+//        decisionHandler(.allow)
+//    }
+    
     public func alertErrorWebView(from viewController: UIViewController, content: String?) {
-        var errorMessage = "Đã có lỗi xãy ra. Vui lòng thử lại"
+        var text = "Đã có lỗi xãy ra. Vui lòng thử lại"
         if content == "The Internet connection appears to be offline." {
-            errorMessage = "Không có kết nối internet. Vui lòng kiểm tra lại."
+            text = "Không có kết nối internet. Vui lòng kiểm tra lại."
         }
-        
-        let alertController = UIAlertController(title: "Thông báo", message: "\(errorMessage)", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Thông báo", message: "\(text)", preferredStyle: .alert)
 
         let okAction = UIAlertAction(title: "Trở về", style: .default) { (action) in
            self.dismiss(animated: true)

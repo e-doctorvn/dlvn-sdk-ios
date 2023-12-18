@@ -1,7 +1,14 @@
-import SwiftUI
-import UIKit
-import WebKit
+//
+//  sdkMain.swift
+//  AppTestSDK
+//
+//  Created by Bùi Đình Mạnh on 08/08/2023.
+//
 
+import SwiftUI
+import WebKit
+import Foundation
+import SendBirdCalls
 
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault() ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
@@ -19,12 +26,17 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
 
 
 public func deleteAccessToken() {
-    DLVNAccessToken.deleteData()
+    LocalStore.deleteData(key: storeType.EdoctorDLVNAccessTokenKey)
+    LocalStore.deleteData(key: storeType.userInfoKey)
 }
 
 public func clearWebViewCache() {
     deleteAccessToken()
     deleteCache()
+}
+
+public func changeEnv(envUpdate: Env) {
+    env = envUpdate
 }
 
 private func deleteCache() {
@@ -36,8 +48,12 @@ private func deleteCache() {
     websiteDataStore.removeData(ofTypes: dataTypes, modifiedSince: date) {
         print("Cache đã được xóa.")
     }
-
 }
+
+public func requestPermission() {
+    requestPermissions()
+}
+
 
 public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     
@@ -55,6 +71,7 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                     print("Lỗi: \(error)")
                     completion(false, error)
                 } else {
+                    SendBirdCallManager.shared.firstConfigure()
                     completion(true, nil)
                 }
             }
@@ -110,20 +127,17 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
                 print("Phản hồi từ server: \(responseString)")
             }
             do {
-
-                let decoder = JSONDecoder()
-                let dataOutput = try decoder.decode(EdoctorOutputDataServer.self, from: data)
-                
+                let dataOutput = try decodeJSON(data: data, type: EdoctorOutputDataServer.self)
                 if dataOutput.data.dlvnAccountInit == nil {
                     completion(nil, NSError(domain: "Edoctor", code: 800, userInfo: ["message": "Data trả về null"]))
                 } else {
                     let result = EdoctorOutputResult(phone: dataOutput.data.dlvnAccountInit?.phone, accessToken: dataOutput.data.dlvnAccountInit?.accessToken)
-                    DLVNAccessToken.saveData(edoctorOutputResult: result)
+                    LocalStore.saveData(dataSave: result, key: storeType.EdoctorDLVNAccessTokenKey)
                     completion(result, nil)
                 }
-
             } catch {
                 print("Lỗi phân tích dữ liệu JSON: \(error)")
+                completion(nil, error)
             }
         }
     }
@@ -131,8 +145,44 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
     task.resume()
 }
 
+@available(iOS 14.3, *)
+public func logOutAndRemoveDelegates() {
+    SendBirdCallManager.shared.removeVoIPPushToken()
+    SendBirdCall.removeAllDelegates()
+    SendBirdCall.deauthenticate { error in
+            if let error = error {
+                print("Error logging out from SendBird Calls: \(error.localizedDescription)")
+            } else {
+                print("Logged out from SendBird Calls successfully")
+            }
+        }
+    clearWebViewCache()
+}
+
+@available(iOS 14.3, *)
+public func logInSendBird(userId: String, accessToken: String) {
+    SendBirdCallManager.shared.login(userId: userId, accessToken: accessToken)
+}
+
+@available(iOS 14.3, *)
+public func configAppId(appId: String) {
+    SendBirdCallManager.shared.configure(appId: appId)
+}
+
+@available(iOS 14.3, *)
+public func configAppIdAndLogin(appId: String, userId: String, accessToken: String) {
+    SendBirdCallManager.shared.configure(appId: appId, userId: userId, accessToken: accessToken)
+}
+
+@available(iOS 14.3, *)
+public func firstConfigureCall() {
+    SendBirdCallManager.shared.firstConfigure()
+}
+
+
+
 public func openAlert(from viewController: UIViewController, content: String?) {
-    let alertController = UIAlertController(title: "Thông báo", message: "\(content ?? "Vui Lòng upgrade OS 13++ để xử dụng chức năng này!")", preferredStyle: .alert)
+    let alertController = UIAlertController(title: "Thông báo", message: "\(content ?? "Vui Lòng upgrade OS 14+ để xử dụng chức năng này!")", preferredStyle: .alert)
 
     let okAction = UIAlertAction(title: "Đồng ý", style: .default) { (action) in
         
@@ -142,10 +192,24 @@ public func openAlert(from viewController: UIViewController, content: String?) {
     viewController.present(alertController, animated: true, completion: nil)
 }
 
-public func changeEnv(envUpdate: Env) {
-    env = envUpdate
-}
+@available(iOS 14.3, *)
+public func addDirectCallSounds(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
+    // SendBirdCall.setDirectCallSound("Ringing.mp3", forKey: .ringing)
+    if (dialingName != nil) {
+        SendBirdCall.addDirectCallSound("Dialing.mp3", forType: .dialing)
+    }
+    
+    if (reconnectingName != nil) {
+        SendBirdCall.addDirectCallSound("ConnectionLost.mp3", forType: .reconnecting)
+    }
 
+    if (reconnectedName != nil) {
+        SendBirdCall.addDirectCallSound("ConnectionRestored.mp3", forType: .reconnected)
+    }
+
+    // If you want to remove added DirectCall sounds,
+    // Use `SendBirdCall.removeDirectCallSound(forType:)`
+}
 
 @objc public class DlvnSdk: NSObject {
     @objc public func openWebViewOC(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault(), data: [String: Any]? = nil) {
@@ -156,6 +220,7 @@ public func changeEnv(envUpdate: Env) {
         openWebView(currentViewController: currentViewController, withURL: urlString, data: data, onSdkRequestLogin: onSdkRequestLogin)
     }
     
+
     @objc public func DLVNSendDataOC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
         DLVNSendData(data: data) { dataOutput, error in
             if let error = error {
@@ -164,6 +229,10 @@ public func changeEnv(envUpdate: Env) {
                 completion(true, nil)
             }
         }
+    }
+    
+    @objc public func requestPermissionOC() {
+        requestPermission()
     }
     
     @objc public func clearWebViewCacheOC() {
@@ -178,11 +247,20 @@ public func changeEnv(envUpdate: Env) {
         env = Env.SANDBOX
     }
     
+    @available(iOS 14.3, *)
+    @objc public func firstConfigureCallOC(userId: String, accessToken: String) {
+        firstConfigureCall()
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func logOutAndRemoveDelegatesOC(userId: String, accessToken: String) {
+        logOutAndRemoveDelegates()
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func addDirectCallSoundsOC(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
+        addDirectCallSounds(dialingName: dialingName, reconnectingName: reconnectingName, reconnectedName: reconnectedName)
+    }
+    
 }
-
-
-
-
-
-
 
