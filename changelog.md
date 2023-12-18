@@ -4,6 +4,12 @@ EDR - DLVN Android SDK
 
 Latest version: 1.0.18 (Updated: 6/12/2023)
 
+## Version 1.0.20
+- xử lý nhấn vào link trong webview
+
+## Version 1.0.19
+- update title color
+
 ## Version 1.0.18
 - update lại key bị trùng trong sessionStorage
 
