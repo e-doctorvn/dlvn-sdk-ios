@@ -139,14 +139,15 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        activityIndicator.stopAnimating()
-
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) { [self] in
+            activityIndicator.stopAnimating()
+        }
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
          if navigationAction.navigationType == WKNavigationType.linkActivated {
              if let url = navigationAction.request.url {
-                 if (url.host!.contains(getDomain()) || url.absoluteString.contains("/tu-van-suc-khoe")) {
+                 if (url.host!.contains("dai-ichi-life.com.vn") || url.absoluteString.contains("/tu-van-suc-khoe")) {
                      if #available(iOS 14.3, *) {
                          webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
                      } else {
