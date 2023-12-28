@@ -31,11 +31,9 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
             update.localizedCallerName = "BS. \(call.caller?.nickname ?? "...")"
             
             
-            print("==>", call.customItems)
             DirectCallManager.shared.setDirectCall(directCall: call)
             
             if SendBirdCall.getOngoingCallCount() > 1 {
-                print("==> getOngoingCallCount")
                 // Allow only one ongoing call.
                 CXCallManager.shared.reportIncomingCall(with: uuid, update: update) { _ in
                     CXCallManager.shared.endCall(for: uuid, endedAt: Date(), reason: .declined)

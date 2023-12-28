@@ -28,7 +28,6 @@ class APIService {
     private init() {}
     
     func startRequest(graphQLQuery: String, variables: [String: Any]? = [:], httpMethod: HttpMethod? = HttpMethod.POST, completion: @escaping (String?, Error?) -> Void) {
-        print("==> start call api")
         let apiUrlString = "\(getApiDefault())graphql"
         
         guard let apiUrl = URL(string: apiUrlString) else {

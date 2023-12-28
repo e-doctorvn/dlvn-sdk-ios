@@ -68,7 +68,7 @@ public class SendBirdCallManager: NSObject {
     public func login( userId: String, accessToken: String) {
         let params = AuthenticateParams(userId: userId, accessToken: accessToken)
         SendBirdCall.authenticate(with: params) { (user, error) in
-            print("authenticate")
+            print("authenticated", userId)
             PushRegistryHandler.shared.registerForDelegate()
             LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: userId, accessToken: accessToken), key: storeType.userInfoKey)
 

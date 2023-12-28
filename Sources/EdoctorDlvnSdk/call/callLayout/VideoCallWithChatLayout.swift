@@ -169,7 +169,6 @@ struct VideoCallWithChatLayout: View {
                 )
                 
             }.onAppear {
-                print("okok - Vao")
                 location = CGPoint(x: geometry.size.width - 90, y: 250)
                 isScaled = false
                 
