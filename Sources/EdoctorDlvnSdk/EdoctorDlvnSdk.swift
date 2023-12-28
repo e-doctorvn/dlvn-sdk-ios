@@ -301,5 +301,9 @@ public func removeDirectCallSounds() {
         removeCallConfig()
     }
     
+    @available(iOS 14.3, *)
+    @objc public func firstConfigureCallOC() {
+        firstConfigureCall()
+    }
 }
 
