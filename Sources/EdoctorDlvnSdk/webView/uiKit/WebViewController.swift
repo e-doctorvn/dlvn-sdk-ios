@@ -157,10 +157,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                     if status {
                         let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
                         
-//                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
-                        
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
@@ -177,11 +173,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         }
         
     }
-    
-//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-
-//    }
-
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
 //        self.activityIndicator.stopAnimating()
@@ -198,49 +189,32 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-         if navigationAction.navigationType == WKNavigationType.linkActivated {
-             if ((navigationAction.request.url!.host!.contains(getDomain()))) {
-                 
-                 webView.load( URLRequest(url: URL(string:(navigationAction.request.url!.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
-                 decisionHandler(.cancel)
-                 return
+        if navigationAction.navigationType == WKNavigationType.linkActivated {
+            if let url = navigationAction.request.url {
+                if (url.host!.contains("dai-ichi-life.com.vn") || url.absoluteString.contains("/tu-van-suc-khoe")) {
+                    if #available(iOS 14.3, *) {
+                        webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
+                    } else {
+                        if (url.absoluteString.contains("tu-van-suc-khoe/phong-tu-van") || url.absoluteString.contains("tu-van-suc-khoe/tu-van-tu-xa")) {
+                                decisionHandler(.cancel)
+                                openAlert(from: self, content: "Chức năng này yêu cầu iOS tối thiểu 14.3, Phiên bản hiện tại của bạn là \(UIDevice.current.systemVersion), Vui lòng nâng cấp hệ điều hành để có thể sử dụng được chức năng này")
+                                return
+                        } else {
+                            webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
+                        }
+                    }
 
-             } else {
-                 UIApplication.shared.open(navigationAction.request.url!)
-             }
-
-         }
-         decisionHandler(.allow)
+                } else {
+                    UIApplication.shared.open(url)
+                    decisionHandler(.cancel)
+                    return
+                }
+            }
+        }
+        decisionHandler(.allow)
     }
 
     
-    // WKNavigationDelegate method - Được gọi khi cần quyết định việc tải một URL
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//
-//        if #available(iOS 14.3, *) {
-//            decisionHandler(.allow)
-//        } else {
-//            if let url = navigationAction.request.url {
-//                if url.absoluteString == "https://khuat.dai-ichi-life.com.vn:8082/login" {
-//
-//                    decisionHandler(.cancel)
-//                    activityIndicator.stopAnimating()
-//                    openAlert(from: self, content: nil)
-//                    return
-//                }
-//            }
-//
-//            decisionHandler(.allow)
-//        }
-//
-//    }
-    
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//            if let url = navigationAction.request.url {
-//                print("okok", url)
-//            }
-//        decisionHandler(.allow)
-//    }
     
     public func alertErrorWebView(from viewController: UIViewController, content: String?) {
         var text = "Đã có lỗi xãy ra. Vui lòng thử lại"

@@ -71,7 +71,7 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                     print("Lỗi: \(error)")
                     completion(false, error)
                 } else {
-                    SendBirdCallManager.shared.firstConfigure()
+//                    SendBirdCallManager.shared.firstConfigure()
                     completion(true, nil)
                 }
             }
@@ -146,7 +146,7 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
 }
 
 @available(iOS 14.3, *)
-public func logOutAndRemoveDelegates() {
+public func removeCallConfig() {
     SendBirdCallManager.shared.removeVoIPPushToken()
     SendBirdCall.removeAllDelegates()
     SendBirdCall.deauthenticate { error in
@@ -156,6 +156,8 @@ public func logOutAndRemoveDelegates() {
                 print("Logged out from SendBird Calls successfully")
             }
         }
+    PushRegistryHandler.shared.deregisterPushRegistryDelegate()
+    LocalStore.deleteData(key: storeType.voIpTokenKey)
     clearWebViewCache()
 }
 
@@ -179,7 +181,34 @@ public func firstConfigureCall() {
     SendBirdCallManager.shared.firstConfigure()
 }
 
+@available(iOS 14.3, *)
+public func callConfig(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+    
+    do {
+        let decoder = JSONDecoder()
+        let jsonDataInput = try JSONSerialization.data(withJSONObject: data, options: [])
+        let dataInput = try decoder.decode(DLVNInputData.self, from: jsonDataInput)
+        
+        let edoctorData = EdoctorData(deviceid: dataInput.deviceid, partnerid: dataInput.partnerid, dcid: dataInput.dcId, token: dataInput.token)
+        let jsonData = try JSONEncoder().encode(edoctorData)
+        if let jsonString = String(data: jsonData, encoding: .utf8) {
+            let edoctorInputData = EdoctorInputData(signature: "", dcId: dataInput.dcId, data: jsonString)
+            getData(dataInput: edoctorInputData) { dataOutput, error in
+                if let error = error {
+                    print("Lỗi: \(error)")
+                    completion(false, error)
+                } else {
+                    SendBirdCallManager.shared.firstConfigure()
+                    completion(true, nil)
+                }
+            }
+        }
 
+    } catch {
+        completion(false, error)
+    }
+    
+}
 
 public func openAlert(from viewController: UIViewController, content: String?) {
     let alertController = UIAlertController(title: "Thông báo", message: "\(content ?? "Vui Lòng upgrade OS 14+ để xử dụng chức năng này!")", preferredStyle: .alert)
@@ -196,19 +225,23 @@ public func openAlert(from viewController: UIViewController, content: String?) {
 public func addDirectCallSounds(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
     // SendBirdCall.setDirectCallSound("Ringing.mp3", forKey: .ringing)
     if (dialingName != nil) {
-        SendBirdCall.addDirectCallSound("Dialing.mp3", forType: .dialing)
+        SendBirdCall.addDirectCallSound(dialingName!, forType: .dialing)
     }
     
     if (reconnectingName != nil) {
-        SendBirdCall.addDirectCallSound("ConnectionLost.mp3", forType: .reconnecting)
+        SendBirdCall.addDirectCallSound(reconnectingName!, forType: .reconnecting)
     }
 
     if (reconnectedName != nil) {
-        SendBirdCall.addDirectCallSound("ConnectionRestored.mp3", forType: .reconnected)
+        SendBirdCall.addDirectCallSound(reconnectedName!, forType: .reconnected)
     }
+}
 
-    // If you want to remove added DirectCall sounds,
-    // Use `SendBirdCall.removeDirectCallSound(forType:)`
+@available(iOS 14.3, *)
+public func removeDirectCallSounds() {
+    SendBirdCall.removeDirectCallSound(forType: .dialing)
+    SendBirdCall.removeDirectCallSound(forType: .reconnecting)
+    SendBirdCall.removeDirectCallSound(forType: .reconnected)
 }
 
 @objc public class DlvnSdk: NSObject {
@@ -248,18 +281,24 @@ public func addDirectCallSounds(dialingName: String? = nil, reconnectingName: St
     }
     
     @available(iOS 14.3, *)
-    @objc public func firstConfigureCallOC(userId: String, accessToken: String) {
-        firstConfigureCall()
-    }
-    
-    @available(iOS 14.3, *)
-    @objc public func logOutAndRemoveDelegatesOC(userId: String, accessToken: String) {
-        logOutAndRemoveDelegates()
-    }
-    
-    @available(iOS 14.3, *)
     @objc public func addDirectCallSoundsOC(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
         addDirectCallSounds(dialingName: dialingName, reconnectingName: reconnectingName, reconnectedName: reconnectedName)
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func callConfigOC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        callConfig(data: data) { dataOutput, error in
+            if let error = error {
+                completion(false, error)
+            } else {
+                completion(true, nil)
+            }
+        }
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func logOutSendBirdOC() {
+        removeCallConfig()
     }
     
 }

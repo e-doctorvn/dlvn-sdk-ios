@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+//               Image("backgroundCall", bundle: isCocoapod ? Bundle(for: WebViewController.self) : Bundle.module)
 @available(iOS 14.3, *)
 struct BackgroundImage: View, Encodable {
     let UrlString: String?
@@ -21,7 +23,7 @@ struct BackgroundImage: View, Encodable {
                     .blur(radius: blur)
                     .opacity(0.7)
             } placeholder: {
-                Image("backgroundCall", bundle: isCocoapod ? Bundle(for: WebViewController.self) : Bundle.module)
+                Image("backgroundCall", bundle: Bundle.module)
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
@@ -33,7 +35,7 @@ struct BackgroundImage: View, Encodable {
                     .edgesIgnoringSafeArea(.all)
                     .blur(radius: blur)
             } else {
-                Image("backgroundCall", bundle: isCocoapod ? Bundle(for: WebViewController.self) : Bundle.module)
+                Image("backgroundCall", bundle: Bundle.module)
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)

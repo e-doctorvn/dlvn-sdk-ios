@@ -16,7 +16,7 @@ import UIKit
 extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     
     public func didStartRinging(_ call: DirectCall) {
-        let name = "Bác sỹ \(call.caller?.nickname ?? "")"
+        let name = "BS. \(call.caller?.nickname ?? "")"
         if #available(iOS 13, *) {
             call.delegate = self // To receive call event through `DirectCallDelegate`
             
@@ -28,7 +28,7 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
             let update = CXCallUpdate()
             update.remoteHandle = CXHandle(type: .generic, value: name)
             update.hasVideo = call.isVideoCall
-            update.localizedCallerName = "Bác sỹ \(call.caller?.nickname ?? "...")"
+            update.localizedCallerName = "BS. \(call.caller?.nickname ?? "...")"
             
             
             print("==>", call.customItems)

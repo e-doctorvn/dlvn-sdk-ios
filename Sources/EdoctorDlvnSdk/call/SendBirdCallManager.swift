@@ -68,22 +68,12 @@ public class SendBirdCallManager: NSObject {
     public func login( userId: String, accessToken: String) {
         let params = AuthenticateParams(userId: userId, accessToken: accessToken)
         SendBirdCall.authenticate(with: params) { (user, error) in
-            print("SendBirdCallManager - login")
-            
-            guard error == nil else { return }
-            
+            print("authenticate")
+            PushRegistryHandler.shared.registerForDelegate()
             LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: userId, accessToken: accessToken), key: storeType.userInfoKey)
-            
-            _ = PushRegistryHandler.shared
-            
-            guard let voIpToken: Data = LocalStore.getData(key: storeType.voIpTokenKey ) else {return}
-            
-            SendBirdCall.registerVoIPPush(token: voIpToken, unique: true) { (error) in
-                guard error == nil else { return }
-            }
-            
 
         }
+        
         if #available(iOS 14.3, *) {
             SendBirdCall.addDelegate(self, identifier: "com.edoctor.AppTestSDK")
         } else {
