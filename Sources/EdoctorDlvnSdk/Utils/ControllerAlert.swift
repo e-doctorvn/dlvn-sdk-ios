@@ -16,11 +16,16 @@ public class ControlerAlert {
     public var viewController: UIViewController? = UIApplication.shared.windows.first?.rootViewController
     
     public func setViewController(value : UIViewController) {
-        viewController = value
+        DispatchQueue.main.async {
+            self.viewController = value
+        }
     }
     
     public func reSetViewController() {
-        viewController = UIApplication.shared.windows.first?.rootViewController
+        DispatchQueue.main.async {
+            self.viewController = UIApplication.shared.windows.first?.rootViewController
+        }
+
     }
     
 }
