@@ -297,7 +297,7 @@ public func removeDirectCallSounds() {
     }
     
     @available(iOS 14.3, *)
-    @objc public func logOutSendBirdOC() {
+    @objc public func removeCallConfigOC() {
         removeCallConfig()
     }
     
