@@ -23,7 +23,7 @@ struct BackgroundImage: View, Encodable {
                     .blur(radius: blur)
                     .opacity(0.7)
             } placeholder: {
-                Image("backgroundCall", bundle: Bundle.module)
+                Image("backgroundCall", bundle: Bundle(for: WebViewController.self))
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
@@ -35,7 +35,7 @@ struct BackgroundImage: View, Encodable {
                     .edgesIgnoringSafeArea(.all)
                     .blur(radius: blur)
             } else {
-                Image("backgroundCall", bundle: Bundle.module)
+                Image("backgroundCall", bundle: Bundle(for: WebViewController.self))
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
