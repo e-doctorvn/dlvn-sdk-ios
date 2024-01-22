@@ -1,12 +1,12 @@
 # DlvnSdk
-## Hướng dẫn tích hợp sdk
+## Hướng dẫn tích hợp SDK
 
 ## Tính năng
 
 - mở webview tư vấn sức khỏe
-- Demo function
+- call native
 
-## Yêu cầu: .iOS(.v13)
+## Yêu cầu: .iOS(.v11)
 
 ## SDK Integration
 -- Đảm bảo bạn đã được thêm tài khoản vào repo  này
@@ -121,5 +121,49 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 - withURL == nil thì sẽ lấy url mặc định  (truyền url để xử lý  phần notification)
 - data == nil thì sẽ ko login được
 - onSdkRequestLogin: hàm này sẽ callback lại khi request login data là url
+
+---
+-- CALL NATIVE
+-
+## Yêu cầu: 
+- iOS 14.3 trở lên
+- Swift 5.0 trở lên
+- Xcode 14.1 trở lên
+## Cấu hình
+- Bật "Voice over IP" trong Signing & Capabilities -> "Background Modes"
+![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)
+- Thêm quyền Microphone và Camera:
+    <key>NSCameraUsageDescription</key>
+    <key>NSMicrophoneUsageDescription</key>
+
+---
+-- CHAT Notification
+-
+bật Remoote notification trong Background Modes
+- Lúc login thành công gọi hàm : authenticateEDROC vs param là data chứa thông tin tài khoản đó
+- Hàm handleRegistriNotification sẽ được gọi trong : application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) vs param là deviceToken 
+```swift
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        handleRegistriNotification(deviceToken: deviceToken)
+    }
+```
+- Xử lý hiện notification như thế này:
+```swift
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        if isEdrMessage(notification: notification) && allowPushNotificationBackground(notification: notification) {
+            completionHandler([.banner, .sound, .badge])
+        } else {
+            //DC app handle
+        }
+        
+    }
+```
+- Xử lý click vào thông báo như thế này: 
+```swift
+   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        handlePressNotificatin(response: response)
+    }
+```
+
 
 
