@@ -8,9 +8,11 @@
 import Foundation
 
 enum storeType: String {
-    case EdoctorDLVNAccessTokenKey = "EdoctorDLVNAccessTokenKey" // lưu thông tin đăng nhập token dlvn/ edr
-    case voIpTokenKey = "voIpTokenKey" // lưu token thông báo
-    case userInfoKey = "userInfoKey"   // lưu thông tin đăng nhập sendbird Call
+    case EdoctorDLVNAccessTokenKey = "EdoctorDLVNAccessTokenKey"
+    case voIpTokenKey = "voIpTokenKey"
+    case userInfoKey = "userInfoKey"
+    case dataLogin = "dataLogin"
+    case deviceToken = "deviceToken"
 }
 
 struct UserInfo: Codable {
@@ -24,10 +26,12 @@ private func getType(key: storeType) -> Decodable {
         
     case storeType.EdoctorDLVNAccessTokenKey:
         return EdoctorOutputResult.self as! Decodable
-    case .voIpTokenKey:
+    case .voIpTokenKey, .deviceToken:
         return Data.self as! Decodable
     case .userInfoKey:
         return UserInfo.self as! Decodable
+    case .dataLogin:
+        return DataLogin.self as! Decodable
     }
     
     
@@ -49,7 +53,7 @@ public class LocalStore {
             if let data = UserDefaults.standard.data(forKey: key.rawValue) {
                 let decoder = PropertyListDecoder()
                 switch key {
-                case .voIpTokenKey:
+                case .voIpTokenKey, .deviceToken:
                     return data as? T
                 case storeType.EdoctorDLVNAccessTokenKey:
                     let accessToken = try decoder.decode(EdoctorOutputResult.self, from: data)
@@ -57,6 +61,9 @@ public class LocalStore {
                 case .userInfoKey:
                     let userInfo = try decoder.decode(UserInfo.self, from: data)
                     return userInfo as? T
+                case .dataLogin:
+                    let dataLogin = try decoder.decode(DataLogin.self, from: data)
+                    return dataLogin as? T
                 }
             }
             return nil
@@ -68,5 +75,19 @@ public class LocalStore {
     static func deleteData(key : storeType) {
         UserDefaults.standard.removeObject(forKey: key.rawValue)
     }
+    static func deleteAllData() {
+        deleteData(key: .EdoctorDLVNAccessTokenKey)
+        deleteData(key: .voIpTokenKey)
+        deleteData(key: .userInfoKey)
+        deleteData(key: .dataLogin)
+        deleteData(key: .deviceToken)
+    }
+}
+
+struct DataLogin : Codable {
+    let partnerid: String
+    let deviceid: String
+    let dcId: String
+    let token: String
 }
 

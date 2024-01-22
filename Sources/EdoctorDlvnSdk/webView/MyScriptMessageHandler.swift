@@ -30,8 +30,6 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
-                
-                print("1-a", data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
@@ -39,10 +37,20 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
                     case closeWebView:
                         (onCloseWebview ?? noHandle)()
+                        
+                        if channel_url_active != "entry_channel_url" {
+                            channel_url_active = "entry_channel_url"
+                        }
   
                     case requestLoginNative:
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
+                    case activeChannelUrl:
+                        channel_url_active = dataReceiveType.channelUrl ?? "entry_channel_url"
+                    case requestUpdateApp:
+                        if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
+                            UIApplication.shared.open(url)
+                        }
                     default:
                         print("default")
                     }
@@ -56,7 +64,6 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         if message.name == "edoctorEventHandler" {
             if let data = message.body as? String {
                 
-                print("1-b", data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
@@ -64,6 +71,11 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
                     case goBack:
                         (onGoBack ?? noHandle)()
+                        
+                        if channel_url_active != "entry_channel_url" {
+                            channel_url_active = "entry_channel_url"
+                        }
+
                     case sharedArticle:
                         if ((dataReceiveType.url) != nil) {
                             let urlToShare = URL(string: dataReceiveType.url ?? "")!
@@ -71,7 +83,12 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                               let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
                             ControlerAlert.shared.viewController?.present(activityViewController, animated: true, completion: nil)
                         }
-
+                    case activeChannelUrl:
+                        channel_url_active = dataReceiveType.channelUrl ?? "entry_channel_url"
+                    case requestUpdateApp:
+                        if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
+                            UIApplication.shared.open(url)
+                        }
                     default:
                         print("default")
                     }
@@ -126,6 +143,7 @@ struct DataReceiveType: Codable {
     let type: String
     let data: URLData?
     let url: String?
+    let channelUrl: String?
 }
 struct URLData: Codable{
     let currentUrl: String?

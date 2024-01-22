@@ -11,9 +11,9 @@ import Foundation
 import SendBirdCalls
 
 
-public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = getUrlDefault() ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil) {
+public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false) {
     
-    let webview = WebViewController(urlString: urlString ?? getUrlDefault(), onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin)
+    let webview = WebViewController(urlString: urlString, onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin, isFromNotification: isFromNotification)
     
     webview.modalPresentationStyle = .fullScreen
 
@@ -24,14 +24,8 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
     }
 }
 
-
-public func deleteAccessToken() {
-    LocalStore.deleteData(key: storeType.EdoctorDLVNAccessTokenKey)
-    LocalStore.deleteData(key: storeType.userInfoKey)
-}
-
 public func clearWebViewCache() {
-    deleteAccessToken()
+    LocalStore.deleteAllData()
     deleteCache()
 }
 
@@ -53,7 +47,6 @@ private func deleteCache() {
 public func requestPermission() {
     requestPermissions()
 }
-
 
 public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     
@@ -146,9 +139,10 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
 }
 
 @available(iOS 14.3, *)
-public func removeCallConfig() {
+public func deauthenticateEDR() {
     SendBirdCallManager.shared.removeVoIPPushToken()
     SendBirdCall.removeAllDelegates()
+    removeChatDelegate()
     SendBirdCall.deauthenticate { error in
             if let error = error {
                 print("Error logging out from SendBird Calls: \(error.localizedDescription)")
@@ -158,6 +152,8 @@ public func removeCallConfig() {
         }
     PushRegistryHandler.shared.deregisterPushRegistryDelegate()
     LocalStore.deleteData(key: storeType.voIpTokenKey)
+    
+    
     clearWebViewCache()
 }
 
@@ -177,12 +173,7 @@ public func configAppIdAndLogin(appId: String, userId: String, accessToken: Stri
 }
 
 @available(iOS 14.3, *)
-public func firstConfigureCall() {
-    SendBirdCallManager.shared.firstConfigure()
-}
-
-@available(iOS 14.3, *)
-public func callConfig(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     
     do {
         let decoder = JSONDecoder()
@@ -199,6 +190,7 @@ public func callConfig(data: [String: Any], completion: @escaping (Bool, Error?)
                     completion(false, error)
                 } else {
                     SendBirdCallManager.shared.firstConfigure()
+                    
                     completion(true, nil)
                 }
             }
@@ -286,8 +278,8 @@ public func removeDirectCallSounds() {
     }
     
     @available(iOS 14.3, *)
-    @objc public func callConfigOC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
-        callConfig(data: data) { dataOutput, error in
+    @objc public func authenticateEDROC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        authenticateEDR(data: data) { dataOutput, error in
             if let error = error {
                 completion(false, error)
             } else {
@@ -297,14 +289,29 @@ public func removeDirectCallSounds() {
     }
     
     @available(iOS 14.3, *)
-    @objc public func removeCallConfigOC() {
-        removeCallConfig()
+    @objc public func deauthenticateEDROC() {
+        deauthenticateEDR()
+    }
+    
+    // chat func
+    @available(iOS 14.3, *)
+    @objc public func handleRegistriNotificationOC(deviceToken: Data) {
+        handleRegistriNotification(deviceToken: deviceToken)
     }
     
     @available(iOS 14.3, *)
-    @objc public func firstConfigureCallOC() {
-        firstConfigureCall()
+    @objc public func allowPushNotificationBackgroundOC(notification: UNNotification) -> Bool {
+        return allowPushNotificationBackground(notification: notification)
     }
     
+    @available(iOS 14.3, *)
+    @objc public func isEdrMessageOC(notification: UNNotification) -> Bool {
+        return  isEdrMessage(notification: notification)
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func handlePressNotificatinOC(response: UNNotificationResponse) {
+       handlePressNotificatin(response: response)
+    }
 }
 

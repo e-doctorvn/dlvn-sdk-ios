@@ -9,8 +9,9 @@ import Foundation
 import UIKit
 import CallKit
 import SendBirdCalls
+import SendbirdChatSDK
 
-
+@available(iOS 14.3, *)
 public class SendBirdCallManager: NSObject {
 
     public static let shared = SendBirdCallManager()
@@ -18,6 +19,16 @@ public class SendBirdCallManager: NSObject {
     private override init() {
         super.init()
         SendBirdCall.configure(appId: eDoctorAppId)
+        
+        let initParams = InitParams(
+            applicationId: eDoctorAppId,
+            isLocalCachingEnabled: true,
+            logLevel: .info
+        )
+
+        SendbirdChat.initialize(params: initParams) {
+
+        }
     }
 
     public func configure(appId: String, userId: String, accessToken: String) {
@@ -48,8 +59,8 @@ public class SendBirdCallManager: NSObject {
                            let token = sendbird["token"] as? String {
                             LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: accountId, accessToken: token), key: storeType.userInfoKey)
                             self.login( userId: accountId, accessToken: token)
+                            authenticateChatEDR()
                         }
-                            
 
                     } catch {
                         print("Error: \(error)")
@@ -64,29 +75,23 @@ public class SendBirdCallManager: NSObject {
         SendBirdCall.configure(appId: appId)
     }
     
-
     public func login( userId: String, accessToken: String) {
+
         let params = AuthenticateParams(userId: userId, accessToken: accessToken)
         SendBirdCall.authenticate(with: params) { (user, error) in
-            print("authenticated")
-            print("userId", userId)
+            print("authenticate", userId)
             PushRegistryHandler.shared.registerForDelegate()
             LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: userId, accessToken: accessToken), key: storeType.userInfoKey)
 
         }
-        
-        if #available(iOS 14.3, *) {
-            SendBirdCall.addDelegate(self, identifier: "com.edoctor.AppTestSDK")
-        } else {
-            // Fallback on earlier versions
-        }
+        SendBirdCall.addDelegate(self, identifier: "com.edoctor.AppTestSDK")
+
     }
 
 //    deinit {
 //        SendBirdCall.removeDelegate(identifier: "com.edoctor.AppTestSDK")
 //    }
     
-    @available(iOS 14.3, *)
     public func makeCall(calleeId: String, isVideoCall: Bool) {
         CallStatusManager.shared.setCallStatus(value: .waiting)
 

@@ -26,7 +26,6 @@ private let urlapiPrd: String = "https://virtual-clinic.api.edoctor.io/"
 
 public func getUrlDefault() -> String {
     let url = env == Env.SANDBOX ? urlDev : urlPrd
-    print("==>",url)
     return "https://" + url + "/tu-van-suc-khoe"
 }
 
@@ -48,5 +47,7 @@ public let closeWebView = "close-webview"
 public let goBack = "go-back"
 public let sharedArticle = "shared-article"
 public let requestLoginNative = "request-login-native"
+public let activeChannelUrl = "active-channel-url"
+public let requestUpdateApp = "request-update-app"
 
 

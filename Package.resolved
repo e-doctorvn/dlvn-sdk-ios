@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "sendbird-chat-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sendbird/sendbird-chat-sdk-ios.git",
+      "state" : {
+        "revision" : "9bb38bbd43106b53e7c9f347795b561345379dd7",
+        "version" : "4.15.1"
+      }
+    },
+    {
       "identity" : "sendbird-webrtc-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sendbird/sendbird-webrtc-ios",
