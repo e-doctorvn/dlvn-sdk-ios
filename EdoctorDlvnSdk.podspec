@@ -19,5 +19,5 @@ spec.source_files = [
     "Sources/EdoctorDlvnSdk/*/*/*.{swift}"
   ]
 spec.resources = "Sources/EdoctorDlvnSdk/*.xcassets"
-spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.1.0/README.md"
+spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.1.1/README.md"
 end
