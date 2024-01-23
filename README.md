@@ -165,5 +165,11 @@ bật Remoote notification trong Background Modes
     }
 ```
 
+- Khi đăng xuất gọi hảm này để hủy các sự kiện:
+
+```swift
+    deauthenticateEDROC
+```
+
 
 
