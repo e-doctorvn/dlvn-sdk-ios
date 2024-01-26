@@ -80,7 +80,7 @@ public class LocalStore {
         deleteData(key: .voIpTokenKey)
         deleteData(key: .userInfoKey)
         deleteData(key: .dataLogin)
-        deleteData(key: .deviceToken)
+//        deleteData(key: .deviceToken)
     }
 }
 
