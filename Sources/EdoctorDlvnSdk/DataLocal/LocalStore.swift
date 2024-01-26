@@ -9,10 +9,10 @@ import Foundation
 
 enum storeType: String {
     case EdoctorDLVNAccessTokenKey = "EdoctorDLVNAccessTokenKey"
-    case voIpTokenKey = "voIpTokenKey"
-    case userInfoKey = "userInfoKey"
-    case dataLogin = "dataLogin"
-    case deviceToken = "deviceToken"
+    case voIpTokenKey = "edrVoIpTokenKey"
+    case userInfoKey = "edrUserInfoKey"
+    case dataLogin = "edrDataLogin"
+    case deviceToken = "edrDeviceToken"
 }
 
 struct UserInfo: Codable {

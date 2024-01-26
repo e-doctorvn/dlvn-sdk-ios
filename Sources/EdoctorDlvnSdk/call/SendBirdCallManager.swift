@@ -23,7 +23,7 @@ public class SendBirdCallManager: NSObject {
         let initParams = InitParams(
             applicationId: eDoctorAppId,
             isLocalCachingEnabled: true,
-            logLevel: .info
+            logLevel: .none
         )
 
         SendbirdChat.initialize(params: initParams) {
