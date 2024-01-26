@@ -41,6 +41,7 @@ public class SendBirdCallManager: NSObject {
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
         if userData != nil {
             login( userId: userData!.userId, accessToken: userData!.accessToken)
+            authenticateChatEDR()
         } else {
             APIService.shared.startRequest(graphQLQuery: sendbirdAccount) { data, error in
                 if error != nil || data == nil {
