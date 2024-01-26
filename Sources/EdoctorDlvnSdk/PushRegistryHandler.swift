@@ -52,6 +52,7 @@ class PushRegistryHandler: NSObject, PKPushRegistryDelegate {
     }
 }
 
+
 //func convertDictionaryToString(dictionary: [AnyHashable: Any]) -> String? {
 //    do {
 //        let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [])

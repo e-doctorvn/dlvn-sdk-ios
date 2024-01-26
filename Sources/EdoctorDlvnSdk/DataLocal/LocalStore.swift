@@ -54,6 +54,7 @@ public class LocalStore {
                 let decoder = PropertyListDecoder()
                 switch key {
                 case .voIpTokenKey, .deviceToken:
+                    let data = try decoder.decode(Data.self, from: data)
                     return data as? T
                 case storeType.EdoctorDLVNAccessTokenKey:
                     let accessToken = try decoder.decode(EdoctorOutputResult.self, from: data)
