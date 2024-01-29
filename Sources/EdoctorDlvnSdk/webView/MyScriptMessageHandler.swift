@@ -51,6 +51,8 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
                             UIApplication.shared.open(url)
                         }
+                    case requiredClose:
+                        ControlerAlert.shared.viewController?.dismiss(animated: true)
                     default:
                         print("default")
                     }
