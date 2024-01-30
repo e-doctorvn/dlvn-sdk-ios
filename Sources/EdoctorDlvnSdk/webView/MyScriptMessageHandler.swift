@@ -45,6 +45,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                     case requestLoginNative:
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
+                        ControlerAlert.shared.reSetViewController()
                     case activeChannelUrl:
                         channel_url_active = dataReceiveType.channelUrl ?? "entry_channel_url"
                     case requestUpdateApp:
@@ -53,6 +54,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         }
                     case requiredClose:
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
+                        ControlerAlert.shared.reSetViewController()
                     default:
                         print("default")
                     }

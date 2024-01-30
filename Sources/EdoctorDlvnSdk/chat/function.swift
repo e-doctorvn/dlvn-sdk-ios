@@ -104,7 +104,12 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
     
     DispatchQueue.main.async {
         let url = getUrlDefault() + "/phong-tu-van?channel=" + channel_url
-        openWebView(currentViewController: ControlerAlert.shared.viewController, withURL: url, isFromNotification: true)
+        
+        if ControlerAlert.shared.isActive {
+            NotificationCenter.default.post(name: .handleLoadUrl, object: nil, userInfo: ["url": url])
+        } else {
+            openWebView(currentViewController: ControlerAlert.shared.viewController, withURL: url, isFromNotification: true)
+        }
     }
 }
 

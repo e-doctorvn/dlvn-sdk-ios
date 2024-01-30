@@ -24,6 +24,19 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         self.onClose = onClose
         self.onSdkRequestLogin = onSdkRequestLogin
         self.loaded = false
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLoadUrl), name: .handleLoadUrl, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func handleLoadUrl(_ notification: Notification) {
+        if let url = notification.userInfo?["url"] as? String{
+            let myRequest = URLRequest(url: URL(string:url)!)
+            webView.load(myRequest)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -42,6 +55,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                 onClose!()
             } else {
                 self.dismiss(animated: true)
+                ControlerAlert.shared.reSetViewController()
             }
 
         }
@@ -318,6 +332,10 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         viewController.present(alertController, animated: true, completion: nil)
     }
     
+}
+
+extension Notification.Name {
+    static let handleLoadUrl = Notification.Name("handleLoadUrl")
 }
 
 
