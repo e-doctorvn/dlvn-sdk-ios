@@ -4,12 +4,12 @@
 //
 //  Created by Bùi Đình Mạnh on 08/08/2023.
 //
+// version 1.1.3 - update
 
 import SwiftUI
 import WebKit
 import Foundation
 import SendBirdCalls
-
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false) {
     
@@ -19,8 +19,14 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
 
     if (currentViewController != nil) {
         currentViewController!.present(webview, animated: true)
-    } else if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController.present(webview, animated: true)
+    } else {
+        if (ControlerAlert.shared.isActive && urlString != nil) {
+            NotificationCenter.default.post(name: .handleLoadUrl, object: nil, userInfo: ["url": urlString ?? ""])
+        } else {
+            if (ControlerAlert.shared.viewController != nil) {
+                ControlerAlert.shared.viewController!.present(webview, animated: true)
+            }
+        }
     }
 }
 
