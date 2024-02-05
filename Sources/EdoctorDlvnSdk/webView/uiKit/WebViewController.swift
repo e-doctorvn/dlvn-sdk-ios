@@ -35,7 +35,9 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     @objc func handleLoadUrl(_ notification: Notification) {
         if let url = notification.userInfo?["url"] as? String{
             let myRequest = URLRequest(url: URL(string:url)!)
-            webView.load(myRequest)
+            if (webView != nil && url != "") {
+                webView.load(myRequest)
+            }
         }
     }
     
