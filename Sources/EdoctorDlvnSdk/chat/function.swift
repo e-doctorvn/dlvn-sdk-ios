@@ -116,10 +116,10 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
 public func removeChatDelegate() {
     let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
     
-    guard userData == nil else {return}
+    if userData == nil {return}
     
-    guard userData?.userId == nil else {return}
-    guard userData?.accessToken == nil else {return}
+    if userData?.userId == nil {return}
+    if userData?.accessToken == nil  {return}
     
     if SendbirdChat.getConnectState() == .open {
         SendbirdChat.connect(userId: userData?.userId ?? "", authToken: userData?.accessToken ?? "") { user, error in
