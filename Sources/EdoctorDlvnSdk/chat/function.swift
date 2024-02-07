@@ -122,7 +122,7 @@ public func removeChatDelegate() {
     guard userData?.accessToken == nil else {return}
     
     if SendbirdChat.getConnectState() == .open {
-        SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+        SendbirdChat.connect(userId: userData?.userId ?? "", authToken: userData?.accessToken ?? "") { user, error in
             
             guard error == nil else {
                 return
@@ -137,9 +137,6 @@ public func removeChatDelegate() {
             }
         }
     }
-    
-    
-
 
 }
 
