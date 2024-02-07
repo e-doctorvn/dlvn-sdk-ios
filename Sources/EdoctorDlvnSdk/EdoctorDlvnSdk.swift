@@ -157,8 +157,6 @@ public func deauthenticateEDR() {
             }
         }
     PushRegistryHandler.shared.deregisterPushRegistryDelegate()
-    LocalStore.deleteData(key: storeType.voIpTokenKey)
-    
     
     clearWebViewCache()
 }

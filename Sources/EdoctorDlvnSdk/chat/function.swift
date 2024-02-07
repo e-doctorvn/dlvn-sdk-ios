@@ -118,9 +118,17 @@ public func removeChatDelegate() {
     
     guard userData == nil else {return}
     
+    guard userData?.userId == nil else {return}
+    guard userData?.accessToken == nil else {return}
+    
     SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+        
+        guard error == nil else {
+            return
+        }
+        
         guard let token = SendbirdChat.getPendingPushToken() else { return }
-        SendbirdChat.unregisterPushToken(token) { response, error in
+        SendbirdChat.unregisterPushToken(token) { error in
             guard error == nil else {
                 return
             }
