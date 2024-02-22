@@ -27,7 +27,7 @@ class APIService {
     
     private init() {}
     
-    func startRequest(graphQLQuery: String, variables: [String: Any]? = [:], httpMethod: HttpMethod? = HttpMethod.POST, completion: @escaping (String?, Error?) -> Void) {
+    func startRequest(graphQLQuery: String, variables: [String: Any]? = [:], httpMethod: HttpMethod? = HttpMethod.POST, isPublic : Bool = false, completion: @escaping (String?, Error?) -> Void) {
         print("==> start call api")
         let apiUrlString = "\(getApiDefault())graphql"
         
@@ -49,13 +49,16 @@ class APIService {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
         
-        if dlvnToken?.accessToken == nil {
+        if dlvnToken?.accessToken == nil && isPublic != true{
             print("==> accessToken nil")
             completion(nil, NSError(domain: "Edoctor", code: 300, userInfo: ["message": "Không có token "]))
             return
         }
         
-        request.addValue(dlvnToken?.accessToken ?? "", forHTTPHeaderField: "Authorization")
+        
+        if dlvnToken?.accessToken != nil{
+            request.addValue(dlvnToken?.accessToken ?? "", forHTTPHeaderField: "Authorization")
+        }
 
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -74,5 +77,7 @@ class APIService {
         
         task.resume()
     }
+    
+    
 }
 

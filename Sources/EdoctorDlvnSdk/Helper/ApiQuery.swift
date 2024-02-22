@@ -51,4 +51,10 @@ mutation EClinicEndCall($eClinicId: String!, $appointmentScheduleId: String!) {
 }
 """
 
+public let checkAccountExist = """
+query checkAccountExist($accountId: String, $phone: String) {
+  checkAccountExist(accountId: $accountId, phone: $phone)
+}
+"""
+
 

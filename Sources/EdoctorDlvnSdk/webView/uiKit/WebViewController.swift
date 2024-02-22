@@ -320,6 +320,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
         let okAction = UIAlertAction(title: "Trở về", style: .default) { (action) in
            self.dismiss(animated: true)
+            ControlerAlert.shared.reSetViewController()
         }
         
         let okReload = UIAlertAction(title: "Thử lại", style: .default) { (action) in

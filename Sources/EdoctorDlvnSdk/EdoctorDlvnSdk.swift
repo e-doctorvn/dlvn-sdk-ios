@@ -31,7 +31,6 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
 }
 
 public func clearWebViewCache() {
-    LocalStore.deleteAllData()
     deleteCache()
 }
 
@@ -157,6 +156,8 @@ public func deauthenticateEDR() {
             }
         }
     PushRegistryHandler.shared.deregisterPushRegistryDelegate()
+    LocalStore.deleteAllData()
+    
     
     clearWebViewCache()
 }
@@ -178,24 +179,38 @@ public func configAppIdAndLogin(appId: String, userId: String, accessToken: Stri
 
 @available(iOS 14.3, *)
 public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
-    
+    deauthenticateEDR()
     do {
         let decoder = JSONDecoder()
         let jsonDataInput = try JSONSerialization.data(withJSONObject: data, options: [])
         let dataInput = try decoder.decode(DLVNInputData.self, from: jsonDataInput)
-        
-        let edoctorData = EdoctorData(deviceid: dataInput.deviceid, partnerid: dataInput.partnerid, dcid: dataInput.dcId, token: dataInput.token)
-        let jsonData = try JSONEncoder().encode(edoctorData)
-        if let jsonString = String(data: jsonData, encoding: .utf8) {
-            let edoctorInputData = EdoctorInputData(signature: "", dcId: dataInput.dcId, data: jsonString)
-            getData(dataInput: edoctorInputData) { dataOutput, error in
-                if let error = error {
-                    print("Lỗi: \(error)")
-                    completion(false, error)
-                } else {
-                    SendBirdCallManager.shared.firstConfigure()
-                    
-                    completion(true, nil)
+        APIService.shared.startRequest(graphQLQuery: checkAccountExist, variables: ["phone" : dataInput.dcId], isPublic: true) { dataCall, error in
+            if let jsonData = dataCall!.data(using: .utf8) {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                       let data = json["data"] as? [String: Any],
+                       let checkAccountExist = data["checkAccountExist"] as? Bool {
+                        if checkAccountExist {
+                            let edoctorData = EdoctorData(deviceid: dataInput.deviceid, partnerid: dataInput.partnerid, dcid: dataInput.dcId, token: dataInput.token)
+                            let jsonData = try JSONEncoder().encode(edoctorData)
+                            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                let edoctorInputData = EdoctorInputData(signature: "", dcId: dataInput.dcId, data: jsonString)
+                                getData(dataInput: edoctorInputData) { dataOutput, error in
+                                    if let error = error {
+                                        print("Lỗi: \(error)")
+                                        completion(false, error)
+                                    } else {
+                                        SendBirdCallManager.shared.firstConfigure()
+                                        
+                                        completion(true, nil)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                } catch {
+                    print("Error: \(error)")
                 }
             }
         }
