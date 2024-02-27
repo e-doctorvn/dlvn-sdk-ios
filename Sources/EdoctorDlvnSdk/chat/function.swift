@@ -32,15 +32,36 @@ public func handleRegistriNotification(deviceToken: Data) {
         
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
         if userData != nil {
-            SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
-                print("authen chat", userData!.userId)
-                guard error == nil else {return}
-                SendbirdChat.registerDevicePushToken(deviceToken, unique: false) { status, error in
-                    if error == nil {
-                        print("registerDevicePushToken success")
+            
+            let currentUser = SendbirdChat.getCurrentUser()
+            let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
+            
+            if currentUser != nil && currentUser?.userId != userData?.userId && tokenStore != nil {
+                SendbirdChat.connect(userId: currentUser!.userId, authToken: tokenStore) { user, error in
+                    guard error == nil else {
+                        return
+                    }
+                    
+                    guard let token = SendbirdChat.getPendingPushToken() else { return }
+                    SendbirdChat.unregisterPushToken(token) { error in
+                        guard error == nil else {return}
+                        SendbirdChat.disconnect()
+                        LocalStore.deleteData(key: .tokenAccountShortLink)
+                    }
+                }
+            } else {
+                SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+                    print("authen chat", userData!.userId)
+                    guard error == nil else {return}
+                    SendbirdChat.registerDevicePushToken(deviceToken, unique: false) { status, error in
+                        if error == nil {
+                            print("registerDevicePushToken success")
+                        }
                     }
                 }
             }
+            
+
         }
     })
 }
@@ -120,10 +141,8 @@ public func removeChatDelegate(isShortLink: Bool? = false) {
         let userLogged = SendbirdChat.getCurrentUser()
 //        let tokenLogged: String? = LocalStore.getData(key: .tokenAccountShortLink)
         let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
-        print("vao userLogged", userLogged?.userId)
-        print("vao tokenLogged", tokenStore)
         
-        if userLogged == nil || tokenStore != nil {
+        if userLogged == nil || tokenStore == nil {
             return
         }
         
