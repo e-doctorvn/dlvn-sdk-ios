@@ -45,8 +45,19 @@ public func handleRegistriNotification(deviceToken: Data) {
                     guard let token = SendbirdChat.getPendingPushToken() else { return }
                     SendbirdChat.unregisterPushToken(token) { error in
                         guard error == nil else {return}
-                        SendbirdChat.disconnect()
-                        LocalStore.deleteData(key: .tokenAccountShortLink)
+                        SendbirdChat.disconnect() {
+                            LocalStore.deleteData(key: .tokenAccountShortLink)
+                            
+                            SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+                                guard error == nil else {return}
+                                SendbirdChat.registerDevicePushToken(deviceToken, unique: false) { status, error in
+                                    if error == nil {
+                                        print("registerDevicePushToken success")
+                                    }
+                                }
+                            }
+                        }
+   
                     }
                 }
             } else {
