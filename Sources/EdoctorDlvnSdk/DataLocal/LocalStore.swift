@@ -13,6 +13,7 @@ enum storeType: String {
     case userInfoKey = "edrUserInfoKey"
     case dataLogin = "edrDataLogin"
     case deviceToken = "edrDeviceToken"
+    case tokenAccountShortLink = "edrTokenAccountShortLink"
 }
 
 struct UserInfo: Codable {
@@ -32,6 +33,8 @@ private func getType(key: storeType) -> Decodable {
         return UserInfo.self as! Decodable
     case .dataLogin:
         return DataLogin.self as! Decodable
+    case .tokenAccountShortLink:
+        return String.self as! Decodable
     }
     
     
@@ -65,6 +68,9 @@ public class LocalStore {
                 case .dataLogin:
                     let dataLogin = try decoder.decode(DataLogin.self, from: data)
                     return dataLogin as? T
+                case .tokenAccountShortLink:
+                    let data = try decoder.decode(String.self, from: data)
+                    return data as? T
                 }
             }
             return nil

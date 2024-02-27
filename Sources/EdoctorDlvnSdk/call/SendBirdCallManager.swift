@@ -19,7 +19,6 @@ public class SendBirdCallManager: NSObject {
     private override init() {
         super.init()
         SendBirdCall.configure(appId: eDoctorAppId)
-        
         let initParams = InitParams(
             applicationId: eDoctorAppId,
             isLocalCachingEnabled: true,
@@ -37,11 +36,12 @@ public class SendBirdCallManager: NSObject {
     }
     
     public func firstConfigure() {
+        
         SendBirdCall.configure(appId: eDoctorAppId)
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
         if userData != nil {
             login( userId: userData!.userId, accessToken: userData!.accessToken)
-            authenticateChatEDR()
+            self.chatSetup()
         } else {
             APIService.shared.startRequest(graphQLQuery: sendbirdAccount) { data, error in
                 if error != nil || data == nil {
@@ -60,8 +60,11 @@ public class SendBirdCallManager: NSObject {
                            let token = sendbird["token"] as? String {
                             LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: accountId, accessToken: token), key: storeType.userInfoKey)
                             self.login( userId: accountId, accessToken: token)
-                            authenticateChatEDR()
+                            
+                            self.chatSetup()
+                            
                         }
+                            
 
                     } catch {
                         print("Error: \(error)")
@@ -72,17 +75,72 @@ public class SendBirdCallManager: NSObject {
         }
     }
     
+    public func chatSetup(userId: String? = nil, accessToken: String? = nil) {
+       
+        let deviceToken: Data? = LocalStore.getData(key: .deviceToken)
+        print("chatSetup", deviceToken)
+        if deviceToken == nil {
+            return
+        }
+        
+        
+        SendbirdChat.setPushTriggerOption(.all) { error in
+            guard error == nil else {return}
+        }
+        
+        let initParams = InitParams(
+            applicationId: eDoctorAppId,
+            isLocalCachingEnabled: true,
+            logLevel: .none
+        )
+        
+        SendbirdChat.initialize(params: initParams, migrationStartHandler: {
+            // Xử lý khi quá trình di chuyển bắt đầu (nếu cần)
+        }, completionHandler: { error in
+            guard error == nil else {return}
+            
+            if (userId != nil && accessToken != nil) {
+                SendbirdChat.connect(userId: userId!, authToken: accessToken!) { user, error in
+                    print("authen chat", userId ?? "")
+                    guard error == nil else {return}
+                    SendbirdChat.registerDevicePushToken(deviceToken!, unique: false) { status, error in
+                        if error == nil {
+                            print("registerDevicePushToken success")
+                        }
+                    }
+                }
+            } else {
+                let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+                if userData != nil {
+                    SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+                        print("authen chat", userData!.userId)
+                        guard error == nil else {return}
+                        SendbirdChat.registerDevicePushToken(deviceToken!, unique: false) { status, error in
+                            if error == nil {
+                                print("registerDevicePushToken success")
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+    
     public func configure(appId: String) {
         SendBirdCall.configure(appId: appId)
     }
     
-    public func login( userId: String, accessToken: String) {
+    
+    public func login( userId: String, accessToken: String, saveAccount: Bool? = true) {
+//        LocalStore.deleteAllData()
 
         let params = AuthenticateParams(userId: userId, accessToken: accessToken)
         SendBirdCall.authenticate(with: params) { (user, error) in
             print("authenticate", userId)
             PushRegistryHandler.shared.registerForDelegate()
-            LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: userId, accessToken: accessToken), key: storeType.userInfoKey)
+            if saveAccount == true {
+                LocalStore.saveData(dataSave: UserInfo(appId: eDoctorAppId, userId: userId, accessToken: accessToken), key: storeType.userInfoKey)
+            }
 
         }
         SendBirdCall.addDelegate(self, identifier: "com.edoctor.AppTestSDK")

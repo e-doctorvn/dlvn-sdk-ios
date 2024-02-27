@@ -113,7 +113,37 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
     }
 }
 
-public func removeChatDelegate() {
+public func removeChatDelegate(isShortLink: Bool? = false) {
+
+    if isShortLink == true {
+        print("vao1")
+        let userLogged = SendbirdChat.getCurrentUser()
+//        let tokenLogged: String? = LocalStore.getData(key: .tokenAccountShortLink)
+        let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
+        print("vao userLogged", userLogged?.userId)
+        print("vao tokenLogged", tokenStore)
+        
+        if userLogged == nil || tokenStore != nil {
+            return
+        }
+        
+        SendbirdChat.connect(userId: userLogged!.userId , authToken: tokenStore) { user, error in
+            print("vao2")
+            guard error == nil else {
+                return
+            }
+            
+            guard let token = SendbirdChat.getPendingPushToken() else { return }
+            SendbirdChat.unregisterPushToken(token) { error in
+                print("vao3")
+                guard error == nil else {return}
+                SendbirdChat.disconnect()
+                LocalStore.deleteData(key: .tokenAccountShortLink)
+            }
+        }
+        return
+    }
+    
     let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
     
     if userData == nil {return}
@@ -122,7 +152,7 @@ public func removeChatDelegate() {
     if userData?.accessToken == nil  {return}
     
     if SendbirdChat.getConnectState() == .open {
-        SendbirdChat.connect(userId: userData?.userId ?? "", authToken: userData?.accessToken ?? "") { user, error in
+        SendbirdChat.connect(userId: userData!.userId , authToken: userData!.accessToken) { user, error in
             
             guard error == nil else {
                 return
@@ -130,9 +160,7 @@ public func removeChatDelegate() {
             
             guard let token = SendbirdChat.getPendingPushToken() else { return }
             SendbirdChat.unregisterPushToken(token) { error in
-                guard error == nil else {
-                    return
-                }
+                guard error == nil else {return}
                 SendbirdChat.disconnect()
             }
         }

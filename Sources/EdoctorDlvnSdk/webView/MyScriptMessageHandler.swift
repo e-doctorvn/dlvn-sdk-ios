@@ -6,17 +6,21 @@
 //
 
 import WebKit
+import SendbirdChatSDK
+import SendBirdCalls
 
 class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     var onSdkRequestLogin: ((String) -> Void)?
     var onGoBack: (() -> Void)?
     var onCloseWebview: (() -> Void)?
+    var handleLoginAndAgree: (() -> Void)?
     
-    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?, handleLoginAndAgree: (() -> Void)?) {
         self.onSdkRequestLogin = onSdkRequestLogin
         self.onGoBack = onGoBack
         self.onCloseWebview = onCloseWebview
+        self.handleLoginAndAgree = handleLoginAndAgree
     }
     
     func noHandle(data : String) {
@@ -30,6 +34,8 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "myMessageHandler" {
             if let data = message.body as? String {
+                
+                print("1-a", data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
@@ -46,15 +52,11 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         (onSdkRequestLogin ?? noHandle)(dataReceiveType.data?.currentUrl ?? "")
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                         ControlerAlert.shared.reSetViewController()
-                    case activeChannelUrl:
-                        channel_url_active = dataReceiveType.channelUrl ?? "entry_channel_url"
-                    case requestUpdateApp:
-                        if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
-                            UIApplication.shared.open(url)
-                        }
+                        
                     case requiredClose:
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                         ControlerAlert.shared.reSetViewController()
+                        rollBackChatAndCall()
                     default:
                         print("default")
                     }
@@ -68,6 +70,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
         if message.name == "edoctorEventHandler" {
             if let data = message.body as? String {
                 
+                print("1-b", data)
                 do {
                     let dataReceiveType = try JSONDecoder().decode(DataReceiveType.self, from: data.data(using: .utf8)!)
                     
@@ -93,6 +96,14 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
                             UIApplication.shared.open(url)
                         }
+                    case "authenticate-short-link":
+                        
+                        if (dataReceiveType.edrToken != nil && dataReceiveType.userId != nil) {
+                            handleChatAndCall(userId: dataReceiveType.userId!, edrToken: dataReceiveType.edrToken!)
+                        }
+                    case "agree-consent":
+                        (handleLoginAndAgree ?? noHandle)()
+                       
                     default:
                         print("default")
                     }
@@ -106,9 +117,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
 
 class MyWebView: WKWebView {
 
-    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?) {
+    init(onSdkRequestLogin: ((String) -> Void)?, onGoBack: (() -> Void)?, onCloseWebview: (() -> Void)?, handleLoginAndAgree: (() -> Void)?) {
         
-        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoBack, onCloseWebview: onCloseWebview)
+        let scriptMessageHandler = MyScriptMessageHandler(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoBack, onCloseWebview: onCloseWebview, handleLoginAndAgree: handleLoginAndAgree)
         let userContentController = WKUserContentController()
         userContentController.add(scriptMessageHandler, name: "myMessageHandler")
         userContentController.add(scriptMessageHandler, name: "edoctorEventHandler")
@@ -148,10 +159,63 @@ struct DataReceiveType: Codable {
     let data: URLData?
     let url: String?
     let channelUrl: String?
+    let userId: String?
+    let edrToken: String?
+    let dlvnToken: String?
 }
 struct URLData: Codable{
     let currentUrl: String?
 }
 
 
+protocol WebViewDelegate {
+    func openURL(url: String)
+}
+
+class SomeClass {
+    var delegate: WebViewDelegate?
+
+    func doSomething() {
+        let parameter = "Some parameter"
+        delegate?.openURL(url: parameter)
+    }
+}
+
+func handleChatAndCall(userId: String, edrToken: String) {
+    let currentUser = SendbirdChat.getCurrentUser()
+    print("vao")
+    
+//    let currentUserStore: UserInfo? = LocalStore.getData(key: .userInfoKey)
+    
+    if currentUser?.userId == userId {
+        return
+    }
+    
+    if #available(iOS 14.3, *) {
+        deauthenticateEDR(clearCache: false)
+        authenticateEDRByToken(token: edrToken)
+    } else {
+        // Fallback on earlier versions
+    }
+    
+}
+
+func rollBackChatAndCall() {
+    let currentUser = SendbirdChat.getCurrentUser()
+    
+    let currentUserStore: UserInfo? = LocalStore.getData(key: .userInfoKey)
+    
+    if currentUser?.userId == currentUserStore?.userId {
+        return
+    }
+    
+    if #available(iOS 14.3, *) {
+        deauthenticateEDR(clearCache: false, isShortLink: true)
+        
+        firstConfigureCall()
+    } else {
+        // Fallback on earlier versions
+    }
+    
+}
 

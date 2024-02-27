@@ -142,12 +142,11 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
     
     task.resume()
 }
-
 @available(iOS 14.3, *)
-public func deauthenticateEDR() {
+public func deauthenticateEDR(clearCache : Bool? = true, isShortLink: Bool? = false) {
     SendBirdCallManager.shared.removeVoIPPushToken()
     SendBirdCall.removeAllDelegates()
-    removeChatDelegate()
+    removeChatDelegate(isShortLink: isShortLink)
     SendBirdCall.deauthenticate { error in
             if let error = error {
                 print("Error logging out from SendBird Calls: \(error.localizedDescription)")
@@ -156,8 +155,10 @@ public func deauthenticateEDR() {
             }
         }
     PushRegistryHandler.shared.deregisterPushRegistryDelegate()
-    LocalStore.deleteAllData()
     
+    if clearCache == true{
+        LocalStore.deleteAllData()
+    }
     
     clearWebViewCache()
 }
@@ -175,6 +176,39 @@ public func configAppId(appId: String) {
 @available(iOS 14.3, *)
 public func configAppIdAndLogin(appId: String, userId: String, accessToken: String) {
     SendBirdCallManager.shared.configure(appId: appId, userId: userId, accessToken: accessToken)
+}
+
+@available(iOS 14.3, *)
+public func authenticateEDRByToken(token: String) {
+    APIService.shared.startRequest(graphQLQuery: sendbirdAccount, token: token) { data, error in
+        if error != nil || data == nil {
+            return
+        }
+        if let jsonData = data!.data(using: .utf8) {
+            do {
+                if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                   let data = json["data"] as? [String: Any],
+                   let account = data["account"] as? [String: Any],
+
+                   let thirdParty = account["thirdParty"] as? [String: Any],
+                   let sendbird = thirdParty["sendbird"] as? [String: Any],
+                   let accountId = account["accountId"] as? String,
+                   let token = sendbird["token"] as? String {
+                    SendBirdCallManager.shared.login(userId: accountId, accessToken: token, saveAccount: false)
+                    SendBirdCallManager.shared.chatSetup(userId: accountId, accessToken: token)
+                    
+                    UserDefaults.standard.set(token, forKey: "edrTokenAccountShortLink")
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+    }
+}
+
+@available(iOS 14.3, *)
+public func firstConfigureCall() {
+    SendBirdCallManager.shared.firstConfigure()
 }
 
 @available(iOS 14.3, *)

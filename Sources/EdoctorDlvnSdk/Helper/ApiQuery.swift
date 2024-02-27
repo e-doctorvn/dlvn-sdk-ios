@@ -51,10 +51,43 @@ mutation EClinicEndCall($eClinicId: String!, $appointmentScheduleId: String!) {
 }
 """
 
+public let AppointmentDetail = """
+query AppointmentDetail($appointmentScheduleId: String) {
+  appointmentSchedules(appointmentScheduleId: $appointmentScheduleId) {
+    appointmentScheduleId
+    eClinic {
+      displayName
+      eClinicId
+      displayNameApp
+      avatar
+    }
+    doctor {
+      avatar
+      degree {
+        shortName
+      }
+      fullName
+    }
+    thirdParty {
+      sendbird {
+        channelUrl
+      }
+    }
+    
+  }
+}
+"""
+
 public let checkAccountExist = """
 query checkAccountExist($accountId: String, $phone: String) {
   checkAccountExist(accountId: $accountId, phone: $phone)
 }
+"""
+
+public let AccountUpdateAggrement = """
+mutation AccountUpdateAggrement($isAcceptAgreement: Date, $isAcceptShareInfo: Date) {
+      accountUpdateAggrement(isAcceptAgreement: $isAcceptAgreement, isAcceptShareInfo: $isAcceptShareInfo)
+    }
 """
 
 

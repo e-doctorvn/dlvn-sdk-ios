@@ -8,6 +8,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var data: [String: Any]? = nil
     var onClose: (() -> Void)?
     var isFromNotification: Bool
+    var encodedData: String?
     
     var onSdkRequestLogin: ((String) -> Void)?
     
@@ -16,7 +17,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var loaded: Bool = false
     
-    init(urlString: String?, onClose: (() -> Void)?, data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false) {
+    init(urlString: String?, onClose: (() -> Void)?, data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false, encodedData: String? = nil) {
         self.urlString = urlString ?? getUrlDefault()
         self.data = data
         self.isFromNotification = isFromNotification
@@ -24,10 +25,11 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         self.onClose = onClose
         self.onSdkRequestLogin = onSdkRequestLogin
         self.loaded = false
+        self.encodedData = encodedData
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleLoadUrl), name: .handleLoadUrl, object: nil)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -58,6 +60,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
             } else {
                 self.dismiss(animated: true)
                 ControlerAlert.shared.reSetViewController()
+                rollBackChatAndCall()
             }
 
         }
@@ -85,7 +88,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     private func _setUpWebView(){
-        webView = MyWebView(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoback, onCloseWebview: onCloseWebview)
+        webView = MyWebView(onSdkRequestLogin: onSdkRequestLogin, onGoBack: onGoback, onCloseWebview: onCloseWebview, handleLoginAndAgree: handleLoginAndAgree)
         webView.uiDelegate = self
   
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -95,8 +98,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.scrollView.bounces = false
   
         webView.navigationDelegate = self
-        
-        
 
     }
     
@@ -220,6 +221,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         // use to checking support consultant in web
         webView.evaluateJavaScript("sessionStorage.setItem('sdkSupportConsultant', \(true));");
         
+        
         if (onClose != nil || isFromNotification) {
             let dataTemp: DataLogin? = LocalStore.getData(key: .dataLogin)
             if dataTemp != nil && dataTemp?.deviceid != nil  {
@@ -234,33 +236,78 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         if (!loaded && (data != nil)) {
             webView.stopLoading()
-            DLVNSendData(data: data!) { status, error in
-                DispatchQueue.main.async { [self] in
-                    if status {
-   
-                        let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
-                        
-                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
-                        webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
-                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
+            
+            APIService.shared.startRequest(graphQLQuery: checkAccountExist, variables: ["phone" : data!["dcId"] as Any], isPublic: true) { dataCall, error in
+                
+                if let jsonData = dataCall!.data(using: .utf8) {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                           let reponseData = json["data"] as? [String: Any],
+                           let checkAccountExist = reponseData["checkAccountExist"] as? Bool {
+                            print("??okok")
+                            if checkAccountExist {
+                                print("okok1")
+                                self.handleLogin()
+                            } else {
+                                print("okok")
+                                webView.evaluateJavaScript("sessionStorage.setItem('consent', '\(true)');");
+                                self.loaded = true
+                                webView.reload()
+                            }
+                        }
 
-
-                        self.loaded = true
-                        webView.reload()
-                        
-                        // save
-                        let dataSave = DataLogin(partnerid: data!["partnerid"] as! String, deviceid: data!["deviceid"] as! String, dcId: data!["dcId"] as! String, token: data!["token"] as! String)
-                        
-                        LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
-
-                    } else {
-                        self.activityIndicator.stopAnimating()
-                        self.alertErrorWebView(from: self, content: error?.localizedDescription)
+                    } catch {
+                        print("Error: \(error)")
                     }
                 }
             }
         }
         
+    }
+    
+    func handleLoginAndAgree() {
+        handleLogin(callAgree: true)
+    }
+    
+    func handleLogin(callAgree: Bool? = false) {
+        DLVNSendData(data: self.data!) { status, error in
+            DispatchQueue.main.async { [self] in
+                if status {
+
+                    let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
+                    
+//                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+//                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+//                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
+                    
+                    webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
+                    webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
+                    webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
+
+                    self.loaded = true
+                    webView.reload()
+                    
+                    // save
+                    let dataSave = DataLogin(partnerid: data!["partnerid"] as! String, deviceid: data!["deviceid"] as! String, dcId: data!["dcId"] as! String, token: data!["token"] as! String)
+                    
+                    LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
+                    
+                    if callAgree == true {
+                        let variables : [String: Any] = [
+                            "isAcceptAgreement": true,
+                            "isAcceptShareInfo": true,
+                        ]
+                        print("dong y")
+                        APIService.shared.startRequest(graphQLQuery: AccountUpdateAggrement, variables: variables, isPublic: false) { dataCall, error in
+                        }
+                    }
+
+                } else {
+                    self.activityIndicator.stopAnimating()
+                    self.alertErrorWebView(from: self, content: error?.localizedDescription)
+                }
+            }
+        }
     }
     
 //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -277,6 +324,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         self.activityIndicator.stopAnimating()
         self.alertErrorWebView(from: self, content: error.localizedDescription)
     }
+    
     
     private func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
         decisionHandler(.allow)
@@ -337,10 +385,10 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
 }
 
+
 extension Notification.Name {
     static let handleLoadUrl = Notification.Name("handleLoadUrl")
 }
-
 
 
 
