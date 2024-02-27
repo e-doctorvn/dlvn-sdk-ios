@@ -270,44 +270,47 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     func handleLogin(callAgree: Bool? = false) {
-        DLVNSendData(data: self.data!) { status, error in
-            DispatchQueue.main.async { [self] in
-                if status {
+        if (self.data != nil) {
+            DLVNSendData(data: self.data!) { status, error in
+                DispatchQueue.main.async { [self] in
+                    if status {
 
-                    let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
-                    
-//                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
-//                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
-                    
-                    webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
-                    webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
-                    webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
+                        let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
+                        
+    //                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
+    //                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
+    //                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
+                        
+                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
+                        webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
+                        webView.evaluateJavaScript("sessionStorage.setItem('accessTokenDlvn', '\(data!["token"] ?? "")');");
 
-                    self.loaded = true
-                    webView.reload()
-                    
-                    // save
-                    let dataSave = DataLogin(partnerid: data!["partnerid"] as! String, deviceid: data!["deviceid"] as! String, dcId: data!["dcId"] as! String, token: data!["token"] as! String)
-                    
-                    LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
-                    
-                    if callAgree == true {
-                        let variables : [String: Any] = [
-                            "isAcceptAgreement": true,
-                            "isAcceptShareInfo": true,
-                        ]
-                        print("dong y")
-                        APIService.shared.startRequest(graphQLQuery: AccountUpdateAggrement, variables: variables, isPublic: false) { dataCall, error in
+                        self.loaded = true
+                        webView.reload()
+                        
+                        // save
+                        let dataSave = DataLogin(partnerid: data!["partnerid"] as! String, deviceid: data!["deviceid"] as! String, dcId: data!["dcId"] as! String, token: data!["token"] as! String)
+                        
+                        LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
+                        
+                        if callAgree == true {
+                            let variables : [String: Any] = [
+                                "isAcceptAgreement": true,
+                                "isAcceptShareInfo": true,
+                            ]
+                            print("dong y")
+                            APIService.shared.startRequest(graphQLQuery: AccountUpdateAggrement, variables: variables, isPublic: false) { dataCall, error in
+                            }
                         }
-                    }
 
-                } else {
-                    self.activityIndicator.stopAnimating()
-                    self.alertErrorWebView(from: self, content: error?.localizedDescription)
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                        self.alertErrorWebView(from: self, content: error?.localizedDescription)
+                    }
                 }
             }
         }
+
     }
     
 //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
