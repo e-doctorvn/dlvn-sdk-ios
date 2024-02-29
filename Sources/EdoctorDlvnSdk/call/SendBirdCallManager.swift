@@ -78,7 +78,7 @@ public class SendBirdCallManager: NSObject {
     public func chatSetup(userId: String? = nil, accessToken: String? = nil) {
        
         let deviceToken: Data? = LocalStore.getData(key: .deviceToken)
-        print("chatSetup", deviceToken)
+        
         if deviceToken == nil {
             return
         }
@@ -112,12 +112,43 @@ public class SendBirdCallManager: NSObject {
             } else {
                 let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
                 if userData != nil {
-                    SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
-                        print("authen chat", userData!.userId)
-                        guard error == nil else {return}
-                        SendbirdChat.registerDevicePushToken(deviceToken!, unique: false) { status, error in
-                            if error == nil {
-                                print("registerDevicePushToken success")
+                    
+                    let currentUser = SendbirdChat.getCurrentUser()
+                    let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
+                    
+                    if currentUser != nil && currentUser?.userId != userData?.userId && tokenStore != nil {
+                        SendbirdChat.connect(userId: currentUser!.userId, authToken: tokenStore) { user, error in
+                            guard error == nil else {
+                                return
+                            }
+                            
+                            guard let token = SendbirdChat.getPendingPushToken() else { return }
+                            SendbirdChat.unregisterPushToken(token) { error in
+                                guard error == nil else {return}
+                                SendbirdChat.disconnect() {
+                                    LocalStore.deleteData(key: .tokenAccountShortLink)
+                                    
+                                    SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+                                        guard error == nil else {return}
+                                        
+                                        SendbirdChat.registerDevicePushToken(deviceToken!, unique: false) { status, error in
+                                            if error == nil {
+                                                print("registerDevicePushToken success")
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                    } else {
+                        SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
+                            print("authen chat", userData!.userId)
+                            guard error == nil else {return}
+                            SendbirdChat.registerDevicePushToken(deviceToken!, unique: false) { status, error in
+                                if error == nil {
+                                    print("registerDevicePushToken success")
+                                }
                             }
                         }
                     }

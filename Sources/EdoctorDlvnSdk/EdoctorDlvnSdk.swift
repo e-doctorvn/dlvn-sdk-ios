@@ -10,6 +10,7 @@ import SwiftUI
 import WebKit
 import Foundation
 import SendBirdCalls
+import SendbirdChatSDK
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false) {
     
@@ -69,7 +70,19 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                     print("Lỗi: \(error)")
                     completion(false, error)
                 } else {
-//                    SendBirdCallManager.shared.firstConfigure()
+                    if #available(iOS 14.3, *) {
+                        let chatUser = SendbirdChat.getCurrentUser()
+                        let callUser = SendBirdCall.currentUser
+                        let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+                        
+                        if (callUser?.userId != chatUser?.userId || callUser?.userId != userData?.userId || userData == nil)  {
+                            SendBirdCallManager.shared.firstConfigure()
+                        }
+
+                    } else {
+                        // Fallback on earlier versions
+                    }
+
                     completion(true, nil)
                 }
             }

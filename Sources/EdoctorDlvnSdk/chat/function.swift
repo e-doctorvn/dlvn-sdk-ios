@@ -11,70 +11,12 @@ import UserNotifications
 import UIKit
 
 public func handleRegistriNotification(deviceToken: Data) {
-    
     LocalStore.saveData(dataSave: deviceToken, key: .deviceToken)
-    
-    SendbirdChat.setPushTriggerOption(.all) { error in
-        guard error == nil else {return}
+    if #available(iOS 14.3, *) {
+        SendBirdCallManager.shared.firstConfigure()
+    } else {
+        // Fallback on earlier versions
     }
-    
-    let initParams = InitParams(
-        applicationId: eDoctorAppId,
-        isLocalCachingEnabled: true,
-        logLevel: .none
-    )
-    
-    SendbirdChat.initialize(params: initParams, migrationStartHandler: {
-        // Xử lý khi quá trình di chuyển bắt đầu (nếu cần)
-    }, completionHandler: { error in
-        
-        guard error == nil else {return}
-        
-        let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
-        if userData != nil {
-            
-            let currentUser = SendbirdChat.getCurrentUser()
-            let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
-            
-            if currentUser != nil && currentUser?.userId != userData?.userId && tokenStore != nil {
-                SendbirdChat.connect(userId: currentUser!.userId, authToken: tokenStore) { user, error in
-                    guard error == nil else {
-                        return
-                    }
-                    
-                    guard let token = SendbirdChat.getPendingPushToken() else { return }
-                    SendbirdChat.unregisterPushToken(token) { error in
-                        guard error == nil else {return}
-                        SendbirdChat.disconnect() {
-                            LocalStore.deleteData(key: .tokenAccountShortLink)
-                            
-                            SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
-                                guard error == nil else {return}
-                                SendbirdChat.registerDevicePushToken(deviceToken, unique: false) { status, error in
-                                    if error == nil {
-                                        print("registerDevicePushToken success")
-                                    }
-                                }
-                            }
-                        }
-   
-                    }
-                }
-            } else {
-                SendbirdChat.connect(userId: userData!.userId, authToken: userData!.accessToken) { user, error in
-                    print("authen chat", userData!.userId)
-                    guard error == nil else {return}
-                    SendbirdChat.registerDevicePushToken(deviceToken, unique: false) { status, error in
-                        if error == nil {
-                            print("registerDevicePushToken success")
-                        }
-                    }
-                }
-            }
-            
-
-        }
-    })
 }
 
 public func authenticateChatEDR() {

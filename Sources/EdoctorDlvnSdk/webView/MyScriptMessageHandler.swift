@@ -103,7 +103,10 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         }
                     case "agree-consent":
                         (handleLoginAndAgree ?? noHandle)()
-                       
+                    case "authenticate-sendbird":
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                            handleLoginSendbird()
+                        }
                     default:
                         print("default")
                     }
@@ -219,3 +222,16 @@ func rollBackChatAndCall() {
     
 }
 
+func handleLoginSendbird() {
+    if #available(iOS 14.3, *) {
+        let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+        if userData != nil {
+            let currentUser = SendbirdChat.getCurrentUser()
+            if currentUser == nil || currentUser?.userId != userData?.userId {
+                firstConfigureCall()
+            }
+        }
+    } else {
+        // Fallback on earlier versions
+    }
+}
