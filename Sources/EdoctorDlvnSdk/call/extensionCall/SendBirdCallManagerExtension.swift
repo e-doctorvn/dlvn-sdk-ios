@@ -17,52 +17,43 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     
     public func didStartRinging(_ call: DirectCall) {
         let name = "BS. \(call.caller?.nickname ?? "")"
-        if #available(iOS 13, *) {
-            call.delegate = self // To receive call event through `DirectCallDelegate`
-            
+        DoctorInfomation.shared.getDoctor(variables: call.customItems)
+        call.delegate = self // To receive call event through `DirectCallDelegate`
+        
 //            AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            
-            guard let uuid = call.callUUID else { return }
-            guard CXCallManager.shared.shouldProcessCall(for: uuid) else { return }  // Should be cross-checked with state to prevent weird event processings
-            
-            let update = CXCallUpdate()
-            update.remoteHandle = CXHandle(type: .generic, value: name)
-            update.hasVideo = call.isVideoCall
-            update.localizedCallerName = "BS. \(call.caller?.nickname ?? "...")"
-            
-            
-            print("==>", call.customItems)
-            DirectCallManager.shared.setDirectCall(directCall: call)
-            
-            if SendBirdCall.getOngoingCallCount() > 1 {
-                print("==> getOngoingCallCount")
-                // Allow only one ongoing call.
-                CXCallManager.shared.reportIncomingCall(with: uuid, update: update) { _ in
-                    CXCallManager.shared.endCall(for: uuid, endedAt: Date(), reason: .declined)
-                }
-                call.end()
-            } else {
-                // Report the incoming call to the system
-                CallStatusManager.shared.setCallStatus(value: .comming)
-                if UIApplication.shared.applicationState == UIApplication.State.active{
-                    DispatchQueue.main.async {
-                        inCommingCall(controller: ControlerAlert.shared.viewController, call: call, isPushNoti: false)
-                    }
-                } else {
-                    CXCallManager.shared.reportIncomingCall(with: uuid, update: update)
-                }
-
+        
+        guard let uuid = call.callUUID else { return }
+        guard CXCallManager.shared.shouldProcessCall(for: uuid) else { return }  // Should be cross-checked with state to prevent weird event processings
+        
+        let update = CXCallUpdate()
+        update.remoteHandle = CXHandle(type: .generic, value: name)
+        update.hasVideo = call.isVideoCall
+        update.localizedCallerName = "BS. \(call.caller?.nickname ?? "...")"
+        
+        
+        print("==>", call.customItems)
+        DirectCallManager.shared.setDirectCall(directCall: call)
+        
+        if SendBirdCall.getOngoingCallCount() > 1 {
+            print("==> getOngoingCallCount")
+            // Allow only one ongoing call.
+            CXCallManager.shared.reportIncomingCall(with: uuid, update: update) { _ in
+                CXCallManager.shared.endCall(for: uuid, endedAt: Date(), reason: .declined)
             }
+            call.end()
         } else {
-            
-            if (ControlerAlert.shared.viewController != nil) {
+            // Report the incoming call to the system
+            CallStatusManager.shared.setCallStatus(value: .comming)
+            if UIApplication.shared.applicationState == UIApplication.State.active{
+                DispatchQueue.main.async {
+                    inCommingCall(controller: ControlerAlert.shared.viewController, call: call, isPushNoti: false)
+                }
 
-                
-                openAlert(from: ControlerAlert.shared.viewController!, content: "có cuộc gọi \(name), Phiên bản hiện tại của bạn không hỗ trợ chức năng tư vấn, vui lòng upgrade os")
+            } else {
+                CXCallManager.shared.reportIncomingCall(with: uuid, update: update)
             }
+
         }
-        
-        
     }
     
     public func didEstablish(_ call: DirectCall) {
@@ -90,7 +81,7 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
                 CallStatusManager.shared.setCallStatus(value: .calling)
             }
         }
-        CountDownManager.shared.startCountDown(remainingTime: 60)
+//        CountDownManager.shared.startCountDown(remainingTime: 60)
 
 
     }
@@ -101,6 +92,8 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     
     public func didEnd(_ call: DirectCall) {
 
+        DoctorInfomation.shared.reset()
+        ControlerAlert.shared.reSetViewController()
         
         var callId: UUID = UUID()
         if let callUUID = call.callUUID {

@@ -34,6 +34,12 @@ public class SendBirdCallManager: NSObject {
         
         SendBirdCall.configure(appId: eDoctorAppId)
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+        
+        let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
+        if tokenStore != nil {
+            deauthenticateEDR(clearCache: false, isShortLink: true)
+        }
+
         if (false) { // disable login local === userData != nil
             login( userId: userData!.userId, accessToken: userData!.accessToken)
             self.chatSetup()

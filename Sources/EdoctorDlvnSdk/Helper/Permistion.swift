@@ -7,6 +7,7 @@
 
 import AVFoundation
 import UserNotifications
+import UIKit
 
 public func requestPermissions() {
     requestCameraPermission()
@@ -18,9 +19,24 @@ public func requestCameraPermission() {
         if granted {
             print("Camera permission granted.")
         } else {
+            if #available(iOS 14.3, *) {
+                DirectCallManager.shared.endCallFast()
+            } else {
+                // Fallback on earlier versions
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                openAlertgoSetting(content: "Cần quyền camera để gọi video")
+            }
             print("Camera permission denied.")
         }
     }
+}
+
+func checkCameraAndMicrophonePermissions() -> Bool {
+    let cameraPermission = AVCaptureDevice.authorizationStatus(for: .video)
+    let microphonePermission = AVCaptureDevice.authorizationStatus(for: .audio)
+    
+    return cameraPermission == .authorized && microphonePermission == .authorized
 }
 
 public func requestMicrophonePermission() {
@@ -28,7 +44,42 @@ public func requestMicrophonePermission() {
         if granted {
             print("Microphone permission granted.")
         } else {
-            print("Microphone permission denied.")
+            if #available(iOS 14.3, *) {
+                DirectCallManager.shared.endCallFast()
+            } else {
+                // Fallback on earlier versions
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                openAlertgoSetting(content: "Cần quyền mic để gọi")
+            }
+
         }
     }
+}
+
+public func openAlertgoSetting(content: String) {
+    
+    let alertController = UIAlertController(title: "Thông báo", message: "\(content)", preferredStyle: .alert)
+
+    let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                print("Settings opened: \(success)")
+            })
+        }
+    }
+    alertController.addAction(settingsAction)
+    print("===1")
+    
+    if (ControlerAlert.shared.viewController == nil) {
+        return
+    }
+
+    ControlerAlert.shared.viewController!.present(alertController, animated: true, completion: nil)
+    print("===2")
 }

@@ -44,3 +44,38 @@ func convertDictionaryToString(dictionary: [AnyHashable: Any]) -> String? {
     }
     return nil
 }
+
+@available(iOS 14.3, *)
+func startCountDownDuration(callDuration: TimeInterval) {
+    print("callDuration", callDuration)
+    DispatchQueue.main.async {
+        CountDownManager.shared.startCountDown(remainingTime: callDuration/1000)
+    }
+
+}
+
+func handleCountDown(reponseData: String) {
+    if let jsonData = reponseData.data(using: .utf8) {
+        do {
+            if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+               let data = json["data"] as? [String: Any],
+               let eClinicApprove = data["eClinicApprove"] as? [String: Any],
+               let callDuration = eClinicApprove["callDuration"] as? TimeInterval,
+               let product = eClinicApprove["product"] as? [String: Any],
+               let packages = product["packages"] as? [Any],
+               let packagesItem = packages[0] as? [String: Any],
+               let time = packagesItem["time"] as? TimeInterval {
+                let totaltime = time*60000
+                let result = totaltime - callDuration
+                if #available(iOS 14.3, *) {
+                    startCountDownDuration(callDuration: result > 0 ? result : 300)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+}

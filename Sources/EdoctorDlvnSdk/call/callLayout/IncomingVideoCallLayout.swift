@@ -17,7 +17,11 @@ struct IncomingVideoCallLayout: View {
     
     @State private var isAnimating = false
     
+    @State private var alearNoPermission = false
+    
     @State private var secondsRemaining = 59
+    
+    @ObservedObject var doctorInfomation = DoctorInfomation.shared
     var timer: Timer {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if self.secondsRemaining > 0 {
@@ -29,7 +33,7 @@ struct IncomingVideoCallLayout: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                BackgroundImage(UrlString: directCallManager.directCall?.caller?.profileURL, blur: 5)
+                BackgroundImage(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, blur: 5)
                      .frame(maxWidth: geometry.size.width, maxHeight: geometry.size.height)
                 
                 
@@ -53,14 +57,14 @@ struct IncomingVideoCallLayout: View {
                                 isAnimating.toggle()
                             }
                             
-                            AvatarView(UrlString: directCallManager.directCall?.caller?.profileURL, size: 60)
+                            AvatarView(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, size: 60)
                                 .equatable()
                                 
                         }
                         
                         VStack {
                             HStack {
-                                Text("BS.\(directCallManager.directCall?.caller?.nickname ?? "")")
+                                Text((doctorInfomation.doctor.fullName == "" ? "BS.\(directCallManager.directCall?.caller?.nickname ?? "")" : doctorInfomation.doctor.fullName)!)
                                     .font(
                                     Font.custom("Inter", size: 24)
                                     .weight(.medium)
@@ -121,10 +125,18 @@ struct IncomingVideoCallLayout: View {
                             
                             VStack {
                                 Button(action: {
-                                    DispatchQueue.main.async {
-                                        directCallManager.acceptCall(isMicOn: isMicMuted, isCamOn: isCameraOff)
-                                        APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
+                                    if checkCameraAndMicrophonePermissions() {
+                                        DispatchQueue.main.async {
+                                            directCallManager.acceptCall(isMicOn: isMicMuted, isCamOn: isCameraOff)
+                                            APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in
+                                                guard error == nil else {return}
+                                                handleCountDown(reponseData: data ?? "")
+                                            }
+                                        }
+                                    } else {
+                                        alearNoPermission = true
                                     }
+
                                 }) {
                                     Image(systemName: "phone.fill")
                                         .font(.system(size: 30))
@@ -205,9 +217,25 @@ struct IncomingVideoCallLayout: View {
                     Spacer()
                     
                 }.padding(.horizontal, 32)
+                    .alert(isPresented: $alearNoPermission) {
+                           Alert(title: Text("Thông báo"),
+                                 message: Text("Cần có quyền camera và microphone để thực hiện cuộc gọi"),
+                                 dismissButton: .default(Text("Settings"), action: {
+                               directCallManager.endCallFast()
+                               let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+                               if UIApplication.shared.canOpenURL(settingsURL) {
+                                          UIApplication.shared.open(settingsURL)
+                               }
+                                         })
+                           )
+                       }
 
                 
             }
+        }
+        .onAppear {
+            DoctorInfomation.shared.getDoctor(variables: directCallManager.directCall?.customItems ?? [:])
+            requestPermissions()
         }
         .edgesIgnoringSafeArea(.bottom)
     }

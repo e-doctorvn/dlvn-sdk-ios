@@ -21,11 +21,12 @@ struct SendBirdVideoViewWrapper: UIViewRepresentable {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.3, *)
 struct WebViewWrapper: UIViewControllerRepresentable, Equatable {
     
     func makeUIViewController(context: Context) -> UIViewController {
-        return  WebViewController(urlString: "https://e-doctor.dev/phase2/tu-van-suc-khoe/phong-tu-van", onClose: onClose)
+        let url = getUrlDefault() + "/phong-tu-van?channel=" + DoctorInfomation.shared.doctor.channelUrl!
+        return  WebViewController(urlString: url, onClose: onClose)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

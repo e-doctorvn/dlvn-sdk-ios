@@ -90,7 +90,6 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
 public func removeChatDelegate(isShortLink: Bool? = false) {
 
     if isShortLink == true {
-        print("vao1")
         let userLogged = SendbirdChat.getCurrentUser()
 //        let tokenLogged: String? = LocalStore.getData(key: .tokenAccountShortLink)
         let tokenStore = UserDefaults.standard.string(forKey: "edrTokenAccountShortLink")
@@ -100,14 +99,12 @@ public func removeChatDelegate(isShortLink: Bool? = false) {
         }
         
         SendbirdChat.connect(userId: userLogged!.userId , authToken: tokenStore) { user, error in
-            print("vao2")
             guard error == nil else {
                 return
             }
             
             guard let token = SendbirdChat.getPendingPushToken() else { return }
             SendbirdChat.unregisterPushToken(token) { error in
-                print("vao3")
                 guard error == nil else {return}
                 SendbirdChat.disconnect()
                 LocalStore.deleteData(key: .tokenAccountShortLink)

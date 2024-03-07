@@ -16,13 +16,14 @@ struct VideoCallScreen: View {
     @State private var isFrontCam = true
     
     @ObservedObject var counDownManager = CountDownManager.shared
+    @ObservedObject var doctorInfomation = DoctorInfomation.shared
     @State private var isPiPMode = false
     var body: some View {
 
             GeometryReader { geometry in
                 ZStack {
                     
-                    BackgroundImage(UrlString: directCallManager.directCall?.caller?.profileURL, blur: 5)
+                    BackgroundImage(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, blur: 5)
                          .frame(maxWidth: geometry.size.width, maxHeight: geometry.size.height)
                     
                     
@@ -188,7 +189,7 @@ struct VideoCallScreen: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                    
+                                        print("==> data nè", DirectCallManager.shared.directCall?.customItems)
                                         APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
                                         directCallManager.endCall()
                                     }) {
@@ -228,6 +229,7 @@ struct VideoCallScreen: View {
                 .onAppear {
                     isLocalAudioEnabled = directCallManager.directCall?.isLocalAudioEnabled ?? true
                     isLocalVideoEnabled = directCallManager.directCall?.isLocalVideoEnabled ?? true
+                    requestPermissions()
                 }
             }
    
@@ -240,6 +242,20 @@ struct VideoCallScreen: View {
 //        VideoCallScreen()
 //    }
 //}
+
+
+
+struct PiPView: UIViewControllerRepresentable {
+    let playerViewController: AVPlayerViewController
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        return playerViewController
+    }
+
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        // Update any properties or configurations as needed.
+    }
+}
 
 
 @available(iOS 14.3, *)
@@ -278,7 +294,6 @@ struct LocalVideoView: View {
             .position(x: UIScreen.main.bounds.width - 75, y: UIScreen.main.bounds.height - 100)
     }
 }
-
 @available(iOS 14.3, *)
 struct ViewRepresentable: UIViewRepresentable {
     let view: UIView

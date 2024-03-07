@@ -17,6 +17,7 @@ struct VideoCallWithChatLayout: View {
     @State private var isScaled = true
     
     @ObservedObject var counDownManager = CountDownManager.shared
+    @ObservedObject var doctorInfomation = DoctorInfomation.shared
     
     @State private var isLocalAudioEnabled = true
     @State private var isLocalVideoEnabled = true
@@ -27,7 +28,7 @@ struct VideoCallWithChatLayout: View {
                 WebViewWrapper().equatable()
                 ZStack {
                     ZStack {
-                        BackgroundImage(UrlString: directCallManager.directCall?.caller?.profileURL, blur: 5)
+                        BackgroundImage(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, blur: 5)
                             .frame(width: 120, height: 180)
                         
                         
@@ -144,6 +145,7 @@ struct VideoCallWithChatLayout: View {
                     }) {
                         Image(systemName: "arrow.down.backward.and.arrow.up.forward")
                             .frame(width: 20, height: 20)
+                            .scaledToFit()
                             .font(.system(size: 22))
                             .foregroundColor(Color.white)
                     }
