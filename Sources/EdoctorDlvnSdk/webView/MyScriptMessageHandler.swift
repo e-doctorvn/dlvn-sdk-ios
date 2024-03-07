@@ -186,9 +186,6 @@ class SomeClass {
 
 func handleChatAndCall(userId: String, edrToken: String) {
     let currentUser = SendbirdChat.getCurrentUser()
-    print("vao")
-    
-//    let currentUserStore: UserInfo? = LocalStore.getData(key: .userInfoKey)
     
     if currentUser?.userId == userId {
         return
@@ -225,11 +222,9 @@ func rollBackChatAndCall() {
 func handleLoginSendbird() {
     if #available(iOS 14.3, *) {
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
-        if userData != nil {
-            let currentUser = SendbirdChat.getCurrentUser()
-            if currentUser == nil || currentUser?.userId != userData?.userId {
-                firstConfigureCall()
-            }
+        let currentUser = SendbirdChat.getCurrentUser()
+        if (currentUser == nil || currentUser?.userId != userData?.userId) {
+            firstConfigureCall()
         }
     } else {
         // Fallback on earlier versions

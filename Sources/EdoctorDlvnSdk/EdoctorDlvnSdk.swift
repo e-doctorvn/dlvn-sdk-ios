@@ -75,7 +75,7 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                         let callUser = SendBirdCall.currentUser
                         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
                         
-                        if (callUser?.userId != chatUser?.userId || callUser?.userId != userData?.userId || userData == nil)  {
+                        if (callUser?.userId != chatUser?.userId || callUser?.userId != userData?.userId || userData == nil || chatUser?.userId == nil || callUser?.userId == nil)  {
                             SendBirdCallManager.shared.firstConfigure()
                         }
 
@@ -184,11 +184,6 @@ public func logInSendBird(userId: String, accessToken: String) {
 @available(iOS 14.3, *)
 public func configAppId(appId: String) {
     SendBirdCallManager.shared.configure(appId: appId)
-}
-
-@available(iOS 14.3, *)
-public func configAppIdAndLogin(appId: String, userId: String, accessToken: String) {
-    SendBirdCallManager.shared.configure(appId: appId, userId: userId, accessToken: accessToken)
 }
 
 @available(iOS 14.3, *)

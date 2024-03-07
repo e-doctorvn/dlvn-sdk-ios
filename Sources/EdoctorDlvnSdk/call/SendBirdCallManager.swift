@@ -29,17 +29,12 @@ public class SendBirdCallManager: NSObject {
 
         }
     }
-
-    public func configure(appId: String, userId: String, accessToken: String) {
-        SendBirdCall.configure(appId: appId)
-        login(userId: userId, accessToken: accessToken)
-    }
     
     public func firstConfigure() {
         
         SendBirdCall.configure(appId: eDoctorAppId)
         let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
-        if userData != nil {
+        if (false) { // disable login local === userData != nil
             login( userId: userData!.userId, accessToken: userData!.accessToken)
             self.chatSetup()
         } else {
