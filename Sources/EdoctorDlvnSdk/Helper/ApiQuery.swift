@@ -20,6 +20,7 @@ public let eClinicApproveCall: String = """
       eClinicApprove(eClinicId: $eClinicId, appointmentScheduleId: $appointmentScheduleId) {
         appointmentScheduleId
         state
+        callDuration
         product {
           packages {
             ... on ProductPackageVideo {
