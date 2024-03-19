@@ -34,8 +34,36 @@ struct WebViewWrapper: UIViewControllerRepresentable, Equatable {
     }
     
     func onClose() {
-        CallStatusManager.shared.setCallStatus(value: .videoCalling)
+        if CallStatusManager.shared.callStatus == .finish {
+            CallStatusManager.shared.setCallStatus(value: .none)
+        } else {
+            CallStatusManager.shared.setCallStatus(value: .videoCalling)
+        }
     }
 
 
+}
+
+extension UIApplication {
+    class func topViewController() -> UIViewController? {
+        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
+            return nil
+        }
+        return topViewController(for: window.rootViewController)
+    }
+    
+    private class func topViewController(for viewController: UIViewController?) -> UIViewController? {
+        if let navigationController = viewController as? UINavigationController {
+            return topViewController(for: navigationController.visibleViewController)
+        }
+        if let tabBarController = viewController as? UITabBarController {
+            if let selectedViewController = tabBarController.selectedViewController {
+                return topViewController(for: selectedViewController)
+            }
+        }
+        if let presentedViewController = viewController?.presentedViewController {
+            return topViewController(for: presentedViewController)
+        }
+        return viewController
+    }
 }

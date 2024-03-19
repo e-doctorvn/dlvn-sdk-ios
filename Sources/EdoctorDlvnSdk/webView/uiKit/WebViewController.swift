@@ -237,30 +237,28 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         if (!loaded && (data != nil)) {
             webView.stopLoading()
             
-            APIService.shared.startRequest(graphQLQuery: checkAccountExist, variables: ["phone" : data!["dcId"] as Any], isPublic: true) { dataCall, error in
-                
-                if let jsonData = dataCall!.data(using: .utf8) {
-                    do {
-                        if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-                           let reponseData = json["data"] as? [String: Any],
-                           let checkAccountExist = reponseData["checkAccountExist"] as? Bool {
-                            print("??okok")
-                            if checkAccountExist {
-                                print("okok1")
-                                self.handleLogin()
-                            } else {
-                                print("okok")
-                                webView.evaluateJavaScript("sessionStorage.setItem('consent', '\(true)');");
-                                self.loaded = true
-                                webView.reload()
-                            }
-                        }
-
-                    } catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
+            handleLogin()
+//            APIService.shared.startRequest(graphQLQuery: checkAccountExist, variables: ["phone" : data!["dcId"] as Any], isPublic: true) { dataCall, error in
+//                
+//                if let jsonData = dataCall!.data(using: .utf8) {
+//                    do {
+//                        if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+//                           let reponseData = json["data"] as? [String: Any],
+//                           let checkAccountExist = reponseData["checkAccountExist"] as? Bool {
+//                            if checkAccountExist {
+//                                self.handleLogin()
+//                            } else {
+//                                webView.evaluateJavaScript("sessionStorage.setItem('consent', '\(true)');");
+//                                self.loaded = true
+//                                webView.reload()
+//                            }
+//                        }
+//
+//                    } catch {
+//                        print("Error: \(error)")
+//                    }
+//                }
+//            }
         }
         
     }
@@ -276,10 +274,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                     if status {
 
                         let dlvnToken: EdoctorOutputResult? = LocalStore.getData(key: storeType.EdoctorDLVNAccessTokenKey)
-                        
-    //                        webView.evaluateJavaScript("document.cookie=\"accessToken=\(dlvnToken?.accessToken ?? ""); path=/\"")
-    //                        webView.evaluateJavaScript("document.cookie=\"upload_token=\(dlvnToken?.accessToken ?? ""); path=/\"")
-    //                        webView.evaluateJavaScript("document.cookie=\"accessTokenDlvn=\(data!["token"] ?? ""); path=/\"")
                         
                         webView.evaluateJavaScript("sessionStorage.setItem('accessTokenEdr', '\(dlvnToken?.accessToken ?? "")');");
                         webView.evaluateJavaScript("sessionStorage.setItem('upload_token', '\(dlvnToken?.accessToken ?? "")');");
@@ -298,7 +292,6 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                                 "isAcceptAgreement": true,
                                 "isAcceptShareInfo": true,
                             ]
-                            print("dong y")
                             APIService.shared.startRequest(graphQLQuery: AccountUpdateAggrement, variables: variables, isPublic: false) { dataCall, error in
                             }
                         }

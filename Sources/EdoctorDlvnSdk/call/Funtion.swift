@@ -28,7 +28,7 @@ public func startVideoCallLayout(calleeId: String, isVideoCall: Bool) {
 
 
 @available(iOS 14.3, *)
-public func inCommingCall(controller: UIViewController? = nil, call: DirectCall, isPushNoti: Bool?) {
+public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
 
     if isPushNoti != true {
         CallStatusManager.shared.setCallStatus(value: .comming)
@@ -40,10 +40,10 @@ public func inCommingCall(controller: UIViewController? = nil, call: DirectCall,
     let hostingController = UIHostingController(rootView: inCommingCall)
     hostingController.modalPresentationStyle = .fullScreen
     
-    if controller != nil {
-        controller!.present(hostingController, animated: true, completion: nil)
-    } else if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
-        currentViewController.present(hostingController, animated: true, completion: nil)
+    DispatchQueue.main.async {
+        if let currentViewController = UIApplication.topViewController() {
+            currentViewController.present(hostingController, animated: true, completion: nil)
+        }
     }
 }
 

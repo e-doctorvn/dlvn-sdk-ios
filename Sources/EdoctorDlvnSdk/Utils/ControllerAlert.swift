@@ -14,7 +14,7 @@ public class ControlerAlert {
     static let shared = ControlerAlert()
     var isActive = false
     
-    public var viewController: UIViewController? = UIApplication.shared.windows.first?.rootViewController
+    public var viewController: UIViewController? = UIApplication.topViewController()
     
     public func setViewController(value : UIViewController) {
         DispatchQueue.main.async {
@@ -23,9 +23,10 @@ public class ControlerAlert {
         }
     }
     
+    
     public func reSetViewController() {
         DispatchQueue.main.async {
-            self.viewController = UIApplication.shared.windows.first?.rootViewController
+            self.viewController = UIApplication.topViewController()
             self.isActive = false
         }
 

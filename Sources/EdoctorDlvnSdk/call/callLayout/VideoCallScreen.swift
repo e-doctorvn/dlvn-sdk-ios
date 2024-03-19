@@ -13,6 +13,10 @@ struct VideoCallScreen: View {
     @State private var isLocalVideoEnabled = true
     @State private var isCallActive = true
     
+    @State private var showToast = false
+    @State private var changeMic = true
+    
+    
     @State private var isFrontCam = true
     
     @ObservedObject var counDownManager = CountDownManager.shared
@@ -115,9 +119,9 @@ struct VideoCallScreen: View {
                                       .font(Font.custom("Inter", size: 11))
                                       .foregroundColor(.white)
                                       .onChange(of: counDownManager.remainingTime) { newValue in
-    //                                      if newValue == 0 {
-    //                                          directCallManager.endCall()
-    //                                      }
+//                                          if newValue == 0 {
+//                                              directCallManager.endCall()
+//                                          }
                                       }
                                 }
                                 .padding(.horizontal, 8)
@@ -128,6 +132,35 @@ struct VideoCallScreen: View {
                                 .padding(.bottom, 16)
                                 
                                 HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
+                                    }) {
+                                        VStack {
+                                            Image("chatImage")
+                                                .frame(width: 50, height: 50)
+                                                .font(.system(size: 22))
+                                                .foregroundColor(Color.white)
+                                                .background(Color(red: 0.78, green: 0.51, blue: 0.35))
+                                                .clipShape(Circle())
+                                            Text("Chat")
+                                                .padding(.top, 12)
+                                                .font(
+                                                    Font.custom("Inter", size: 14)
+                                                        .weight(.medium)
+                                                )
+                                                .multilineTextAlignment(.center)
+                                                .foregroundColor(.white)
+                                            
+                                        }
+                                    }
+                                    .onChange(of: isLocalAudioEnabled) { newValue in
+                                        if newValue {
+                                            directCallManager.directCall?.unmuteMicrophone()
+                                        } else {
+                                            directCallManager.directCall?.muteMicrophone()
+                                        }
+                                    }
                                     Spacer()
                                     Button(action: {
                                         isLocalAudioEnabled.toggle()
@@ -151,6 +184,8 @@ struct VideoCallScreen: View {
                                         }
                                     }
                                     .onChange(of: isLocalAudioEnabled) { newValue in
+                                        changeMic = true
+                                        showToast = true
                                         if newValue {
                                             directCallManager.directCall?.unmuteMicrophone()
                                         } else {
@@ -169,7 +204,7 @@ struct VideoCallScreen: View {
                                                 .background(Color(red: 0.78, green: 0.51, blue: 0.35))
                                                 .clipShape(Circle())
                                             
-                                            Text("Gọi video")
+                                            Text("Camera")
                                                 .padding(.top, 12)
                                                 .font(
                                                     Font.custom("Inter", size: 14)
@@ -180,6 +215,9 @@ struct VideoCallScreen: View {
                                         }
                                     }
                                     .onChange(of: isLocalVideoEnabled) { newValue in
+                                        changeMic = false
+                                        showToast = true
+                                        
                                         if newValue {
                                             directCallManager.directCall?.startVideo()
                                         } else {
@@ -189,7 +227,6 @@ struct VideoCallScreen: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        print("==> data nè", DirectCallManager.shared.directCall?.customItems)
                                         APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
                                         directCallManager.endCall()
                                     }) {
@@ -223,6 +260,63 @@ struct VideoCallScreen: View {
                         .frame(width: .infinity, alignment: .top)
                         .background(Color(red: 0.16, green: 0.16, blue: 0.16).opacity(0.4))
                     }
+                    
+                    
+                    if (counDownManager.remainingTime > 294 && counDownManager.remainingTime <= 300) {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Spacer()
+                                VStack {
+                                    Text("Sắp hết phiên tư vấn")
+                                        .foregroundColor(.white)
+                                }
+                                .frame(width: geometry.size.width*0.8)
+                                .padding(16)
+                                .background(Color(red: 0.9, green: 0.4, blue: 0.4))
+                                .cornerRadius(8)
+                                .shadow(color: .black.opacity(0.4), radius: 2, x: 2, y: 4)
+                                
+                                
+                            }.padding(.bottom, 180)
+                            Spacer()
+                        }.opacity(0.8)
+                    }
+                    
+                    if (showToast) {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Spacer()
+                                VStack {
+                                    if (changeMic) {
+                                        Text("bạn đã \(isLocalAudioEnabled == true ? "bật": "tắt") microphone")
+                                            .foregroundColor(.white)
+                                    } else {
+                                        Text("bạn đã \(isLocalVideoEnabled == true ? "bật": "tắt") camera")
+                                            .foregroundColor(.white)
+                                    }
+
+                                }
+                                .frame(width: geometry.size.width*0.8)
+                                .padding(16)
+                                .background((Color(red: 0.16, green: 0.16, blue: 0.16).opacity(0.4)))
+                                .cornerRadius(8)
+                                .shadow(color: .black.opacity(0.4), radius: 2, x: 2, y: 4)
+                                
+                                
+                            }.padding(.bottom, 180)
+                            Spacer()
+                        }.opacity(0.85)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    if (showToast) {
+                                        self.showToast = false
+                                    }
+                                }
+                            }
+                    }
+                    
 
                 }.frame(width: geometry.size.width, height: geometry.size.height)
                     .background(Color.gray)
@@ -230,6 +324,13 @@ struct VideoCallScreen: View {
                     isLocalAudioEnabled = directCallManager.directCall?.isLocalAudioEnabled ?? true
                     isLocalVideoEnabled = directCallManager.directCall?.isLocalVideoEnabled ?? true
                     requestPermissions()
+                    
+                    counDownManager.startCountDown(remainingTime: 300)
+                    
+                    UIApplication.shared.isIdleTimerDisabled = true
+                }
+                .onDisappear {
+                    UIApplication.shared.isIdleTimerDisabled = false
                 }
             }
    
@@ -243,70 +344,3 @@ struct VideoCallScreen: View {
 //    }
 //}
 
-
-
-struct PiPView: UIViewControllerRepresentable {
-    let playerViewController: AVPlayerViewController
-
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        return playerViewController
-    }
-
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        // Update any properties or configurations as needed.
-    }
-}
-
-
-@available(iOS 14.3, *)
-struct RemoteVideoView: View {
-    let remoteView: UIView
-    
-    var body: some View {
-        ViewRepresentable(remoteView)
-            .scaledToFill()
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-    }
-}
-
-@available(iOS 14.3, *)
-struct RemoteVideoViewController: UIViewControllerRepresentable {
-
-    func makeUIViewController(context: Context) -> UIViewController {
-        let viewController = UIViewController()
-        viewController.view = DirectCallManager.shared.remoteVideoView
-        return viewController
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        // Update UI if needed
-    }
-}
-
-@available(iOS 14.3, *)
-struct LocalVideoView: View {
-    let localView: UIView
-    
-    var body: some View {
-        ViewRepresentable(localView)
-            .scaledToFit()
-            .frame(width: 120, height: 160)
-            .position(x: UIScreen.main.bounds.width - 75, y: UIScreen.main.bounds.height - 100)
-    }
-}
-@available(iOS 14.3, *)
-struct ViewRepresentable: UIViewRepresentable {
-    let view: UIView
-    
-    init(_ view: UIView) {
-        self.view = view
-    }
-    
-    func makeUIView(context: Context) -> UIView {
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIView, context: Context) {
-        // Update the view if needed
-    }
-}

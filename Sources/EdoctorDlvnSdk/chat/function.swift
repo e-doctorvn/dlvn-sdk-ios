@@ -79,10 +79,14 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
     DispatchQueue.main.async {
         let url = getUrlDefault() + "/phong-tu-van?channel=" + channel_url
         
-        if ControlerAlert.shared.isActive {
-            NotificationCenter.default.post(name: .handleLoadUrl, object: nil, userInfo: ["url": url])
+        if #available(iOS 13.0, *) {
+            if (CallStatusManager.shared.callStatus != .none && CallStatusManager.shared.callStatus != .videoCallWithChat && DirectCallManager.shared.directCall?.isOnHold == true) {
+                CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
+            } else {
+                openWebView(withURL: url, isFromNotification: true)
+            }
         } else {
-            openWebView(currentViewController: ControlerAlert.shared.viewController, withURL: url, isFromNotification: true)
+            openWebView(withURL: url, isFromNotification: true)
         }
     }
 }

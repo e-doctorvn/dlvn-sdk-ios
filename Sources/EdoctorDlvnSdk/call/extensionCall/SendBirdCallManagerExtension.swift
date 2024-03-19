@@ -46,7 +46,7 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
             CallStatusManager.shared.setCallStatus(value: .comming)
             if UIApplication.shared.applicationState == UIApplication.State.active{
                 DispatchQueue.main.async {
-                    inCommingCall(controller: ControlerAlert.shared.viewController, call: call, isPushNoti: false)
+                    inCommingCall(call: call, isPushNoti: false)
                 }
 
             } else {
@@ -93,7 +93,6 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     public func didEnd(_ call: DirectCall) {
 
         DoctorInfomation.shared.reset()
-        ControlerAlert.shared.reSetViewController()
         
         var callId: UUID = UUID()
         if let callUUID = call.callUUID {

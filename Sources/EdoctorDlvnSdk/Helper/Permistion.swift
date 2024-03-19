@@ -25,7 +25,7 @@ public func requestCameraPermission() {
                 // Fallback on earlier versions
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                openAlertgoSetting(content: "Cần quyền camera để gọi video")
+                openAlertgoSetting(content: "Vui lòng cho phép quyền camera để thực hiện tư vấn video")
             }
             print("Camera permission denied.")
         }
@@ -50,7 +50,7 @@ public func requestMicrophonePermission() {
                 // Fallback on earlier versions
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                openAlertgoSetting(content: "Cần quyền mic để gọi")
+                openAlertgoSetting(content: "Vui lòng cho phép quyền microphone để thực hiện tư vấn video")
             }
 
         }
@@ -74,12 +74,10 @@ public func openAlertgoSetting(content: String) {
         }
     }
     alertController.addAction(settingsAction)
-    print("===1")
     
     if (ControlerAlert.shared.viewController == nil) {
         return
     }
 
-    ControlerAlert.shared.viewController!.present(alertController, animated: true, completion: nil)
-    print("===2")
+    UIApplication.topViewController()!.present(alertController, animated: true, completion: nil)
 }

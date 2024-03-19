@@ -19,9 +19,7 @@ struct IncommingCallScreen: View {
                 VideoCallScreen()
                     .environmentObject(directCallManager)
                     .environmentObject(callStatusManager)
-            } else if callStatusManager.callStatus == .finish || callStatusManager.callStatus == .none{
-                FinnishCallLayout()
-            } else if callStatusManager.callStatus == .videoCallWithChat {
+            } else if callStatusManager.callStatus == .videoCallWithChat || callStatusManager.callStatus == .finish {
                 VideoCallWithChatLayout()
                     .environmentObject(directCallManager)
             } else {
@@ -33,14 +31,19 @@ struct IncommingCallScreen: View {
         }
         .edgesIgnoringSafeArea(.all)
         .onDisappear {
-            // Đóng hosting controller khi SwiftUI view biến mất
             if let presentingViewController = UIApplication.shared.windows.first?.rootViewController?.presentedViewController {
                 presentingViewController.dismiss(animated: true, completion: nil)
             }
         }
         .onChange(of: callStatusManager.callStatus) { newValue in
+            UIApplication.shared.isIdleTimerDisabled = false
             if newValue == .none {
                 onClose()
+                DoctorInfomation.shared.reset()
+            } else if newValue == .finish {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    DoctorInfomation.shared.reset()
+                }
             }
         }
     }

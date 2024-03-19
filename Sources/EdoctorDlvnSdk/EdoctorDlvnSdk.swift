@@ -12,7 +12,7 @@ import Foundation
 import SendBirdCalls
 import SendbirdChatSDK
 
-public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false) {
+public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false, onClose: (() -> Void)? = nil) {
     
     let webview = WebViewController(urlString: urlString, onClose: nil, data: data, onSdkRequestLogin: onSdkRequestLogin, isFromNotification: isFromNotification)
     

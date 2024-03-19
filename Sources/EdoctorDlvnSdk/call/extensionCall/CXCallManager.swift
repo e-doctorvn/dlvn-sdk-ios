@@ -4,7 +4,7 @@ import UIKit
 import AVFoundation
 import SendBirdCalls
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 class CXCallManager: NSObject {
     static let shared = CXCallManager()
     
@@ -26,7 +26,7 @@ class CXCallManager: NSObject {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 extension CXCallManager { // Process with CXProvider
     func reportIncomingCall(with callID: UUID, update: CXCallUpdate, completionHandler: ((Error?) -> Void)? = nil) {
         self.provider.reportNewIncomingCall(with: callID, update: update) { (error) in
@@ -45,7 +45,7 @@ extension CXCallManager { // Process with CXProvider
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 extension CXCallManager { // Process with CXTransaction
     func requestTransaction(_ transaction: CXTransaction, action: String = "") {
         self.controller.request(transaction) { error in
@@ -85,7 +85,7 @@ extension CXCallManager { // Process with CXTransaction
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 extension CXCallManager: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) { }
     
@@ -103,7 +103,6 @@ extension CXCallManager: CXProviderDelegate {
         action.fulfill()
     }
     
-    @available(iOS 14.0, *)
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         guard let call = SendBirdCall.getCall(forUUID: action.callUUID) else {
             action.fail()
@@ -118,7 +117,10 @@ extension CXCallManager: CXProviderDelegate {
             DispatchQueue.main.async {
                 DirectCallManager.shared.directCall = call
                 DirectCallManager.shared.acceptCall(isMicOn: true, isCamOn: true)
-                APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: call.customItems) { data, error in }
+                APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: call.customItems) { data, error in
+                    guard error == nil else {return}
+                    handleCountDown(reponseData: data ?? "")
+                }
             }
             
             if call.isVideoCall {
@@ -128,11 +130,7 @@ extension CXCallManager: CXProviderDelegate {
             }
             
             DispatchQueue.main.async {
-                if #available(iOS 14.3, *) {
-                    inCommingCall(call: call, isPushNoti: true)
-                } else {
-                    // Fallback on earlier versions
-                }
+                inCommingCall(call: call, isPushNoti: true)
             }
             
             action.fulfill()
@@ -219,7 +217,7 @@ extension DirectCallEndResult {
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 extension CXProviderConfiguration {
     // The app's provider configuration, representing its CallKit capabilities
     static var `default`: CXProviderConfiguration {
@@ -237,13 +235,13 @@ extension CXProviderConfiguration {
         
         // Set up ringing sound
         // If you want to set up other sounds such as dialing, reconnecting and reconnected, see `AppDelegate+SoundEffects.swift` file.
-         providerConfiguration.ringtoneSound = "Ringing.mp3"
+//         providerConfiguration.ringtoneSound = "Ringing.mp3"
         
         return providerConfiguration
     }
 }
 
-@available(iOS 14.0, *)
+@available(iOS 14.3, *)
 extension CXProvider {
     static var `default`: CXProvider {
         CXProvider(configuration: .`default`)

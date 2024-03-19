@@ -30,8 +30,7 @@ struct VideoCallWithChatLayout: View {
                     ZStack {
                         BackgroundImage(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, blur: 5)
                             .frame(width: 120, height: 180)
-                        
-                        
+ 
 
                         if directCallManager.directCall?.isRemoteVideoEnabled == true {
                             SendBirdVideoViewWrapper(sendBirdVideoView: (directCallManager.remoteVideoView))
@@ -53,8 +52,8 @@ struct VideoCallWithChatLayout: View {
                                             .font(Font.custom("Inter", size: 7.6806))
                                             .foregroundColor(.white)
                                             .onChange(of: counDownManager.remainingTime) { newValue in
-                                                if newValue == 0 {
-                                                    directCallManager.endCall()
+                                                if newValue == 301 {
+                                                    onClick()
                                                 }
                                             }
                                     }.padding(.horizontal, 4)
@@ -140,16 +139,20 @@ struct VideoCallWithChatLayout: View {
                     .cornerRadius(8)
                     .shadow(color: .black.opacity(0.25), radius: 2, x: 2, y: 4)
 
+                VStack {
                     Button(action: {
-
+                        onClick()
                     }) {
                         Image(systemName: "arrow.down.backward.and.arrow.up.forward")
-                            .frame(width: 20, height: 20)
-                            .scaledToFit()
-                            .font(.system(size: 22))
-                            .foregroundColor(Color.white)
+                            .scaledToFill()
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray)
                     }
-                    .clipShape(Circle())
+
+                }
+                .frame(width: 20, height: 20)
+                .background(Color.white)
+                .clipShape(Circle())
                     .shadow(color: .black.opacity(0.25), radius: 1.20009, x: 0, y: 1.20009)
                     .position(x: 120, y: 5)
                 }.frame(width: 120, height: 180)
@@ -167,12 +170,16 @@ struct VideoCallWithChatLayout: View {
                 )
                 
             }.onAppear {
-                print("okok - Vao")
                 location = CGPoint(x: geometry.size.width - 90, y: 250)
                 isScaled = false
                 
                 isLocalAudioEnabled = directCallManager.directCall?.isLocalAudioEnabled ?? true
                 isLocalVideoEnabled = directCallManager.directCall?.isLocalVideoEnabled ?? true
+                
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+            .onDisappear {
+                UIApplication.shared.isIdleTimerDisabled = false
             }
             
         }.edgesIgnoringSafeArea(.bottom)
@@ -204,7 +211,7 @@ struct VideoCallWithChatLayout: View {
 }
     
     
-//
+
 //    struct VideoCallWithChatLayout_Previews: PreviewProvider {
 //        static var previews: some View {
 //            VideoCallWithChatLayout()
