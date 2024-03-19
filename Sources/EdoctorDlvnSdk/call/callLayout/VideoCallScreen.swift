@@ -137,7 +137,7 @@ struct VideoCallScreen: View {
                                         CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
                                     }) {
                                         VStack {
-                                            Image("chatImage")
+                                            Image("chatImage", bundle: Bundle(for: WebViewController.self))
                                                 .frame(width: 50, height: 50)
                                                 .font(.system(size: 22))
                                                 .foregroundColor(Color.white)
