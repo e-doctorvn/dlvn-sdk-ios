@@ -325,7 +325,6 @@ struct VideoCallScreen: View {
                     isLocalVideoEnabled = directCallManager.directCall?.isLocalVideoEnabled ?? true
                     requestPermissions()
                     
-                    counDownManager.startCountDown(remainingTime: 300)
                     
                     UIApplication.shared.isIdleTimerDisabled = true
                 }
