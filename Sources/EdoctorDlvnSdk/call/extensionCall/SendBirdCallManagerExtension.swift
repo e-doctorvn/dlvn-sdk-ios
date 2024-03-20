@@ -91,8 +91,6 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     }
     
     public func didEnd(_ call: DirectCall) {
-
-        DoctorInfomation.shared.reset()
         
         var callId: UUID = UUID()
         if let callUUID = call.callUUID {

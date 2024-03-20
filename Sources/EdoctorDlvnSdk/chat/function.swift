@@ -59,7 +59,7 @@ public func allowPushNotificationBackground(notification: UNNotification) -> Boo
 }
 
 
-public func handlePressNotificatin(response: UNNotificationResponse) {
+public func handlePressNotificatin(currentViewController: UIViewController? = nil, response: UNNotificationResponse) {
     
     if UIApplication.shared.applicationIconBadgeNumber > 0 {
            UIApplication.shared.applicationIconBadgeNumber -= 1
@@ -80,13 +80,13 @@ public func handlePressNotificatin(response: UNNotificationResponse) {
         let url = getUrlDefault() + "/phong-tu-van?channel=" + channel_url
         
         if #available(iOS 13.0, *) {
-            if (CallStatusManager.shared.callStatus != .none && CallStatusManager.shared.callStatus != .videoCallWithChat && DirectCallManager.shared.directCall?.isOnHold == true) {
+            if (CallStatusManager.shared.callStatus != .none && CallStatusManager.shared.callStatus != .videoCallWithChat) {
                 CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
             } else {
-                openWebView(withURL: url, isFromNotification: true)
+                openWebView(currentViewController: currentViewController, withURL: url, isFromNotification: true)
             }
         } else {
-            openWebView(withURL: url, isFromNotification: true)
+            openWebView(currentViewController: currentViewController, withURL: url, isFromNotification: true)
         }
     }
 }

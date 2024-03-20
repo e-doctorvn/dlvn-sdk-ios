@@ -41,7 +41,7 @@ struct IncommingCallScreen: View {
                 onClose()
                 DoctorInfomation.shared.reset()
             } else if newValue == .finish {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     DoctorInfomation.shared.reset()
                 }
             }

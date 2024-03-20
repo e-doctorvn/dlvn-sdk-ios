@@ -68,7 +68,7 @@ func handleCountDown(reponseData: String) {
                 let totaltime = time*60000
                 let result = totaltime - callDuration
                 if #available(iOS 14.3, *) {
-                    startCountDownDuration(callDuration: result > 0 ? result : 300)
+                    startCountDownDuration(callDuration: result > 0 ? result : 0)
                 } else {
                     // Fallback on earlier versions
                 }

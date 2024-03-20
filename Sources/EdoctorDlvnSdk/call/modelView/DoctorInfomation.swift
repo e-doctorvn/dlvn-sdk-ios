@@ -42,7 +42,11 @@ public class DoctorInfomation : ObservableObject {
                        let thirdParty = appointmentSchedulesItem["thirdParty"] as? [String: Any],
                        let sendbird = thirdParty["sendbird"] as? [String: Any],
                        let channelUrl = sendbird["channelUrl"] as? String{
-                        DoctorInfomation.shared.setInfomation(newDoctor: Doctor(avatar: avatar, fullName: (shortName + fullName), channelUrl: channelUrl))
+                        
+                        DispatchQueue.main.async {
+                            DoctorInfomation.shared.setInfomation(newDoctor: Doctor(avatar: avatar, fullName: (shortName + fullName), channelUrl: channelUrl))
+                        }
+
                        }
 
                 } catch {

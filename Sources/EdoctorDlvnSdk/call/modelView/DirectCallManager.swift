@@ -69,7 +69,7 @@ public class DirectCallManager: UIViewController, ObservableObject {
         
         CallStatusManager.shared.setCallStatus(value: .waiting)
         
-        CountDownManager.shared.startCountDown(remainingTime: 150)
+//        CountDownManager.shared.startCountDown(remainingTime: 300)
         
         directCall?.updateLocalVideoView(localVideoView)
         directCall?.updateRemoteVideoView(remoteVideoView)

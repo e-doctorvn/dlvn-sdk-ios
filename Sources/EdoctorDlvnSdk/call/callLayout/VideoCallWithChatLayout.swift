@@ -18,6 +18,7 @@ struct VideoCallWithChatLayout: View {
     
     @ObservedObject var counDownManager = CountDownManager.shared
     @ObservedObject var doctorInfomation = DoctorInfomation.shared
+    @ObservedObject var callStatus = CallStatusManager.shared
     
     @State private var isLocalAudioEnabled = true
     @State private var isLocalVideoEnabled = true
@@ -36,7 +37,6 @@ struct VideoCallWithChatLayout: View {
                             SendBirdVideoViewWrapper(sendBirdVideoView: (directCallManager.remoteVideoView))
                             .frame(width: 120, height: 180)
                         }
-  
                         
                         VStack {
                             Spacer()
@@ -105,6 +105,7 @@ struct VideoCallWithChatLayout: View {
                                         }
                                         
                                         Button(action: {
+                                            APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
                                             directCallManager.endCall()
                                         }) {
                                             VStack {
@@ -168,6 +169,7 @@ struct VideoCallWithChatLayout: View {
                             onClick()
                         }
                 )
+                opacity(callStatus.callStatus == .finish ? 0 : 1)
                 
             }.onAppear {
                 location = CGPoint(x: geometry.size.width - 90, y: 250)

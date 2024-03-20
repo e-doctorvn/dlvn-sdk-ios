@@ -370,9 +370,15 @@ public func removeDirectCallSounds() {
         return  isEdrMessage(notification: notification)
     }
     
+    
     @available(iOS 14.3, *)
-    @objc public func handlePressNotificatinOC(response: UNNotificationResponse) {
-       handlePressNotificatin(response: response)
+    @objc public func removeDirectCallSoundsOC() {
+        removeDirectCallSounds()
+    }
+    
+    @available(iOS 14.3, *)
+    @objc public func handlePressNotificatinOC(currentViewController: UIViewController? = nil, response: UNNotificationResponse) {
+       handlePressNotificatin(currentViewController: currentViewController, response: response)
     }
 }
 
