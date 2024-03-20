@@ -169,7 +169,7 @@ struct VideoCallWithChatLayout: View {
                             onClick()
                         }
                 )
-                opacity(callStatus.callStatus == .finish ? 0 : 1)
+                .opacity(callStatus.callStatus == .finish ? 0 : 1)
                 
             }.onAppear {
                 location = CGPoint(x: geometry.size.width - 90, y: 250)
