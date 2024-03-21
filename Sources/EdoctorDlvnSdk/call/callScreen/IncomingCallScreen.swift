@@ -9,7 +9,6 @@ import SwiftUI
 
 @available(iOS 14.3, *)
 struct IncommingCallScreen: View {
-    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var directCallManager = DirectCallManager.shared
     @ObservedObject var callStatusManager = CallStatusManager.shared
      
@@ -30,17 +29,12 @@ struct IncommingCallScreen: View {
             
         }
         .edgesIgnoringSafeArea(.all)
-        .onDisappear {
-            if let presentingViewController = UIApplication.shared.windows.first?.rootViewController?.presentedViewController {
-                presentingViewController.dismiss(animated: true, completion: nil)
-            }
-        }
         .onChange(of: callStatusManager.callStatus) { newValue in
             UIApplication.shared.isIdleTimerDisabled = false
             if newValue == .none {
                 onClose()
                 DoctorInfomation.shared.reset()
-                ControlerAlert.shared.reSetViewController()
+                
             } else if newValue == .finish {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     DoctorInfomation.shared.reset()
@@ -50,6 +44,7 @@ struct IncommingCallScreen: View {
     }
     
     func onClose () {
-        presentationMode.wrappedValue.dismiss()
+        ControlerAlert.shared.viewController?.dismiss(animated: true)
+        ControlerAlert.shared.reSetViewController()
     }
 }

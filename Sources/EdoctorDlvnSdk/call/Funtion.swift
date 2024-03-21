@@ -31,7 +31,9 @@ public func startVideoCallLayout(calleeId: String, isVideoCall: Bool) {
 public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
 
     if isPushNoti != true {
-        CallStatusManager.shared.setCallStatus(value: .comming)
+        DispatchQueue.main.async { 
+            CallStatusManager.shared.setCallStatus(value: .comming)
+        }
     }
     
     let inCommingCall = IncommingCallScreen()
