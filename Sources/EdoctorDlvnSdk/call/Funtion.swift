@@ -42,11 +42,8 @@ public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
     
     DispatchQueue.main.async {
         if let currentViewController = UIApplication.topViewController() {
-            if currentViewController.isBeingPresentedModally {
-                currentViewController.dismiss(animated: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    currentViewController.present(hostingController, animated: true, completion: nil)
-                }
+            if ControlerAlert.shared.isActive {
+                ControlerAlert.shared.viewController!.present(hostingController, animated: true, completion: nil)
             } else {
                 currentViewController.present(hostingController, animated: true, completion: nil)
             }
