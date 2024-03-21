@@ -77,3 +77,12 @@ func topMostController() -> UIViewController? {
     
     return topController
 }
+
+extension UIViewController {
+    var isBeingPresentedModally: Bool {
+        if let presentingViewController = presentingViewController {
+            return presentingViewController.presentedViewController == self
+        }
+        return false
+    }
+}
