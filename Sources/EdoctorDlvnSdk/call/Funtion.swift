@@ -43,7 +43,7 @@ public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
     DispatchQueue.main.async {
         let topControllerView = topMostController()
         if topControllerView != nil {
-            topControllerView.present(hostingController, animated: true, completion: nil)
+            topControllerView!.present(hostingController, animated: true, completion: nil)
         }
         if let currentViewController = UIApplication.topViewController() {
             currentViewController.present(hostingController, animated: true, completion: nil)
