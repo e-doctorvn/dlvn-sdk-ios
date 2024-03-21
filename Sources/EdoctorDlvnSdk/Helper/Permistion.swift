@@ -79,5 +79,5 @@ public func openAlertgoSetting(content: String) {
         return
     }
 
-    UIApplication.topViewController()!.present(alertController, animated: true, completion: nil)
+    ControlerAlert.shared.viewController!.present(alertController, animated: true, completion: nil)
 }

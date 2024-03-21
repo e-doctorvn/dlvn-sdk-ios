@@ -39,16 +39,19 @@ public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
 
     let hostingController = UIHostingController(rootView: inCommingCall)
     hostingController.modalPresentationStyle = .fullScreen
+
     
     DispatchQueue.main.async {
-        if let currentViewController = UIApplication.topViewController() {
-            if ControlerAlert.shared.isActive {
+        
+        if CallStatusManager.shared.callStatus == .videoCallWithChat {
+            CallStatusManager.shared.setCallStatus(value: .comming)
+        } else {
+            if (ControlerAlert.shared.viewController != nil) {
                 ControlerAlert.shared.viewController!.present(hostingController, animated: true, completion: nil)
-            } else {
-                currentViewController.present(hostingController, animated: true, completion: nil)
             }
-            
         }
+        
+
     }
 }
 

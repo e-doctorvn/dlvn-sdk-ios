@@ -40,6 +40,7 @@ struct IncommingCallScreen: View {
             if newValue == .none {
                 onClose()
                 DoctorInfomation.shared.reset()
+                ControlerAlert.shared.reSetViewController()
             } else if newValue == .finish {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     DoctorInfomation.shared.reset()
