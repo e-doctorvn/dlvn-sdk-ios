@@ -41,7 +41,10 @@ public func inCommingCall(call: DirectCall, isPushNoti: Bool?) {
     hostingController.modalPresentationStyle = .fullScreen
     
     DispatchQueue.main.async {
-        
+        let topControllerView = topMostController()
+        if topControllerView != nil {
+            topControllerView.present(hostingController, animated: true, completion: nil)
+        }
         if let currentViewController = UIApplication.topViewController() {
             currentViewController.present(hostingController, animated: true, completion: nil)
         }
