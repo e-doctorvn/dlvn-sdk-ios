@@ -18,15 +18,13 @@ public func openWebView(currentViewController: UIViewController? = nil, withURL 
     
     webview.modalPresentationStyle = .fullScreen
 
-    if (currentViewController != nil) {
-        currentViewController!.present(webview, animated: true)
+    if (ControlerAlert.shared.isActive && urlString != nil) {
+        NotificationCenter.default.post(name: .handleLoadUrl, object: nil, userInfo: ["url": urlString ?? ""])
     } else {
-        if (ControlerAlert.shared.isActive && urlString != nil) {
-            NotificationCenter.default.post(name: .handleLoadUrl, object: nil, userInfo: ["url": urlString ?? ""])
-        } else {
-            if (ControlerAlert.shared.viewController != nil) {
-                ControlerAlert.shared.viewController!.present(webview, animated: true)
-            }
+        if (currentViewController != nil) {
+            currentViewController!.present(webview, animated: true)
+        } else if (ControlerAlert.shared.viewController != nil) {
+            ControlerAlert.shared.viewController!.present(webview, animated: true)
         }
     }
 }

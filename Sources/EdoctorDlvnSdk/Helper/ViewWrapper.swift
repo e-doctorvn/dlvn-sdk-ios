@@ -67,3 +67,13 @@ extension UIApplication {
         return viewController
     }
 }
+
+func topMostController() -> UIViewController? {
+    var topController = UIApplication.shared.keyWindow?.rootViewController
+    
+    while let presentedViewController = topController?.presentedViewController {
+        topController = presentedViewController
+    }
+    
+    return topController
+}
