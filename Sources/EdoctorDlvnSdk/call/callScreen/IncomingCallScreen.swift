@@ -45,6 +45,9 @@ struct IncommingCallScreen: View {
     
     func onClose () {
         ControlerAlert.shared.viewController?.dismiss(animated: true)
-        ControlerAlert.shared.reSetViewController()
+        if ControlerAlert.shared.isActive == false {
+            ControlerAlert.shared.reSetViewController()
+        }
+
     }
 }
