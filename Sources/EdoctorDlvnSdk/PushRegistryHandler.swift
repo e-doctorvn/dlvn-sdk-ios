@@ -35,7 +35,6 @@ class PushRegistryHandler: NSObject, PKPushRegistryDelegate, UIApplicationDelega
             LocalStore.saveData(dataSave: credentials.token, key: storeType.voIpTokenKey)
         }
     }
-    
 
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         // Xử lý khi push token bị vô hiệu hóa
@@ -46,6 +45,7 @@ class PushRegistryHandler: NSObject, PKPushRegistryDelegate, UIApplicationDelega
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         // Xử lý khi nhận được push notification
 //        print("okok", convertDictionaryToString(dictionary: payload.dictionaryPayload))
+        
         SendBirdCall.pushRegistry(registry, didReceiveIncomingPushWith: payload, for: type, completionHandler: { callUUID in
             print("pushRegistry callUUID\(String(describing: callUUID))")
         })

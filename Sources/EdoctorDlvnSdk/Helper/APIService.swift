@@ -28,11 +28,9 @@ class APIService {
     private init() {}
     
     func startRequest(graphQLQuery: String, variables: [String: Any]? = [:], httpMethod: HttpMethod? = HttpMethod.POST, isPublic : Bool = false, token: String? = nil, completion: @escaping (String?, Error?) -> Void) {
-        print("==> start call api")
         let apiUrlString = "\(getApiDefault())graphql"
         
         guard let apiUrl = URL(string: apiUrlString) else {
-            print("URL không hợp lệ")
             return
         }
         
@@ -53,7 +51,6 @@ class APIService {
             request.addValue(token ?? "", forHTTPHeaderField: "Authorization")
         } else {
             if dlvnToken?.accessToken == nil && isPublic != true{
-                print("==> accessToken nil")
                 completion(nil, NSError(domain: "Edoctor", code: 300, userInfo: ["message": "Không có token "]))
                 return
             }
@@ -68,7 +65,7 @@ class APIService {
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(nil, error)
-                print("==> lỗi: \(error)")
+                print("error: \(error)")
             } else if let data = data {
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("==> Phản hồi từ server: \(responseString)")

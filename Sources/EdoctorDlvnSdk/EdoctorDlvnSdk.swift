@@ -98,7 +98,6 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
     let apiUrlString = "\(getApiDefault())graphql"
     
     guard let apiUrl = URL(string: apiUrlString) else {
-        print("URL không hợp lệ")
         return
     }
     

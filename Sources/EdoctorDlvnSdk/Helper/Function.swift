@@ -47,7 +47,6 @@ func convertDictionaryToString(dictionary: [AnyHashable: Any]) -> String? {
 
 @available(iOS 14.3, *)
 func startCountDownDuration(callDuration: TimeInterval) {
-    print("callDuration", callDuration)
     DispatchQueue.main.async {
         CountDownManager.shared.startCountDown(remainingTime: callDuration/1000)
     }
