@@ -59,13 +59,13 @@ func handleCountDown(reponseData: String) {
             if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
                let data = json["data"] as? [String: Any],
                let eClinicApprove = data["eClinicApprove"] as? [String: Any],
-               let callDuration = eClinicApprove["callDuration"] as? TimeInterval,
+               let callDuration = eClinicApprove["callDuration"] as? TimeInterval?,
                let product = eClinicApprove["product"] as? [String: Any],
                let packages = product["packages"] as? [Any],
                let packagesItem = packages[0] as? [String: Any],
-               let time = packagesItem["time"] as? TimeInterval {
-                let totaltime = time*60000
-                let result = totaltime - callDuration
+               let time = packagesItem["time"] as? TimeInterval? {
+                let totaltime = (time ?? 30)*60000
+                let result = totaltime - (callDuration ?? 0)
                 if #available(iOS 14.3, *) {
                     startCountDownDuration(callDuration: result > 0 ? result : 0)
                 } else {
@@ -74,6 +74,11 @@ func handleCountDown(reponseData: String) {
             }
 
         } catch {
+            if #available(iOS 14.3, *) {
+                startCountDownDuration(callDuration: 30*60000)
+            } else {
+                // Fallback on earlier versions
+            }
             print("Error: \(error)")
         }
     }

@@ -12,7 +12,7 @@ public class CountDownManager: ObservableObject {
     
     static let shared = CountDownManager()
     
-    @Published var remainingTime: TimeInterval = 0
+    @Published var remainingTime: TimeInterval = 1800
     
     private var timer: Timer?
     
@@ -29,7 +29,7 @@ public class CountDownManager: ObservableObject {
     
     public func stopTimer() {
         timer?.invalidate()
-        remainingTime = 0
+        remainingTime = 1800
         timer = nil
     }
     

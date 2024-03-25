@@ -41,9 +41,17 @@ extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
                 CXCallManager.shared.endCall(for: uuid, endedAt: Date(), reason: .declined)
             }
             call.end()
+            if CallStatusManager.shared.callStatus != .none {
+                DispatchQueue.main.async {
+                    CallStatusManager.shared.setCallStatus(value: .none)
+                }
+            }
         } else {
             // Report the incoming call to the system
-            CallStatusManager.shared.setCallStatus(value: .comming)
+            DispatchQueue.main.async {
+                CallStatusManager.shared.setCallStatus(value: .comming)
+            }
+
             if UIApplication.shared.applicationState == UIApplication.State.active{
                 DispatchQueue.main.async {
                     inCommingCall(call: call, isPushNoti: false)
