@@ -35,6 +35,7 @@ struct IncomingVideoCallLayout: View {
             ZStack {
                 BackgroundImage(UrlString: doctorInfomation.doctor.avatar == "" ? directCallManager.directCall?.caller?.profileURL : doctorInfomation.doctor.avatar, blur: 5)
                      .frame(maxWidth: geometry.size.width, maxHeight: geometry.size.height)
+                     .background((Color(red: 0.16, green: 0.16, blue: 0.16).opacity(1)))
                 
                 
                 VStack {
@@ -196,7 +197,7 @@ struct IncomingVideoCallLayout: View {
                                         .background(Color(red: 0.78, green: 0.51, blue: 0.35))
                                         .clipShape(Circle())
                                 }
-                                Text("Gọi video")
+                                Text("Camera")
                                     .padding(.top, 16)
                                 .font(
                                 Font.custom("Inter", size: 14)

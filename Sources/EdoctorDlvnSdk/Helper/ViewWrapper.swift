@@ -34,14 +34,14 @@ struct WebViewWrapper: UIViewControllerRepresentable, Equatable {
     }
     
     func onClose() {
-        if CallStatusManager.shared.callStatus == .finish {
-            CallStatusManager.shared.setCallStatus(value: .none)
-        } else {
-            CallStatusManager.shared.setCallStatus(value: .videoCalling)
+        DispatchQueue.main.async {
+            if CallStatusManager.shared.callStatus == .finish {
+                CallStatusManager.shared.setCallStatus(value: .none)
+            } else {
+                CallStatusManager.shared.setCallStatus(value: .videoCalling)
+            }
         }
     }
-
-
 }
 
 //extension UIApplication {

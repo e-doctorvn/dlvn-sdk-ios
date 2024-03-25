@@ -76,7 +76,7 @@ struct VideoCallScreen: View {
                     .position(x: 32, y: 65)
                     
                     
-                    if (callStatusManager.callStatus == .calling || callStatusManager.callStatus == .videoCalling || callStatusManager.callStatus == .reconnect) {
+                    if (callStatusManager.callStatus == .calling || callStatusManager.callStatus == .videoCalling || callStatusManager.callStatus == .reconnect) && isLocalVideoEnabled == true {
                         VStack {
                             HStack {
                                 Spacer()
@@ -290,10 +290,10 @@ struct VideoCallScreen: View {
                                 Spacer()
                                 VStack {
                                     if (changeMic) {
-                                        Text("bạn đã \(isLocalAudioEnabled == true ? "bật": "tắt") microphone")
+                                        Text("Bạn đã \(isLocalAudioEnabled == true ? "bật": "tắt") microphone")
                                             .foregroundColor(.white)
                                     } else {
-                                        Text("bạn đã \(isLocalVideoEnabled == true ? "bật": "tắt") camera")
+                                        Text("Bạn đã \(isLocalVideoEnabled == true ? "bật": "tắt") camera")
                                             .foregroundColor(.white)
                                     }
 
