@@ -81,5 +81,11 @@ func handleCountDown(reponseData: String) {
             }
             print("Error: \(error)")
         }
+    } else {
+        if #available(iOS 14.3, *) {
+            startCountDownDuration(callDuration: 30*60000)
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
