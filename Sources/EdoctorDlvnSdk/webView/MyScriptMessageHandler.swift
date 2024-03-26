@@ -55,6 +55,10 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                         ControlerAlert.shared.reSetViewController()
                         rollBackChatAndCall()
+                    case requestUpdateApp:
+                        if let url = URL(string: "itms-apps://itunes.apple.com/app/id1435474783") {
+                            UIApplication.shared.open(url)
+                        }
                     default:
                         print("default")
                     }

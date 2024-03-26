@@ -222,6 +222,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         
         // use to checking support consultant in web
         webView.evaluateJavaScript("sessionStorage.setItem('sdkSupportConsultant', \(true));");
+        webView.evaluateJavaScript("sessionStorage.setItem('sdkSupportVideoCall', \(true));");
         
         
         if (onClose != nil || isFromNotification) {
