@@ -57,6 +57,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         } else {
             if onClose != nil {
                 onClose!()
+                ControlerAlert.shared.reSetViewController()
+                rollBackChatAndCall()
             } else {
                 self.dismiss(animated: true)
                 ControlerAlert.shared.reSetViewController()
