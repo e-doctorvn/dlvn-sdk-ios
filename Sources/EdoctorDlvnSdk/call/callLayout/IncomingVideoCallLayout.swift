@@ -130,7 +130,10 @@ struct IncomingVideoCallLayout: View {
                                         DispatchQueue.main.async {
                                             directCallManager.acceptCall(isMicOn: isMicMuted, isCamOn: isCameraOff)
                                             APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in
-                                                guard error == nil else {return}
+                                                guard error == nil else {
+                                                    startCountDownDuration(callDuration: 30*60000)
+                                                    return
+                                                }
                                                 handleCountDown(reponseData: data ?? "")
                                             }
                                         }
