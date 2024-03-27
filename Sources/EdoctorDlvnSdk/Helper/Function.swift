@@ -54,6 +54,7 @@ func startCountDownDuration(callDuration: TimeInterval) {
 }
 
 func handleCountDown(reponseData: String) {
+    var isUpdate = false
     if let jsonData = reponseData.data(using: .utf8) {
         do {
             if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
@@ -68,6 +69,7 @@ func handleCountDown(reponseData: String) {
                 let result = totaltime - (callDuration ?? 0)
                 if #available(iOS 14.3, *) {
                     startCountDownDuration(callDuration: result > 0 ? result : 0)
+                    isUpdate = true
                 } else {
                     // Fallback on earlier versions
                 }
@@ -82,6 +84,13 @@ func handleCountDown(reponseData: String) {
             print("Error: \(error)")
         }
     } else {
+        if #available(iOS 14.3, *) {
+            startCountDownDuration(callDuration: 30*60000)
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    if isUpdate == false {
         if #available(iOS 14.3, *) {
             startCountDownDuration(callDuration: 30*60000)
         } else {
