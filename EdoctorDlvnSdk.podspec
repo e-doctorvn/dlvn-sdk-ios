@@ -12,7 +12,6 @@ spec.dependencies = {
     "SendBirdCalls": ["~> 1.10.13"],
     "SendbirdChatSDK": ["~> 4.15.1"],
     "Apollo": ["~> 1.9.3"]
-    "API": { :path => "../API" }
   }
 spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.2.11' }
 spec.source_files = [
