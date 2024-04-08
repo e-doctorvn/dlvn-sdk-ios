@@ -1,0 +1,25 @@
+mutation AccountStaffLogin($input: StaffLoginInput) {
+  accountStaffLogin(input: $input) {
+    isSucceeded
+    accessToken
+    uploadToken
+    staff {
+      role
+      eClinicIds
+      scopes
+      slug
+      phone
+      email
+      isActive
+      account {
+        accountId fullName
+      }
+      eClinics {
+        eClinicId
+        slug
+        displayName
+      }
+      tags
+    }
+  }
+}

@@ -1,0 +1,21 @@
+//
+//  CallStatusManager.swift
+//  AppTestSDK
+//
+//  Created by Bùi Đình Mạnh on 15/08/2023.
+//
+
+import Foundation
+
+@available(iOS 13.0, *)
+public class CallStatusManager : ObservableObject {
+    
+    static let shared = CallStatusManager()
+    
+    @Published var callStatus: CallStatus = .null
+    
+    public func setCallStatus(value : CallStatus) {
+        callStatus = value
+    }
+    
+}

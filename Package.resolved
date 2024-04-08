@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "apollo-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apollographql/apollo-ios.git",
+      "state" : {
+        "revision" : "eedde2151859011a44bb7cb05388deb2bf532644",
+        "version" : "1.9.3"
+      }
+    },
+    {
+      "identity" : "sendbird-calls-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sendbird/sendbird-calls-ios.git",
+      "state" : {
+        "revision" : "602660b7b462396b1167c1580bb1d5c0fe83f981",
+        "version" : "1.10.18"
+      }
+    },
+    {
+      "identity" : "sendbird-chat-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sendbird/sendbird-chat-sdk-ios.git",
+      "state" : {
+        "revision" : "481ab3cda4bf85a44d2e25629246b7a7f9d8b2cd",
+        "version" : "4.19.1"
+      }
+    },
+    {
+      "identity" : "sendbird-webrtc-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sendbird/sendbird-webrtc-ios",
+      "state" : {
+        "revision" : "a736f8e6d0df0e39707e1323fa8f20c0979ee201",
+        "version" : "1.8.1"
+      }
+    },
+    {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift.git",
+      "state" : {
+        "revision" : "e78ae0220e17525a15ac68c697a155eb7a672a8e",
+        "version" : "0.15.0"
+      }
+    }
+  ],
+  "version" : 2
+}
