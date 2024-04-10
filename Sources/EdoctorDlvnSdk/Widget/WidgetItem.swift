@@ -218,6 +218,7 @@ struct WitgetItem: View {
                     isErrorConfirmTimeValidation = true
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        handleWidgetGetdata()
                         isButtonActionLoading = false
                     }
                 }
@@ -226,6 +227,10 @@ struct WitgetItem: View {
         case "JOINING", "JOINED", "ENDCALL":
             let url = getUrlDefault() + "/phong-tu-van?channel=" + (item.thirdParty.sendbird?.channelUrl ?? "")
             openWebView(currentViewController: currentViewController, withURL: url, data: data)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                handleWidgetGetdata()
+                isButtonActionLoading = false
+            }
         case "EXPIRED_RINGING":
             print("EXPIRED_RINGING")
             isButtonActionLoading = true
@@ -241,8 +246,17 @@ struct WitgetItem: View {
                     inCommingCall(currentViewController: currentViewController, call: DirectCallManager.shared.directCall!, isPushNoti: false)
                 }
             }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                handleWidgetGetdata()
+                isButtonActionLoading = false
+            }
 
         default:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                handleWidgetGetdata()
+                isButtonActionLoading = false
+            }
             print("default")
         }
     }

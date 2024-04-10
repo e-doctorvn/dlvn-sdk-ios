@@ -217,6 +217,11 @@ public func firstConfigureCall() {
 }
 
 @available(iOS 14.3, *)
+public func handleWidgetGetdata() {
+    AppointmentViewModel.shared.getData()
+}
+
+@available(iOS 14.3, *)
 public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     deauthenticateEDR()
     do {
@@ -292,6 +297,29 @@ public func removeDirectCallSounds() {
     SendBirdCall.removeDirectCallSound(forType: .dialing)
     SendBirdCall.removeDirectCallSound(forType: .reconnecting)
     SendBirdCall.removeDirectCallSound(forType: .reconnected)
+}
+
+@available(iOS 14.3, *)
+@objc public class DlvnWidget: UIViewController {
+    var data: [String: Any]? = nil
+    var currentViewController: UIViewController? = nil
+    
+    init(data: [String: Any], currentViewController: UIViewController? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.data = data
+        self.currentViewController = currentViewController
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let contentView =  WidgetList(currentViewController: currentViewController, data: data)
+        
+    }
 }
 
 @objc public class DlvnSdk: NSObject {
@@ -377,5 +405,11 @@ public func removeDirectCallSounds() {
     @objc public func handlePressNotificatinOC(currentViewController: UIViewController? = nil, response: UNNotificationResponse) {
        handlePressNotificatin(currentViewController: currentViewController, response: response)
     }
+    
+    @available(iOS 14.3, *)
+    @objc public func handleWidgetGetdataOC() {
+        handleWidgetGetdata()
+    }
+    
 }
 
