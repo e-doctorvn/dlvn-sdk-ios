@@ -28,9 +28,16 @@ struct WidgetList: View {
                     
                     HStack(alignment: .center, spacing: 0) {
                         
-                        VStack(alignment: .center, spacing: 14) {
+                        VStack(alignment: .center, spacing: 8) {
+                            
+                            Image("room", bundle: Bundle(for: WebViewController.self))
+                                .frame(width: 92, height: 92)
                             
                             HStack(spacing: 8) {
+                                Image("enterRoom", bundle: Bundle(for: WebViewController.self))
+                                    .frame(width: 50, height: 50)
+                                    .font(.system(size: 22))
+                    
                                 Text("Lối tắt vào phòng tư vấn")
                                   .font(
                                     Font.custom("Inter", size: 16)
@@ -40,9 +47,9 @@ struct WidgetList: View {
                             }
                         }
                     }
-                    .padding(.leading, 60.5)
-                    .padding(.trailing, 59.5)
-                    .frame(width:343, height: list.appointmentList.count > 0 ? 172 : 0, alignment: .center)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+                    .frame(width:geometry.size.width - 32, height: 172, alignment: .center)
                     .background(Color.white)
                     .cornerRadius(8)
                     .overlay(
