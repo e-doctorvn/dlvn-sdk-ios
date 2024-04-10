@@ -304,7 +304,8 @@ public func removeDirectCallSounds() {
     var data: [String: Any]? = nil
     var currentViewController: UIViewController? = nil
     
-    init(data: [String: Any], currentViewController: UIViewController? = nil) {
+    // Khởi tạo lớp với dữ liệu và viewController hiện tại
+    @objc public init(data: [String: Any], currentViewController: UIViewController? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.data = data
         self.currentViewController = currentViewController
@@ -317,8 +318,21 @@ public func removeDirectCallSounds() {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        let contentView =  WidgetList(currentViewController: currentViewController, data: data)
+        // Tạo SwiftUI view
+        let swiftUIView = WidgetList(currentViewController: currentViewController, data: data)
         
+        // Tạo UIHostingController để hiển thị SwiftUI view
+        let hostingController = UIHostingController(rootView: swiftUIView)
+        
+        // Thêm UIHostingController vào view của DlvnWidget
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        hostingController.didMove(toParent: self)
     }
 }
 
