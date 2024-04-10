@@ -19,7 +19,7 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", from: "1.10.13"),
         .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.15.1"),
-        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.9.3"),
+        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "0.36.0"),
         .package(path: "./API")
     ],
     targets: [

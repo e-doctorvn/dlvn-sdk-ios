@@ -75,48 +75,48 @@ func startCountDownDuration(callDuration: TimeInterval) {
 
 }
 
+@available(iOS 14.3, *)
 func handleCountDown(reponseData: String) {
-    var isUpdate = false
     if let jsonData = reponseData.data(using: .utf8) {
         do {
-            if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-               let data = json["data"] as? [String: Any],
-               let eClinicApprove = data["eClinicApprove"] as? [String: Any],
-               let callDuration = eClinicApprove["callDuration"] as? TimeInterval?,
-               let product = eClinicApprove["product"] as? [String: Any],
-               let packages = product["packages"] as? [Any],
-               let packagesItem = packages[0] as? [String: Any],
-               let time = packagesItem["time"] as? TimeInterval? {
-                let totaltime = (time ?? 30)*60000
-                let result = totaltime - (callDuration ?? 0)
-                if #available(iOS 14.3, *) {
-                    startCountDownDuration(callDuration: result > 0 ? result : 0)
-                    isUpdate = true
-                } else {
-                    // Fallback on earlier versions
-                }
-            }
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let value = try decoder.decode(CountDown.self, from: jsonData)
+            let callDuration = value.data?.eClinicApprove.callDuration ?? 0
+            let time = value.data?.eClinicApprove.product?.packages?[0].time ?? 0
+            let totaltime = time*60000
+            let result = totaltime - callDuration
+            startCountDownDuration(callDuration: result > 0 ? result : 300)
 
         } catch {
-            if #available(iOS 14.3, *) {
-                startCountDownDuration(callDuration: 30*60000)
-            } else {
-                // Fallback on earlier versions
-            }
-            print("Error: \(error)")
+            startCountDownDuration(callDuration: 30*60000)
+            print("Error decoding JSON: \(error)")
         }
     } else {
-        if #available(iOS 14.3, *) {
-            startCountDownDuration(callDuration: 30*60000)
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    if isUpdate == false {
-        if #available(iOS 14.3, *) {
-            startCountDownDuration(callDuration: 30*60000)
-        } else {
-            // Fallback on earlier versions
-        }
+        startCountDownDuration(callDuration: 30*60000)
     }
 }
+
+struct CountDown: Codable  {
+    let data: CountDown1?
+}
+
+struct CountDown1: Codable  {
+    let eClinicApprove: EClinicApprove
+}
+
+
+struct EClinicApprove: Codable, Hashable  {
+    let callDuration: TimeInterval?
+    let product: Product?
+}
+
+public struct Product: Codable, Hashable {
+    let packages: [PackagesItem]?
+    
+}
+
+public struct PackagesItem: Codable, Hashable {
+    let time: TimeInterval?
+}
+
