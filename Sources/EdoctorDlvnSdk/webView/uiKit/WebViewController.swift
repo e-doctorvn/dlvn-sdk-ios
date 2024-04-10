@@ -55,6 +55,9 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         if webView.canGoBack {
             // web handle
         } else {
+            if #available(iOS 14.3, *) {
+                handleWidgetGetdata()
+            }
             if onClose != nil {
                 onClose!()
                 ControlerAlert.shared.reSetViewController()

@@ -52,6 +52,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         ControlerAlert.shared.reSetViewController()
                         
                     case requiredClose:
+                        if #available(iOS 14.3, *) {
+                            handleWidgetGetdata()
+                        }
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                         ControlerAlert.shared.reSetViewController()
                         rollBackChatAndCall()
@@ -104,6 +107,9 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                     case "agree-consent":
                         (handleLoginAndAgree ?? noHandle)()
                     case "authenticate-sendbird":
+                        if #available(iOS 14.3, *) {
+                            handleWidgetGetdata()
+                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
                             handleLoginSendbird()
                         }
