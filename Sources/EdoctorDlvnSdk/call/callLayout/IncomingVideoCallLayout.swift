@@ -102,6 +102,7 @@ struct IncomingVideoCallLayout: View {
                                     DispatchQueue.main.async {
                                         APIService.shared.startRequest(graphQLQuery: eClinicExpireRinging, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
                                         directCallManager.endCallFast()
+                                        handleWidgetGetdata()
                                     }
                                 }) {
                                     Image(systemName: "phone.down.fill")
@@ -135,6 +136,7 @@ struct IncomingVideoCallLayout: View {
                                                     return
                                                 }
                                                 handleCountDown(reponseData: data ?? "")
+                                                handleWidgetGetdata()
                                             }
                                         }
                                     } else {

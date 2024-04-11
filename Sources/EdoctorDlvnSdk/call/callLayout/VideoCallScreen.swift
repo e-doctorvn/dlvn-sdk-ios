@@ -229,6 +229,7 @@ struct VideoCallScreen: View {
                                     Button(action: {
                                         APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
                                         directCallManager.endCall()
+                                        handleWidgetGetdata()
                                     }) {
                                         VStack {
                                             Image(systemName: "xmark")

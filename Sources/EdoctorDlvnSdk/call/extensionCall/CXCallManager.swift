@@ -120,6 +120,7 @@ extension CXCallManager: CXProviderDelegate {
                 APIService.shared.startRequest(graphQLQuery: eClinicApproveCall, variables: call.customItems) { data, error in
                     guard error == nil else {return}
                     handleCountDown(reponseData: data ?? "")
+                    handleWidgetGetdata()
                 }
             }
             
@@ -159,7 +160,9 @@ extension CXCallManager: CXProviderDelegate {
                         action.fail()
                         return
                     }
-                    APIService.shared.startRequest(graphQLQuery: eClinicExpireRinging, variables: call.customItems) { data, error in }
+                    APIService.shared.startRequest(graphQLQuery: eClinicExpireRinging, variables: call.customItems) { data, error in
+                        handleWidgetGetdata()
+                    }
                     call.end {
                         action.fulfill()
                         // End background task

@@ -229,6 +229,11 @@ public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Er
         let jsonDataInput = try JSONSerialization.data(withJSONObject: data, options: [])
         let dataInput = try decoder.decode(DLVNInputData.self, from: jsonDataInput)
         APIService.shared.startRequest(graphQLQuery: checkAccountExist, variables: ["phone" : dataInput.dcId], isPublic: true) { dataCall, error in
+            
+            if error != nil || dataCall == nil {
+                return
+            }
+            
             if let jsonData = dataCall!.data(using: .utf8) {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
