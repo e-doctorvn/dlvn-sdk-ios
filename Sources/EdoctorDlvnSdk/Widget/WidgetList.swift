@@ -64,11 +64,11 @@ struct WidgetList: View {
             }.padding(8)
                 .alert(isPresented: $isPresented) {
                     if (isAppointmentCancelSuccess) {
-                        Alert(title: Text("Thông báo"), message: Text("Hủy lịch hẹn thành công"), dismissButton: .default(Text("Đã hiểu"), action: {
+                        return Alert(title: Text("Thông báo"), message: Text("Hủy lịch hẹn thành công"), dismissButton: .default(Text("Đã hiểu"), action: {
                             isAppointmentCancelSuccess = false
                         }))
                     } else {
-                        Alert(title: Text("Xác nhận"), message: Text("Bạn có muốn hủy lịch hẹn?"), primaryButton: .destructive(Text("Hủy lịch hẹn"), action: {
+                        return Alert(title: Text("Xác nhận"), message: Text("Bạn có muốn hủy lịch hẹn?"), primaryButton: .destructive(Text("Hủy lịch hẹn"), action: {
                             let variables : [String: Any] = [
                                 "eClinicId": AppointmentFocus.shared.appointment.eClinicId,
                                 "appointmentScheduleId": AppointmentFocus.shared.appointment.appointmentScheduleId,
