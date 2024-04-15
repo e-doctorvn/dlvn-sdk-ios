@@ -25,39 +25,41 @@ struct WidgetList: View {
                     ForEach(list.appointmentList, id: \.self) { item in
                         WitgetItem(item: item, currentViewController: currentViewController, data: data, isPresented: $isPresented).frame(width: geometry.size.width - 40)
                     }
-                    
-                    HStack(alignment: .center, spacing: 0) {
+                    if list.appointmentList.count > 0 {
+                        HStack(alignment: .center, spacing: 0) {
+                            
+                            VStack(alignment: .center, spacing: 8) {
+                                
+                                Image("room", bundle: Bundle(for: WebViewController.self))
+                                    .frame(width: 92, height: 92)
+                                
+                                HStack(spacing: 8) {
+                                    Image("enterRoom", bundle: Bundle(for: WebViewController.self))
+                                        .frame(width: 50, height: 50)
+                                        .font(.system(size: 22))
                         
-                        VStack(alignment: .center, spacing: 8) {
-                            
-                            Image("room", bundle: Bundle(for: WebViewController.self))
-                                .frame(width: 92, height: 92)
-                            
-                            HStack(spacing: 8) {
-                                Image("enterRoom", bundle: Bundle(for: WebViewController.self))
-                                    .frame(width: 50, height: 50)
-                                    .font(.system(size: 22))
-                    
-                                Text("Lối tắt vào phòng tư vấn")
-                                  .font(
-                                    Font.custom("Inter", size: 16)
-                                      .weight(.semibold)
-                                  )
-                                  .foregroundColor(Color(red: 0.6, green: 0.35, blue: 0))
+                                    Text("Lối tắt vào phòng tư vấn")
+                                      .font(
+                                        Font.custom("Inter", size: 16)
+                                          .weight(.semibold)
+                                      )
+                                      .foregroundColor(Color(red: 0.6, green: 0.35, blue: 0))
+                                }
                             }
                         }
-                    }
-                    .padding(.top, 16)
-                    .padding(.bottom, 8)
-                    .frame(width:geometry.size.width - 32, height: 172, alignment: .center)
-                    .background(Color.white)
-                    .cornerRadius(8)
-                    .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                    .inset(by: 0.5)
-                    .stroke(Color(red: 0.77, green: 0.77, blue: 0.77), lineWidth: 1)
+                        .padding(.top, 16)
+                        .padding(.bottom, 8)
+                        .frame(width:geometry.size.width - 32, height: 172, alignment: .center)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0.77, green: 0.77, blue: 0.77), lineWidth: 1)
 
-                    )
+                        )
+                    }
+                    
                 }
             }.padding(8)
                 .alert(isPresented: $isPresented) {
