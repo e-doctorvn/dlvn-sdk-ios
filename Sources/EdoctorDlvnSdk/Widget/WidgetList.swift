@@ -63,7 +63,7 @@ struct WidgetList: View {
                 }
             }.padding(8)
                 .alert(isPresented: $isPresented) {
-                    if (isAppointmentCancelSuccess) {
+                    if isAppointmentCancelSuccess {
                         return Alert(title: Text("Thông báo"), message: Text("Hủy lịch hẹn thành công"), dismissButton: .default(Text("Đã hiểu"), action: {
                             isAppointmentCancelSuccess = false
                         }))
@@ -85,7 +85,11 @@ struct WidgetList: View {
                     }
 
                 }
-        }.frame(height: list.appointmentList.count > 0 ? 300 : 0)
+        }
+        .onAppear {
+            handleWidgetGetdata()
+        }
+        .frame(height: list.appointmentList.count > 0 ? 300 : 0)
     }
 }
 

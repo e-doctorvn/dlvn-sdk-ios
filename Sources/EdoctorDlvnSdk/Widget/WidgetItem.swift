@@ -188,17 +188,18 @@ struct WitgetItem: View {
     func getStatus(status: String, type: String?) -> some View {
         switch status {
         case "PENDING":
-            return AnyView(JoiningView(text: "Đã đặt lịch", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Đã đặt lịch", color: Color(red: 194/255, green: 229/255, blue: 255/255)
+, textColor: Color(red: 13/255, green: 153/255, blue: 255/255)))
         case "JOINING":
-            return AnyView(JoiningView(text: "Chờ \(type == "Video" ? "gọi" : "")tư vấn", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Chờ \(type == "Video" ? "gọi" : "")tư vấn", color: Color(red: 129/255, green: 198/255, blue: 117/255), textColor: Color.white))
         case "EXPIRED_RINGING":
-            return AnyView(JoiningView(text: "Bị nhỡ", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Bị nhỡ", color: Color(red: 241/255, green: 91/255, blue: 87/255), textColor: Color.white))
         case "RINGING":
-            return AnyView(JoiningView(text: "Bác sĩ đang gọi", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Bác sĩ đang gọi", color: Color(red: 129/255, green: 198/255, blue: 117/255, opacity: 0.35), textColor: Color(red: 6/255, green: 144/255, blue: 0/255)))
         case "JOINED":
-            return AnyView(JoiningView(text: "Đang tư vấn", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Đang tư vấn", color: Color(red: 6/255, green: 144/255, blue: 0/255), textColor: Color.white))
         case "ENDCALL":
-            return AnyView(JoiningView(text: "Đang tư vấn", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
+            return AnyView(JoiningView(text: "Đang tư vấn", color: Color(red: 6/255, green: 144/255, blue: 0/255), textColor: Color.white))
         default:
             return AnyView(JoiningView(text: "Đã đặt lịch", color: Color(red: 0.51, green: 0.78, blue: 0.46), textColor: Color.white))
         }
@@ -218,17 +219,16 @@ struct WitgetItem: View {
                     isErrorConfirmTimeValidation = true
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        handleWidgetGetdata()
                         isButtonActionLoading = false
                     }
                 }
+                handleWidgetGetdata()
 
             }
         case "JOINING", "JOINED", "ENDCALL":
             let url = getUrlDefault() + "/phong-tu-van?channel=" + (item.thirdParty.sendbird?.channelUrl ?? "")
             openWebView(currentViewController: currentViewController, withURL: url, data: data)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                handleWidgetGetdata()
                 isButtonActionLoading = false
             }
         case "EXPIRED_RINGING":
@@ -238,6 +238,7 @@ struct WitgetItem: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     isButtonActionLoading = false
                 }
+                handleWidgetGetdata()
             }
         case "RINGING":
             print("RINGING")
@@ -248,13 +249,11 @@ struct WitgetItem: View {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                handleWidgetGetdata()
                 isButtonActionLoading = false
             }
 
         default:
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                handleWidgetGetdata()
                 isButtonActionLoading = false
             }
             print("default")
