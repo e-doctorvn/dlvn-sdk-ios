@@ -17,8 +17,9 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", from: "1.10.13"),
+        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", from: "1.10.18"),
         .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.15.1"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.24.0"),
 //        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "0.36.0"),
 //        .package(path: "./API")
     ],
@@ -30,6 +31,7 @@ let package = Package(
             dependencies: [
                 .product(name: "SendBirdCalls", package: "sendbird-calls-ios"),
                 .product(name: "SendbirdChatSDK", package: "sendbird-chat-sdk-ios"),
+                .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
 //                .product(name: "Apollo", package: "apollo-ios"),
 //////                .product(name: "ApolloWebSocket", package: "apollo-ios-websocket"),
 //                .product(name: "API", package: "API"),

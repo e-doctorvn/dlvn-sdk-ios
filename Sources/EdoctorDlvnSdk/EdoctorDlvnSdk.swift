@@ -11,6 +11,14 @@ import WebKit
 import Foundation
 import SendBirdCalls
 import SendbirdChatSDK
+import FirebaseAnalytics
+
+public func logEvent(name: String = "Edoctor-SDK", parameters: [String: Any]?) {
+    if !isLogEventEnable {
+       return
+    }
+    Analytics.logEvent(name, parameters: parameters)
+}
 
 public func openWebView(currentViewController: UIViewController? = nil, withURL urlString: String? = nil ,data: [String: Any]? = nil, onSdkRequestLogin: ((String) -> Void)? = nil, isFromNotification: Bool = false, onClose: (() -> Void)? = nil) {
     
