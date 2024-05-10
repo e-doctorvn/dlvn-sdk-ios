@@ -15,6 +15,8 @@ public var env: Env = Env.SANDBOX
 public var targetVersionBooking: String = "14.3"
 public var isCocoapod: Bool = false
 
+public var isLogEventEnable: Bool = true
+
 
 public let eDoctorAppId: String = "0BEF9C57-BA3B-474E-A40F-62B027AA47F6"
 private let urlDev: String = "khuat.dai-ichi-life.com.vn"

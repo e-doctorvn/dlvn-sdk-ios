@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 spec.name = "EdoctorDlvnSdk"
-spec.version = "1.2.11"
+spec.version = "1.2.13"
 spec.summary = "SDK tích hợp vào DlVN"
 spec.description = "SDK được phát triển bởi EDoctor"
 spec.homepage = "https://edoctor.io/"
@@ -11,14 +11,13 @@ spec.swift_version = '5.0'
 spec.dependencies = {
     "SendBirdCalls": ["~> 1.10.13"],
     "SendbirdChatSDK": ["~> 4.15.1"],
-    "Apollo": ["~> 0.36.0"]
   }
-spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.2.11' }
+spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.2.13' }
 spec.source_files = [
     "Sources/EdoctorDlvnSdk/*.{swift}",
     "Sources/EdoctorDlvnSdk/*/*.{swift}",
     "Sources/EdoctorDlvnSdk/*/*/*.{swift}"
   ]
 spec.resources = "Sources/EdoctorDlvnSdk/*.xcassets"
-spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.2.11/README.md"
+spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.2.13/README.md"
 end

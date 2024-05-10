@@ -227,7 +227,10 @@ struct VideoCallScreen: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: DirectCallManager.shared.directCall?.customItems) { data, error in }
+                                        var variables: [String: Any] = DirectCallManager.shared.directCall?.customItems ?? [:]
+                                        variables["callId"] = DirectCallManager.shared.directCall?.callId
+                                        
+                                        APIService.shared.startRequest(graphQLQuery: eClinicEndCall, variables: variables) { data, error in }
                                         directCallManager.endCall()
                                         handleWidgetGetdata()
                                     }) {

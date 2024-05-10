@@ -45,8 +45,8 @@ mutation eClinicExpireRinging($eClinicId: String!, $appointmentScheduleId: Strin
 
 //goi khi từ tắt cuộc goi
 public let eClinicEndCall = """
-mutation EClinicEndCall($eClinicId: String!, $appointmentScheduleId: String!) {
-  eClinicEndCall(eClinicId: $eClinicId, appointmentScheduleId: $appointmentScheduleId) {
+mutation EClinicEndCall($eClinicId: String!, $appointmentScheduleId: String!, $callId: String) {
+  eClinicEndCall(eClinicId: $eClinicId, appointmentScheduleId: $appointmentScheduleId, callId: $callId) {
     appointmentScheduleId
   }
 }
