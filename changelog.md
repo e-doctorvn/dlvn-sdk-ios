@@ -1,4 +1,4 @@
-# dlvn-sdk-android
+# dlvn-sdk-ios
 
 EDR - DLVN Android IOS 
 
