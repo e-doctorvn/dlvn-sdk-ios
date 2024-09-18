@@ -323,6 +323,10 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        let code = (error as NSError).code
+        if code == NSURLErrorCancelled {
+            return
+        }
         self.activityIndicator.stopAnimating()
         self.alertErrorWebView(from: self, content: error.localizedDescription)
     }

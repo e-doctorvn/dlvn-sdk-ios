@@ -1,6 +1,6 @@
 # dlvn-sdk-android
 
-EDR - DLVN Android SDK 
+EDR - DLVN Android IOS 
 
 Latest version: 1.0.18 (Updated: 6/12/2023)
 
