@@ -1,23 +1,24 @@
 Pod::Spec.new do |spec|
 spec.name = "EdoctorDlvnSdk"
-spec.version = "1.3.0"
-spec.summary = "SDK tích hợp vào DlVN"
+spec.version = "2.0.0"
+spec.summary = "SDK tích hợp vào DlVN - ⚠️ DEPRECATED: Vui lòng sử dụng Swift Package Manager"
 spec.description = "SDK được phát triển bởi EDoctor"
 spec.homepage = "https://edoctor.io/"
 spec.license = { :type => "MIT", :file => "LICENSE" }
 spec.author = { "edoctor" => "edoctor.io" }
-spec.platform = :ios, "13.0"
+spec.platform = :ios, "14.3"
 spec.swift_version = '5.0'
 spec.dependencies = {
-    "SendBirdCalls": ["~> 1.10.22"],
+    # SendBirdCalls không còn hỗ trợ CocoaPods từ version 1.11.0
+    # Vui lòng migrate sang Swift Package Manager
     "SendbirdChatSDK": ["~> 4.34.1"],
   }
-spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.3.0' }
+spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v2.0.0' }
 spec.source_files = [
     "Sources/EdoctorDlvnSdk/*.{swift}",
     "Sources/EdoctorDlvnSdk/*/*.{swift}",
     "Sources/EdoctorDlvnSdk/*/*/*.{swift}"
   ]
 spec.resources = "Sources/EdoctorDlvnSdk/*.xcassets"
-spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v1.3.0/README.md"
+spec.readme = "https://github.com/e-doctorvn/dlvn-sdk-ios/blob/v2.0.0/README.md"
 end

@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-@available(iOS 14.3, *)
+
 struct StartCallScreen: View {
     @Environment(\.presentationMode) var presentationMode
     

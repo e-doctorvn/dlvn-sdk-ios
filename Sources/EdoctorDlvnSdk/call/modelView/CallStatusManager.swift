@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 13.0, *)
+
 public class CallStatusManager : ObservableObject {
     
     static let shared = CallStatusManager()

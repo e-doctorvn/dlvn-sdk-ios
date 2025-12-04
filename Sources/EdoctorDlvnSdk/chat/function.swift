@@ -12,11 +12,7 @@ import UIKit
 
 public func handleRegistriNotification(deviceToken: Data) {
     LocalStore.saveData(dataSave: deviceToken, key: .deviceToken)
-    if #available(iOS 14.3, *) {
-        SendBirdCallManager.shared.firstConfigure()
-    } else {
-        // Fallback on earlier versions
-    }
+    SendBirdCallManager.shared.firstConfigure()
 }
 
 public func authenticateChatEDR() {
@@ -79,12 +75,8 @@ public func handlePressNotificatin(currentViewController: UIViewController? = ni
     DispatchQueue.main.async {
         let url = getUrlDefault() + "/phong-tu-van?channel=" + channel_url
         
-        if #available(iOS 13.0, *) {
-            if (CallStatusManager.shared.callStatus != .none && CallStatusManager.shared.callStatus != .videoCallWithChat) {
-                CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
-            } else {
-                openWebView(currentViewController: currentViewController, withURL: url, isFromNotification: true)
-            }
+        if (CallStatusManager.shared.callStatus != .none && CallStatusManager.shared.callStatus != .videoCallWithChat) {
+            CallStatusManager.shared.setCallStatus(value: .videoCallWithChat)
         } else {
             openWebView(currentViewController: currentViewController, withURL: url, isFromNotification: true)
         }

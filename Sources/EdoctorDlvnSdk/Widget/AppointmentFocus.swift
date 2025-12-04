@@ -6,7 +6,7 @@
 //
 import Foundation
 
-@available(iOS 14.3, *)
+
 public class AppointmentFocus : ObservableObject {
     
     static let shared = AppointmentFocus()

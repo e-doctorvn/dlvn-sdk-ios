@@ -9,7 +9,7 @@ import Foundation
 import SendBirdCalls
 import UIKit
 
-@available(iOS 13.0, *)
+
 public class DirectCallManager: UIViewController, ObservableObject {
     
     public func didConnect(_ call: SendBirdCalls.DirectCall) {
@@ -75,7 +75,7 @@ public class DirectCallManager: UIViewController, ObservableObject {
         directCall?.updateRemoteVideoView(remoteVideoView)
     }
     
-    @available(iOS 14.3, *)
+    
     public func startCall(calleeId: String,  isVideoCall: Bool) {
 
         

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
+
 struct ImageView: View {
     @State private var image: UIImage? = nil
     @State private var isLoading = false

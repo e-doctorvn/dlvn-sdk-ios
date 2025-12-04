@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.3, *)
+
 struct IncommingCallScreen: View {
     @ObservedObject var directCallManager = DirectCallManager.shared
     @ObservedObject var callStatusManager = CallStatusManager.shared

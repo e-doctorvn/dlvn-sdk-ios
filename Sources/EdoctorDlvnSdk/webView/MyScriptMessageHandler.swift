@@ -52,9 +52,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                         ControlerAlert.shared.reSetViewController()
                         
                     case requiredClose:
-                        if #available(iOS 14.3, *) {
-                            handleWidgetGetdata()
-                        }
+                        handleWidgetGetdata()
                         ControlerAlert.shared.viewController?.dismiss(animated: true)
                         ControlerAlert.shared.reSetViewController()
                         rollBackChatAndCall()
@@ -107,9 +105,7 @@ class MyScriptMessageHandler: NSObject, WKScriptMessageHandler {
                     case "agree-consent":
                         (handleLoginAndAgree ?? noHandle)()
                     case "authenticate-sendbird":
-                        if #available(iOS 14.3, *) {
-                            handleWidgetGetdata()
-                        }
+                        handleWidgetGetdata()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
                             handleLoginSendbird()
                         }
@@ -197,12 +193,8 @@ func handleChatAndCall(userId: String, edrToken: String) {
         return
     }
     
-    if #available(iOS 14.3, *) {
-        deauthenticateEDR(clearCache: false)
-        authenticateEDRByToken(token: edrToken)
-    } else {
-        // Fallback on earlier versions
-    }
+    deauthenticateEDR(clearCache: false)
+    authenticateEDRByToken(token: edrToken)
     
 }
 
@@ -215,24 +207,15 @@ func rollBackChatAndCall() {
         return
     }
     
-    if #available(iOS 14.3, *) {
-        deauthenticateEDR(clearCache: false, isShortLink: true)
-        
-        firstConfigureCall()
-    } else {
-        // Fallback on earlier versions
-    }
+    deauthenticateEDR(clearCache: false, isShortLink: true)
+    firstConfigureCall()
     
 }
 
 func handleLoginSendbird() {
-    if #available(iOS 14.3, *) {
-        let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
-        let currentUser = SendbirdChat.getCurrentUser()
-        if (currentUser == nil || currentUser?.userId != userData?.userId) {
-            firstConfigureCall()
-        }
-    } else {
-        // Fallback on earlier versions
+    let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+    let currentUser = SendbirdChat.getCurrentUser()
+    if (currentUser == nil || currentUser?.userId != userData?.userId) {
+        firstConfigureCall()
     }
 }

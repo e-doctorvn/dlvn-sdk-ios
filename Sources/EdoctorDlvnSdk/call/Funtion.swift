@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import SendBirdCalls
 
-@available(iOS 14.3, *)
+
 public func startVideoCallLayout(calleeId: String, isVideoCall: Bool) {
     requestPermissions()
     SendBirdCallManager.shared.makeCall(calleeId: calleeId, isVideoCall: isVideoCall)
@@ -27,7 +27,7 @@ public func startVideoCallLayout(calleeId: String, isVideoCall: Bool) {
 }
 
 
-@available(iOS 14.3, *)
+
 public func inCommingCall(currentViewController: UIViewController? = nil, call: DirectCall, isPushNoti: Bool?) {
 
     if isPushNoti != true {

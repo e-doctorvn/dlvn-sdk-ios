@@ -11,7 +11,7 @@ import CallKit
 import SendBirdCalls
 import SendbirdChatSDK
 
-@available(iOS 14.3, *)
+
 public class SendBirdCallManager: NSObject {
 
     public static let shared = SendBirdCallManager()

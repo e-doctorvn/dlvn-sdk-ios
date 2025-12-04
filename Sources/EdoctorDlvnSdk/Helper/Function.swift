@@ -67,7 +67,7 @@ func convertDictionaryToString(dictionary: [AnyHashable: Any]) -> String? {
     return nil
 }
 
-@available(iOS 14.3, *)
+
 func startCountDownDuration(callDuration: TimeInterval) {
     DispatchQueue.main.async {
         CountDownManager.shared.startCountDown(remainingTime: callDuration/1000)
@@ -75,7 +75,7 @@ func startCountDownDuration(callDuration: TimeInterval) {
 
 }
 
-@available(iOS 14.3, *)
+
 func handleCountDown(reponseData: String) {
     if let jsonData = reponseData.data(using: .utf8) {
         do {

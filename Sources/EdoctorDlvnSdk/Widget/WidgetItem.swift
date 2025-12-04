@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.3, *)
+
 struct WitgetItem: View {
     
     var item: AppointmentSchedules
@@ -265,7 +265,7 @@ struct WitgetItem: View {
 
 
     
-@available(iOS 14.3, *)
+
 struct JoiningView: View {
         var text: String = ""
         var color: Color = Color(red: 0.51, green: 0.78, blue: 0.46)

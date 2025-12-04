@@ -191,11 +191,6 @@ class MainViewController: UIViewController {
     }
     
     @objc private func authenticateTapped() {
-        guard #available(iOS 14.3, *) else {
-            updateStatus("⚠️ Yêu cầu iOS 14.3+")
-            return
-        }
-        
         guard let dcId = dcIdField.text, !dcId.isEmpty else {
             updateStatus("⚠️ Vui lòng nhập DC ID")
             return
@@ -227,9 +222,7 @@ class MainViewController: UIViewController {
     }
     
     @objc private func logoutTapped() {
-        if #available(iOS 14.3, *) {
-            deauthenticateEDR()
-        }
+        deauthenticateEDR()
         isAuthenticated = false
         updateStatus("⚪ Đã đăng xuất")
     }

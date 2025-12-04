@@ -76,17 +76,12 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                     print("Lỗi: \(error)")
                     completion(false, error)
                 } else {
-                    if #available(iOS 14.3, *) {
-                        let chatUser = SendbirdChat.getCurrentUser()
-                        let callUser = SendBirdCall.currentUser
-                        let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
-                        
-                        if (callUser?.userId != chatUser?.userId || callUser?.userId != userData?.userId || userData == nil || chatUser?.userId == nil || callUser?.userId == nil)  {
-                            SendBirdCallManager.shared.firstConfigure()
-                        }
-
-                    } else {
-                        // Fallback on earlier versions
+                    let chatUser = SendbirdChat.getCurrentUser()
+                    let callUser = SendBirdCall.currentUser
+                    let userData: UserInfo? = LocalStore.getData(key: storeType.userInfoKey)
+                    
+                    if (callUser?.userId != chatUser?.userId || callUser?.userId != userData?.userId || userData == nil || chatUser?.userId == nil || callUser?.userId == nil)  {
+                        SendBirdCallManager.shared.firstConfigure()
                     }
 
                     completion(true, nil)
@@ -160,7 +155,6 @@ func getData(dataInput: EdoctorInputData, completion: @escaping (EdoctorOutputRe
     
     task.resume()
 }
-@available(iOS 14.3, *)
 public func deauthenticateEDR(clearCache : Bool? = true, isShortLink: Bool? = false) {
     SendBirdCallManager.shared.removeVoIPPushToken()
     SendBirdCall.removeAllDelegates()
@@ -181,17 +175,14 @@ public func deauthenticateEDR(clearCache : Bool? = true, isShortLink: Bool? = fa
     clearWebViewCache()
 }
 
-@available(iOS 14.3, *)
 public func logInSendBird(userId: String, accessToken: String) {
     SendBirdCallManager.shared.login(userId: userId, accessToken: accessToken)
 }
 
-@available(iOS 14.3, *)
 public func configAppId(appId: String) {
     SendBirdCallManager.shared.configure(appId: appId)
 }
 
-@available(iOS 14.3, *)
 public func authenticateEDRByToken(token: String) {
     APIService.shared.startRequest(graphQLQuery: sendbirdAccount, token: token) { data, error in
         if error != nil || data == nil {
@@ -219,17 +210,14 @@ public func authenticateEDRByToken(token: String) {
     }
 }
 
-@available(iOS 14.3, *)
 public func firstConfigureCall() {
     SendBirdCallManager.shared.firstConfigure()
 }
 
-@available(iOS 14.3, *)
 public func handleWidgetGetdata() {
     AppointmentViewModel.shared.getData()
 }
 
-@available(iOS 14.3, *)
 public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
     deauthenticateEDR()
     do {
@@ -289,7 +277,6 @@ public func openAlert(from viewController: UIViewController, content: String?) {
     viewController.present(alertController, animated: true, completion: nil)
 }
 
-@available(iOS 14.3, *)
 public func addDirectCallSounds(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
     // SendBirdCall.setDirectCallSound("Ringing.mp3", forKey: .ringing)
     if (dialingName != nil) {
@@ -305,14 +292,12 @@ public func addDirectCallSounds(dialingName: String? = nil, reconnectingName: St
     }
 }
 
-@available(iOS 14.3, *)
 public func removeDirectCallSounds() {
     SendBirdCall.removeDirectCallSound(forType: .dialing)
     SendBirdCall.removeDirectCallSound(forType: .reconnecting)
     SendBirdCall.removeDirectCallSound(forType: .reconnected)
 }
 
-@available(iOS 14.3, *)
 @objc public class DlvnWidget: UIViewController {
     var data: [String: Any]? = nil
     var currentViewController: UIViewController? = nil
@@ -385,13 +370,11 @@ public func removeDirectCallSounds() {
         env = Env.SANDBOX
     }
     
-    @available(iOS 14.3, *)
-    @objc public func addDirectCallSoundsOC(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
+        @objc public func addDirectCallSoundsOC(dialingName: String? = nil, reconnectingName: String? = nil, reconnectedName: String? = nil) {
         addDirectCallSounds(dialingName: dialingName, reconnectingName: reconnectingName, reconnectedName: reconnectedName)
     }
     
-    @available(iOS 14.3, *)
-    @objc public func authenticateEDROC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
+        @objc public func authenticateEDROC(data: [String: Any], completion: @escaping (Bool, Error?) -> Void) {
         authenticateEDR(data: data) { dataOutput, error in
             if let error = error {
                 completion(false, error)
@@ -401,40 +384,33 @@ public func removeDirectCallSounds() {
         }
     }
     
-    @available(iOS 14.3, *)
-    @objc public func deauthenticateEDROC() {
+        @objc public func deauthenticateEDROC() {
         deauthenticateEDR()
     }
     
     // chat func
-    @available(iOS 14.3, *)
-    @objc public func handleRegistriNotificationOC(deviceToken: Data) {
+        @objc public func handleRegistriNotificationOC(deviceToken: Data) {
         handleRegistriNotification(deviceToken: deviceToken)
     }
     
-    @available(iOS 14.3, *)
-    @objc public func allowPushNotificationBackgroundOC(notification: UNNotification) -> Bool {
+        @objc public func allowPushNotificationBackgroundOC(notification: UNNotification) -> Bool {
         return allowPushNotificationBackground(notification: notification)
     }
     
-    @available(iOS 14.3, *)
-    @objc public func isEdrMessageOC(notification: UNNotification) -> Bool {
+        @objc public func isEdrMessageOC(notification: UNNotification) -> Bool {
         return  isEdrMessage(notification: notification)
     }
     
     
-    @available(iOS 14.3, *)
-    @objc public func removeDirectCallSoundsOC() {
+        @objc public func removeDirectCallSoundsOC() {
         removeDirectCallSounds()
     }
     
-    @available(iOS 14.3, *)
-    @objc public func handlePressNotificatinOC(currentViewController: UIViewController? = nil, response: UNNotificationResponse) {
+        @objc public func handlePressNotificatinOC(currentViewController: UIViewController? = nil, response: UNNotificationResponse) {
        handlePressNotificatin(currentViewController: currentViewController, response: response)
     }
     
-    @available(iOS 14.3, *)
-    @objc public func handleWidgetGetdataOC() {
+        @objc public func handleWidgetGetdataOC() {
         handleWidgetGetdata()
     }
     

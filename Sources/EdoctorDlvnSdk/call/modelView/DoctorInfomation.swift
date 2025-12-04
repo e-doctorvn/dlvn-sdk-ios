@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 14.3, *)
+
 public class DoctorInfomation : ObservableObject {
     
     static let shared = DoctorInfomation()

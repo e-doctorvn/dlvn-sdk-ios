@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.3, *)
+
 struct IncomingVideoCallLayout: View {
     
     @EnvironmentObject var directCallManager : DirectCallManager

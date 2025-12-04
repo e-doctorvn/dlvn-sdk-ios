@@ -6,28 +6,14 @@
 - mở webview tư vấn sức khỏe
 - call native
 
-## Yêu cầu: iOS 13.0+
+## Yêu cầu: iOS 14.3+
+
+> ⚠️ **Từ version 2.0.0**, SDK chỉ hỗ trợ **Swift Package Manager**. CocoaPods không còn được hỗ trợ do SendBirdCalls đã ngừng hỗ trợ CocoaPods từ version 1.11.0.
 
 ## SDK Integration
--- Đảm bảo bạn đã được thêm tài khoản vào repo  này
--- Hướng dẫn lấy access Token tại đây : https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
--- Dưới đây là 2 cách để tích hợp sdk vào dự án
+### Swift Package Manager (Khuyến nghị)
 
--- Cách 1 dùng Cocoapod:
--
-- Thêm đoạn mã vào podfile dự án :
-    ```swift
-    target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.2.0' 
-    end
-    ```
-- sau đó chạy lệnh "pod install" để cài đặt
-- Nhập username
-- Nhập password là access token đã tạo ở bước trên  (không phải nhập password git)
-* lưu ý: Nếu dùng cách này thì phải mở file  .xcworkspace 
-
--- Cách 2 Package Dependency:
 -
 - Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
 - Chọn Add Other...
@@ -128,7 +114,7 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ## Yêu cầu: 
 - iOS 14.3 trở lên
 - Swift 5.0 trở lên
-- Xcode 14.1 trở lên
+- Xcode 15.0 trở lên
 ## Cấu hình
 - Bật "Voice over IP" trong Signing & Capabilities -> "Background Modes"
 ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)

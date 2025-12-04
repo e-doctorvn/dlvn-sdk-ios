@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.3, *)
+
 struct AvatarView: View, Equatable {
     var UrlString: String?
     var size: CGFloat

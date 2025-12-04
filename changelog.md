@@ -2,7 +2,26 @@
 
 EDR - DLVN Android IOS 
 
-Latest version: 1.3.0 (Updated: 04/12/2024)
+Latest version: 2.0.0 (Updated: 04/12/2024)
+
+## Version 2.0.0 🚀 SPM ONLY
+- **⚠️ BREAKING**: Chỉ hỗ trợ **Swift Package Manager**, không còn hỗ trợ CocoaPods
+- **Minimum iOS version**: 13.0 → **14.3**
+- **SendBirdCalls**: 1.10.22 → **1.11.1**
+- **SendbirdChatSDK**: 4.34.1 (giữ nguyên)
+- Loại bỏ các `@available(iOS 14.3, *)` checks không cần thiết
+- Cập nhật Example app tương thích iOS 14+
+
+### Migration Guide
+```swift
+// Podfile - KHÔNG CÒN HỖ TRỢ
+// pod 'EdoctorDlvnSdk'
+
+// Package.swift - SỬ DỤNG CÁCH NÀY
+dependencies: [
+    .package(url: "https://github.com/e-doctorvn/dlvn-sdk-ios.git", from: "2.0.0")
+]
+```
 
 ## Version 1.3.0 ⚠️ BREAKING CHANGES
 - **Minimum iOS version**: 11.0 → **13.0**

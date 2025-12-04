@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 14.3, *)
+
 class AppointmentViewModel: ObservableObject {
     
     static let shared = AppointmentViewModel()

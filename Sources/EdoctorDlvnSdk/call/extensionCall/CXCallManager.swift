@@ -4,7 +4,7 @@ import UIKit
 import AVFoundation
 import SendBirdCalls
 
-@available(iOS 14.3, *)
+
 class CXCallManager: NSObject {
     static let shared = CXCallManager()
     
@@ -26,7 +26,7 @@ class CXCallManager: NSObject {
     }
 }
 
-@available(iOS 14.3, *)
+
 extension CXCallManager { // Process with CXProvider
     func reportIncomingCall(with callID: UUID, update: CXCallUpdate, completionHandler: ((Error?) -> Void)? = nil) {
         self.provider.reportNewIncomingCall(with: callID, update: update) { (error) in
@@ -45,7 +45,7 @@ extension CXCallManager { // Process with CXProvider
     }
 }
 
-@available(iOS 14.3, *)
+
 extension CXCallManager { // Process with CXTransaction
     func requestTransaction(_ transaction: CXTransaction, action: String = "") {
         self.controller.request(transaction) { error in
@@ -85,7 +85,7 @@ extension CXCallManager { // Process with CXTransaction
     }
 }
 
-@available(iOS 14.3, *)
+
 extension CXCallManager: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) { }
     
@@ -220,7 +220,7 @@ extension DirectCallEndResult {
     }
 }
 
-@available(iOS 14.3, *)
+
 extension CXProviderConfiguration {
     // The app's provider configuration, representing its CallKit capabilities
     static var `default`: CXProviderConfiguration {
@@ -244,7 +244,7 @@ extension CXProviderConfiguration {
     }
 }
 
-@available(iOS 14.3, *)
+
 extension CXProvider {
     static var `default`: CXProvider {
         CXProvider(configuration: .`default`)

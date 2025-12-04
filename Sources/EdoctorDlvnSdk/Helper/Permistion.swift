@@ -19,11 +19,7 @@ public func requestCameraPermission() {
         if granted {
             print("Camera permission granted.")
         } else {
-            if #available(iOS 14.3, *) {
-                DirectCallManager.shared.endCallFast()
-            } else {
-                // Fallback on earlier versions
-            }
+            DirectCallManager.shared.endCallFast()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 openAlertgoSetting(content: "Vui lòng cho phép quyền camera để thực hiện tư vấn video")
             }
@@ -44,11 +40,7 @@ public func requestMicrophonePermission() {
         if granted {
             print("Microphone permission granted.")
         } else {
-            if #available(iOS 14.3, *) {
-                DirectCallManager.shared.endCallFast()
-            } else {
-                // Fallback on earlier versions
-            }
+            DirectCallManager.shared.endCallFast()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 openAlertgoSetting(content: "Vui lòng cho phép quyền microphone để thực hiện tư vấn video")
             }

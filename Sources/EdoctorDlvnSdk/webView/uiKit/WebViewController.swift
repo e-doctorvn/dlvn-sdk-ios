@@ -55,9 +55,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         if webView.canGoBack {
             // web handle
         } else {
-            if #available(iOS 14.3, *) {
-                handleWidgetGetdata()
-            }
+            handleWidgetGetdata()
             if onClose != nil {
                 onClose!()
                 ControlerAlert.shared.reSetViewController()
@@ -194,17 +192,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
          if navigationAction.navigationType == WKNavigationType.linkActivated {
              if let url = navigationAction.request.url {
                  if (url.host!.contains("dai-ichi-life.com.vn") || url.absoluteString.contains("/tu-van-suc-khoe")) {
-                     if #available(iOS 14.3, *) {
-                         webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
-                     } else {
-                         if (url.absoluteString.contains("tu-van-suc-khoe/phong-tu-van") || url.absoluteString.contains("tu-van-suc-khoe/tu-van-tu-xa")) {
-                                 decisionHandler(.cancel)
-                                 openAlert(from: self, content: "Chức năng này yêu cầu iOS tối thiểu 14.3, Phiên bản hiện tại của bạn là \(UIDevice.current.systemVersion), Vui lòng nâng cấp hệ điều hành để có thể sử dụng được chức năng này")
-                                 return
-                         } else {
-                             webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
-                         }
-                     }
+                     webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
 
                  } else {
                      UIApplication.shared.open(url)

@@ -8,7 +8,7 @@
 import SwiftUI
 import SendBirdCalls
 
-@available(iOS 13.0, *)
+
 struct SendBirdVideoViewWrapper: UIViewRepresentable {
     let sendBirdVideoView: SendBirdVideoView
 
@@ -21,7 +21,7 @@ struct SendBirdVideoViewWrapper: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.3, *)
+
 struct WebViewWrapper: UIViewControllerRepresentable, Equatable {
     
     func makeUIViewController(context: Context) -> UIViewController {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
+
 struct FinnishCallLayout: View {
     
     @State var rating = 5

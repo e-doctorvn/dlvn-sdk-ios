@@ -7,7 +7,7 @@
 
 import SwiftUI
 //               Image("backgroundCall", bundle: isCocoapod ? Bundle(for: WebViewController.self) : Bundle.module)
-@available(iOS 14.3, *)
+
 struct BackgroundImage: View, Encodable {
     let UrlString: String?
     let blur: CGFloat

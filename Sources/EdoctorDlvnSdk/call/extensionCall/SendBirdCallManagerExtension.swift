@@ -12,7 +12,7 @@ import UIKit
 
 //import AVFoundation
 
-@available(iOS 14.3, *)
+
 extension SendBirdCallManager: SendBirdCallDelegate, DirectCallDelegate {
     
     public func didStartRinging(_ call: DirectCall) {

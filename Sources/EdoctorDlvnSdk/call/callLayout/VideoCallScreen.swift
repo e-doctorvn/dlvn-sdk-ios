@@ -3,7 +3,7 @@ import WebKit
 import AVKit
 
 
-@available(iOS 14.3, *)
+
 struct VideoCallScreen: View {
     
     @EnvironmentObject var directCallManager : DirectCallManager
