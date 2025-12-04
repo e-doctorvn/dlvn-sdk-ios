@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "EdoctorDlvnSdk",
     platforms: [
-        .macOS(.v10_14), .iOS(.v11)
+        .macOS(.v10_14), .iOS(.v13)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -17,8 +17,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", from: "1.10.18"),
-        .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.15.1"),
+        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", exact: "1.10.22"),
+        .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.34.1"),
 //        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.24.0"),
 //        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "0.36.0"),
 //        .package(path: "./API")

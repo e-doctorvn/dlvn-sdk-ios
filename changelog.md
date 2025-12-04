@@ -2,7 +2,19 @@
 
 EDR - DLVN Android IOS 
 
-Latest version: 1.0.18 (Updated: 6/12/2023)
+Latest version: 1.3.0 (Updated: 04/12/2024)
+
+## Version 1.3.0 ⚠️ BREAKING CHANGES
+- **Minimum iOS version**: 11.0 → **13.0**
+- **SendBirdCalls**: 1.10.13 → **1.10.22** (bản cuối cùng hỗ trợ CocoaPods)
+- **SendbirdChatSDK**: 4.15.1 → **4.34.1**
+- Fix typo "xãy ra" → "xảy ra"
+- Thêm Example app để test SDK
+
+> ⚠️ **Lưu ý**: Đây là bản cuối cùng hỗ trợ CocoaPods cho SendBirdCalls. Các bản sau sẽ chỉ hỗ trợ Swift Package Manager.
+
+## Version 1.2.14
+- Ignore bug code -999 from webview
 
 ## Version 1.0.18
 - update lại key bị trùng trong sessionStorage

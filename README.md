@@ -6,7 +6,7 @@
 - mở webview tư vấn sức khỏe
 - call native
 
-## Yêu cầu: .iOS(.v11)
+## Yêu cầu: iOS 13.0+
 
 ## SDK Integration
 -- Đảm bảo bạn đã được thêm tài khoản vào repo  này

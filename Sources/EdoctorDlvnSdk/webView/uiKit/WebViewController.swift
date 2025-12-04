@@ -366,7 +366,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 //    }
     
     public func alertErrorWebView(from viewController: UIViewController, content: String?) {
-        var text = "Đã có lỗi xãy ra. Vui lòng thử lại"
+        var text = "Đã có lỗi xảy ra. Vui lòng thử lại"
         if content == "The Internet connection appears to be offline." {
             text = "Không có kết nối internet. Vui lòng kiểm tra lại."
         }
