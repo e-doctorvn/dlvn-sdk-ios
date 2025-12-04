@@ -6,7 +6,7 @@ spec.description = "SDK được phát triển bởi EDoctor"
 spec.homepage = "https://edoctor.io/"
 spec.license = { :type => "MIT", :file => "LICENSE" }
 spec.author = { "edoctor" => "edoctor.io" }
-spec.platform = :ios, "14.3"
+spec.platform = :ios, "14.0"
 spec.swift_version = '5.0'
 spec.dependencies = {
     # SendBirdCalls không còn hỗ trợ CocoaPods từ version 1.11.0

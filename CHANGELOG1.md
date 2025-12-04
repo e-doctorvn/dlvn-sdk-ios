@@ -6,7 +6,7 @@ Latest version: 2.0.0 (Updated: 04/12/2024)
 
 ## Version 2.0.0 🚀 SPM ONLY
 - **⚠️ BREAKING**: Chỉ hỗ trợ **Swift Package Manager**, không còn hỗ trợ CocoaPods
-- **Minimum iOS version**: 13.0 → **14.3**
+- **Minimum iOS version**: 13.0 → **14.0**
 - **SendBirdCalls**: 1.10.22 → **1.11.1**
 - **SendbirdChatSDK**: 4.34.1 (giữ nguyên)
 - Loại bỏ các `@available(iOS 14.3, *)` checks không cần thiết

@@ -3,7 +3,7 @@
 SDK tích hợp tư vấn sức khỏe cho ứng dụng Dai-ichi Life Vietnam.
 
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org)
-[![iOS](https://img.shields.io/badge/iOS-14.3+-blue.svg)](https://developer.apple.com/ios/)
+[![iOS](https://img.shields.io/badge/iOS-14.0+-blue.svg)](https://developer.apple.com/ios/)
 [![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
 
 ## Tính năng
@@ -16,7 +16,7 @@ SDK tích hợp tư vấn sức khỏe cho ứng dụng Dai-ichi Life Vietnam.
 
 | Yêu cầu | Phiên bản |
 |---------|-----------|
-| iOS | 14.3+ |
+| iOS | 14.0+ |
 | Swift | 5.0+ |
 | Xcode | 15.0+ |
 
