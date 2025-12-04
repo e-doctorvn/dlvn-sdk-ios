@@ -1,161 +1,209 @@
-# DlvnSdk
-## Hướng dẫn tích hợp SDK
+# EdoctorDlvnSdk
+
+SDK tích hợp tư vấn sức khỏe cho ứng dụng Dai-ichi Life Vietnam.
+
+[![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org)
+[![iOS](https://img.shields.io/badge/iOS-14.3+-blue.svg)](https://developer.apple.com/ios/)
+[![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
 
 ## Tính năng
 
-- mở webview tư vấn sức khỏe
-- call native
+- Mở WebView tư vấn sức khỏe
+- Video call với bác sĩ
+- Chat và nhận thông báo
 
-## Yêu cầu: iOS 14.3+
+## Yêu cầu hệ thống
 
-> ⚠️ **Từ version 2.0.0**, SDK chỉ hỗ trợ **Swift Package Manager**. CocoaPods không còn được hỗ trợ do SendBirdCalls đã ngừng hỗ trợ CocoaPods từ version 1.11.0.
+| Yêu cầu | Phiên bản |
+|---------|-----------|
+| iOS | 14.3+ |
+| Swift | 5.0+ |
+| Xcode | 15.0+ |
 
-## SDK Integration
+> **Lưu ý:** Từ version 2.0.0, SDK chỉ hỗ trợ **Swift Package Manager**. CocoaPods không còn được hỗ trợ do SendBirdCalls đã ngừng hỗ trợ CocoaPods từ version 1.11.0.
 
-### Swift Package Manager (Khuyến nghị)
+---
 
--
-- Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
-- Chọn Add Other...
-- Chọn Add Package Dependency
-- Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
-- Nhập userName và access token được tạo ở bước trên
-- ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
-- Nhấn Add Package
+## Cài đặt
+
+### Swift Package Manager
+
+1. Trong Xcode, vào **File > Add Package Dependencies...**
+2. Nhập URL repository:
+   ```
+   https://github.com/e-doctorvn/dlvn-sdk-ios
+   ```
+3. Chọn version và nhấn **Add Package**
+
+> **Lưu ý:** Bạn cần có quyền truy cập vào repository. Tham khảo [hướng dẫn tạo Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+
+---
 
 ## Sử dụng
 
-Import:
+### Import SDK
 
 ```swift
 import EdoctorDlvnSdk
 ```
 
-mở webView
+### 1. Gửi dữ liệu xác thực
 
+```swift
+let data: [String: Any] = [
+    "company": "",
+    "partner_code": "",
+    "partnerid": "your_partner_id",
+    "deviceid": "your_device_id",
+    "dcId": "your_dc_id",
+    "token": "your_token"
+]
 
-```sh
-openWebView(currentViewController: self)
-```
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| currentViewController | UIViewController? | UIViewController to display, if nil will use first view of rootViewController |
-| urlString | String? | URL to open in WebView. If nil, use the initialized value in SDK |
-
-
-Gọi hàm:
-
-```sh
-let data : [String: Any] = [
-                    "company": "",
-                    "partner_code": "",
-                    "partnerid": "45f63H33771b42f1b08b7f9a50e6bd8a",
-                    "deviceid": "3e030eb9-63e6-4be1-ae0e-940f6b7e2c61",
-                    "dcId": "19E2ADB7-91A8-4C32-821B-31A03AD32C89",
-                    "token": "26f63593771b42f1b08b7f9a50e6dc7c"
-                ]
-DLVNSendData(data: data) { status, error in
-    print(status)
+DLVNSendData(data: data) { success, error in
+    if success {
+        print("Xác thực thành công")
+    } else {
+        print("Lỗi: \(error?.localizedDescription ?? "Unknown")")
+    }
 }
 ```
 
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `data` | `[String: Any]` | Dữ liệu xác thực (bắt buộc) |
 
+### 2. Mở WebView tư vấn
 
-| Parameter | Type          | Description                       |
-| :-------- | :----------- | :-------------------------------- |
-| data      | [String: Any] | Required|
-
-Kết quả:
--- `true`: Lấy accesstoken thành công
--- `false`: Gọi hàm không thành công
-
-
-```sh 
-// xóa accessToken
-deleteAccessToken()
+```swift
+openWebView(currentViewController: self)
 ```
 
-```sh 
-// chuyển đổi môi trường
-changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `currentViewController` | `UIViewController?` | ViewController hiển thị. Nếu `nil`, sử dụng rootViewController |
+| `urlString` | `String?` | URL tùy chỉnh. Nếu `nil`, sử dụng URL mặc định |
+
+### 3. Các hàm tiện ích
+
+```swift
+// Xóa cache WebView
+clearWebViewCache()
+
+// Chuyển đổi môi trường
+changeEnv(envUpdate: .LIVE)     // Production
+changeEnv(envUpdate: .SANDBOX)  // Development
 ```
-
-## Gọi mở webView cho objective-C
-
-```sh
-    @import EdoctorDlvnSdk;
-    
-    - (void)myFunction:(String *)urlString {
-    NSLog(@"urlString %@", urlString);
-    }
-
-    NSDictionary *data = @{
-        @"partnerid": @"45f63H33771b42f1b08b7f9a50e6bd8a",
-        @"deviceid": @"3e030eb9-63e6-4be1-ae0e-940f6b7e2c61",
-        @"dcId": @"19E2ADB7-91A8-4C32-821B-31A03AD32C89",
-        @"token": @"26f63593771b42f1b08b7f9a50e6dc7c"
-    };
-    DlvnSdk *dlvn = [[DlvnSdk alloc] init];
-
-
-    [dlvn openWebViewOCWithCurrentViewController:self withURL:nil data:nil onSdkRequestLogin:^(String *urlString) {
-        [self myFunction:urlString];
-    }];
-```
-
-- CurrentViewController == nil thì sẽ lấy "first view of rootViewController"
-- withURL == nil thì sẽ lấy url mặc định  (truyền url để xử lý  phần notification)
-- data == nil thì sẽ ko login được
-- onSdkRequestLogin: hàm này sẽ callback lại khi request login data là url
 
 ---
--- CALL NATIVE
--
-## Yêu cầu: 
-- iOS 14.3 trở lên
-- Swift 5.0 trở lên
-- Xcode 15.0 trở lên
-## Cấu hình
-- Bật "Voice over IP" trong Signing & Capabilities -> "Background Modes"
-![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)
-- Thêm quyền Microphone và Camera:
-    <key>NSCameraUsageDescription</key>
-    <key>NSMicrophoneUsageDescription</key>
+
+## Tích hợp Video Call
+
+### Cấu hình Xcode
+
+1. **Background Modes** - Bật các options sau trong **Signing & Capabilities**:
+   - Voice over IP
+   - Remote notifications
+
+2. **Info.plist** - Thêm các quyền:
+   ```xml
+   <key>NSCameraUsageDescription</key>
+   <string>Ứng dụng cần quyền Camera để thực hiện video call</string>
+   
+   <key>NSMicrophoneUsageDescription</key>
+   <string>Ứng dụng cần quyền Microphone để thực hiện cuộc gọi</string>
+   ```
+
+### Xác thực Sendbird
+
+```swift
+// Khi user đăng nhập thành công
+authenticateEDR(data: userData) { success, error in
+    if success {
+        print("Đăng nhập Sendbird thành công")
+    }
+}
+
+// Khi user đăng xuất
+deauthenticateEDR()
+```
 
 ---
--- CHAT Notification
--
-bật Remoote notification trong Background Modes
-- Lúc login thành công gọi hàm : authenticateEDROC vs param là data chứa thông tin tài khoản đó
-- Hàm handleRegistriNotification sẽ được gọi trong : application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) vs param là deviceToken 
-```swift
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        handleRegistriNotification(deviceToken: deviceToken)
-    }
-```
-- Xử lý hiện notification như thế này:
-```swift
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        if isEdrMessage(notification: notification) && allowPushNotificationBackground(notification: notification) {
-            completionHandler([.banner, .sound, .badge])
-        } else {
-            //DC app handle
-        }
-        
-    }
-```
-- Xử lý click vào thông báo như thế này: 
-```swift
-   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        handlePressNotificatin(response: response)
-    }
-```
 
-- Khi đăng xuất gọi hảm này để hủy các sự kiện:
+## Tích hợp Push Notification
+
+### 1. Đăng ký device token
 
 ```swift
-    deauthenticateEDROC
+func application(_ application: UIApplication, 
+                 didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    handleRegistriNotification(deviceToken: deviceToken)
+}
 ```
+
+### 2. Xử lý notification khi app đang mở
+
+```swift
+func userNotificationCenter(_ center: UNUserNotificationCenter,
+                            willPresent notification: UNNotification,
+                            withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    if isEdrMessage(notification: notification) && 
+       allowPushNotificationBackground(notification: notification) {
+        completionHandler([.banner, .sound, .badge])
+    } else {
+        // App xử lý notification khác
+    }
+}
+```
+
+### 3. Xử lý khi user tap vào notification
+
+```swift
+func userNotificationCenter(_ center: UNUserNotificationCenter,
+                            didReceive response: UNNotificationResponse,
+                            withCompletionHandler completionHandler: @escaping () -> Void) {
+    handlePressNotificatin(response: response)
+    completionHandler()
+}
+```
+
+---
+
+## Objective-C Support
+
+```objc
+@import EdoctorDlvnSdk;
+
+// Khởi tạo SDK
+DlvnSdk *dlvn = [[DlvnSdk alloc] init];
+
+// Gửi dữ liệu xác thực
+NSDictionary *data = @{
+    @"partnerid": @"your_partner_id",
+    @"deviceid": @"your_device_id",
+    @"dcId": @"your_dc_id",
+    @"token": @"your_token"
+};
+
+[dlvn DLVNSendDataOC:data completion:^(BOOL success, NSError *error) {
+    if (success) {
+        NSLog(@"Success");
+    }
+}];
+
+// Mở WebView
+[dlvn openWebViewOCWithCurrentViewController:self 
+                                     withURL:nil 
+                                        data:data 
+                           onSdkRequestLogin:^(NSString *urlString) {
+    // Handle login request
+}];
+```
+
+---
+
+## License
+
+MIT License - Copyright (c) 2024 EDoctor
 
 
 
