@@ -159,20 +159,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let window = UIApplication.shared.windows.last
         let topPadding = window?.safeAreaInsets.top
         view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: topPadding ?? 0)
-        let layer0 = CAGradientLayer()
-        layer0.colors = [
-            UIColor(red: 0.824, green: 0.333, blue: 0.251, alpha: 1).cgColor,
-            UIColor(red: 0.886, green: 0.38, blue: 0.255, alpha: 1).cgColor,
-        ]
-        layer0.locations = [0, 1]
-
-        layer0.startPoint = CGPoint(x: 0.5, y: 1)
-        layer0.endPoint = CGPoint(x: 0.5, y: 0)
-
-        layer0.bounds = view.bounds
-        layer0.position = view.center
-        
-        view.layer.addSublayer(layer0)
+        view.backgroundColor = UIColor(red: 23.0 / 255.0, green: 70.0 / 255.0, blue: 1.0, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -383,6 +370,5 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 extension Notification.Name {
     static let handleLoadUrl = Notification.Name("handleLoadUrl")
 }
-
 
 
