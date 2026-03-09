@@ -69,7 +69,16 @@ struct WebViewWrapper: UIViewControllerRepresentable, Equatable {
 //}
 
 func topMostController() -> UIViewController? {
-    var topController = UIApplication.shared.keyWindow?.rootViewController
+    let activeWindowScene = UIApplication.shared.connectedScenes
+        .compactMap { $0 as? UIWindowScene }
+        .first { $0.activationState == .foregroundActive }
+    let keyWindow = activeWindowScene?.windows.first(where: \.isKeyWindow)
+        ?? UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first(where: \.isKeyWindow)
+
+    var topController = keyWindow?.rootViewController
     
     while let presentedViewController = topController?.presentedViewController {
         topController = presentedViewController

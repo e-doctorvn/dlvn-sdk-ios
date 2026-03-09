@@ -39,9 +39,7 @@ func formatDateString(_ dateString: String) -> String {
     
     if let date = dateFormatter.date(from: dateString) {
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day, .month, .year], from: Date())
-        let todayDate = calendar.date(from: components)!
-        
+
         if calendar.isDateInToday(date) {
             dateFormatter.dateFormat = "'Hôm nay,' HH:mm"
         } else {
@@ -119,4 +117,3 @@ public struct Product: Codable, Hashable {
 public struct PackagesItem: Codable, Hashable {
     let time: TimeInterval?
 }
-

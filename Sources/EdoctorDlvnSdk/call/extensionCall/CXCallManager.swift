@@ -206,6 +206,8 @@ extension DirectCallEndResult {
         switch self {
         case .connectionLost, .timedOut, .acceptFailed, .dialFailed, .unknown:
             return .failed
+        case .notConnected:
+            return .failed
         case .completed, .canceled:
             return .remoteEnded
         case .declined:
@@ -250,4 +252,3 @@ extension CXProvider {
         CXProvider(configuration: .`default`)
     }
 }
-
