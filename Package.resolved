@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "sendbird-auth-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sendbird/sendbird-auth-ios.git",
+      "state" : {
+        "revision" : "74f13a091fba7e234e6a5e241800687857d6b245",
+        "version" : "0.0.11"
+      }
+    },
+    {
       "identity" : "sendbird-calls-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sendbird/sendbird-calls-ios.git",
       "state" : {
-        "revision" : "602660b7b462396b1167c1580bb1d5c0fe83f981",
-        "version" : "1.10.18"
+        "revision" : "b1535db69f0df8a4160022629adfd5cbc5458412",
+        "version" : "1.10.22"
       }
     },
     {
@@ -14,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sendbird/sendbird-chat-sdk-ios.git",
       "state" : {
-        "revision" : "481ab3cda4bf85a44d2e25629246b7a7f9d8b2cd",
-        "version" : "4.19.1"
+        "revision" : "46d07fb3dcf8ea31da09e73d81dc90333885492d",
+        "version" : "4.37.1"
       }
     },
     {

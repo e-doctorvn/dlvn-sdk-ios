@@ -7,6 +7,8 @@ Latest version: 1.3.1 (Updated: 08/03/2026)
 ## Version 1.3.1
 
 - Update webview header sang màu cố định `#1746FF`
+- Update `SendbirdChatSDK` lên `4.37.1`
+- Đồng bộ SPM/CocoaPods metadata với yêu cầu mới của Sendbird (`iOS 13+`, Swift `5.10+`)
 
 ## Version 1.3.0 ⚠️ BREAKING CHANGES
 
