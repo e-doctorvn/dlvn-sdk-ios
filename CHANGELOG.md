@@ -2,7 +2,14 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.1 (Updated: 08/03/2026)
+Latest version: 1.3.2 (Updated: 09/03/2026)
+
+## Version 1.3.2
+
+- Fix warning `switch must be exhaustive` cho `DirectCallEndResult.notConnected`
+- Loại bỏ warning biến không sử dụng trong `Function.swift`
+- Thay `keyWindow` deprecated bằng cách lấy active scene/window phù hợp iOS 13+
+- Bổ sung file `LICENSE` và cập nhật podspec để `pod lib lint` pass ổn định
 
 ## Version 1.3.1
 
