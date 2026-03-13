@@ -2,7 +2,12 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.2 (Updated: 13/03/2026)
+Latest version: 1.3.3 (Updated: 13/03/2026)
+
+## Version 1.3.3
+
+- Bump `EdoctorDlvnSdk.podspec` lên `1.3.3` (update `version`, `source tag`, `readme` URL)
+- Cập nhật màu text "Lối tắt vào phòng tư vấn" thành `#1746FF` trong `WidgetList.swift`
 
 ## Version 1.3.2
 
