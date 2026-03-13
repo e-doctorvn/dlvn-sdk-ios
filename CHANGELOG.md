@@ -29,7 +29,7 @@ Latest version: 1.3.2 (Updated: 13/03/2026)
 - Fix typo "xãy ra" → "xảy ra"
 - Thêm Example app để test SDK
 
-> ⚠️ **Lưu ý**: Đây là bản cuối cùng hỗ trợ CocoaPods cho SendBirdCalls. Các bản sau sẽ chỉ hỗ trợ Swift Package Manager.
+> ⚠️ **Lưu ý**: Đây là bản cuối cùng hỗ trợ CocoaPods cho SendBirdCalls. Từ bản 2.0.0 sẽ chỉ hỗ trợ Swift Package Manager.
 
 ## Version 1.2.14
 
