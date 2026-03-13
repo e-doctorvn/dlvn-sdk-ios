@@ -2,14 +2,18 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.2 (Updated: 09/03/2026)
+Latest version: 1.3.2 (Updated: 13/03/2026)
 
 ## Version 1.3.2
 
+- Bump `EdoctorDlvnSdk.podspec` lên `1.3.2` (update `version`, `source tag`, `readme` URL)
 - Fix warning `switch must be exhaustive` cho `DirectCallEndResult.notConnected`
 - Loại bỏ warning biến không sử dụng trong `Function.swift`
 - Thay `keyWindow` deprecated bằng cách lấy active scene/window phù hợp iOS 13+
-- Bổ sung file `LICENSE` và cập nhật podspec để `pod lib lint` pass ổn định
+- Bổ sung file `LICENSE` (MIT)
+- Cập nhật màu các action button trong màn hình video call sang tông xanh mới (`#0091FF`)
+- Cập nhật một số asset giao diện call (`Welcome`, `phongtuvan`)
+- Chuẩn hóa format tài liệu `README.md`
 
 ## Version 1.3.1
 
