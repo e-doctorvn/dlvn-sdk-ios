@@ -176,7 +176,7 @@ struct IncomingVideoCallLayout: View {
                                         .frame(width: 50, height: 50)
                                         .font(.system(size: 22))
                                         .foregroundColor(Color.white)
-                                        .background(Color(red: 0.78, green: 0.51, blue: 0.35))
+                                        .background(Color(red: 0.0, green: 145.0 / 255.0, blue: 1.0))
                                         .clipShape(Circle())
                                 }
                                 Text("Mic")
@@ -199,7 +199,7 @@ struct IncomingVideoCallLayout: View {
                                         .font(.system(size: 20))
                                         .frame(width: 50, height: 50)
                                         .foregroundColor(Color.white)
-                                        .background(Color(red: 0.78, green: 0.51, blue: 0.35))
+                                        .background(Color(red: 0.0, green: 145.0 / 255.0, blue: 1.0))
                                         .clipShape(Circle())
                                 }
                                 Text("Camera")

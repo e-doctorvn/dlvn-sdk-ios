@@ -1,4 +1,5 @@
 # DlvnSdk
+
 ## Hướng dẫn tích hợp SDK
 
 ## Tính năng
@@ -9,26 +10,28 @@
 ## Yêu cầu: iOS 13.0+
 
 ## SDK Integration
--- Đảm bảo bạn đã được thêm tài khoản vào repo  này
+
+-- Đảm bảo bạn đã được thêm tài khoản vào repo này
 -- Hướng dẫn lấy access Token tại đây : https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
 -- Dưới đây là 2 cách để tích hợp sdk vào dự án
 
--- Cách 1 dùng Cocoapod:
--
+## -- Cách 1 dùng Cocoapod:
+
 - Thêm đoạn mã vào podfile dự án :
-    ```swift
-    target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.2.0' 
-    end
-    ```
+  ```swift
+  target 'MyApp' do
+    pod 'EdoctorDlvnSdk', '~> 1.2.0'
+  end
+  ```
 - sau đó chạy lệnh "pod install" để cài đặt
 - Nhập username
-- Nhập password là access token đã tạo ở bước trên  (không phải nhập password git)
-* lưu ý: Nếu dùng cách này thì phải mở file  .xcworkspace 
+- Nhập password là access token đã tạo ở bước trên (không phải nhập password git)
 
--- Cách 2 Package Dependency:
--
+* lưu ý: Nếu dùng cách này thì phải mở file .xcworkspace
+
+## -- Cách 2 Package Dependency:
+
 - Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
 - Chọn Add Other...
 - Chọn Add Package Dependency
@@ -47,15 +50,14 @@ import EdoctorDlvnSdk
 
 mở webView
 
-
 ```sh
 openWebView(currentViewController: self)
 ```
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| currentViewController | UIViewController? | UIViewController to display, if nil will use first view of rootViewController |
-| urlString | String? | URL to open in WebView. If nil, use the initialized value in SDK |
 
+| Parameter             | Type              | Description                                                                   |
+| :-------------------- | :---------------- | :---------------------------------------------------------------------------- |
+| currentViewController | UIViewController? | UIViewController to display, if nil will use first view of rootViewController |
+| urlString             | String?           | URL to open in WebView. If nil, use the initialized value in SDK              |
 
 Gọi hàm:
 
@@ -73,23 +75,20 @@ DLVNSendData(data: data) { status, error in
 }
 ```
 
-
-
-| Parameter | Type          | Description                       |
-| :-------- | :----------- | :-------------------------------- |
-| data      | [String: Any] | Required|
+| Parameter | Type          | Description |
+| :-------- | :------------ | :---------- |
+| data      | [String: Any] | Required    |
 
 Kết quả:
 -- `true`: Lấy accesstoken thành công
 -- `false`: Gọi hàm không thành công
 
-
-```sh 
+```sh
 // xóa accessToken
 deleteAccessToken()
 ```
 
-```sh 
+```sh
 // chuyển đổi môi trường
 changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ```
@@ -98,7 +97,7 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 
 ```sh
     @import EdoctorDlvnSdk;
-    
+
     - (void)myFunction:(String *)urlString {
     NSLog(@"urlString %@", urlString);
     }
@@ -118,36 +117,45 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ```
 
 - CurrentViewController == nil thì sẽ lấy "first view of rootViewController"
-- withURL == nil thì sẽ lấy url mặc định  (truyền url để xử lý  phần notification)
+- withURL == nil thì sẽ lấy url mặc định (truyền url để xử lý phần notification)
 - data == nil thì sẽ ko login được
 - onSdkRequestLogin: hàm này sẽ callback lại khi request login data là url
 
 ---
--- CALL NATIVE
--
-## Yêu cầu: 
+
+## -- CALL NATIVE
+
+## Yêu cầu:
+
 - iOS 14.3 trở lên
 - Swift 5.0 trở lên
 - Xcode 14.1 trở lên
+
 ## Cấu hình
+
 - Bật "Voice over IP" trong Signing & Capabilities -> "Background Modes"
-![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)
+  ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)
 - Thêm quyền Microphone và Camera:
-    <key>NSCameraUsageDescription</key>
-    <key>NSMicrophoneUsageDescription</key>
+  <key>NSCameraUsageDescription</key>
+  <key>NSMicrophoneUsageDescription</key>
 
 ---
--- CHAT Notification
--
+
+## -- CHAT Notification
+
 bật Remoote notification trong Background Modes
+
 - Lúc login thành công gọi hàm : authenticateEDROC vs param là data chứa thông tin tài khoản đó
-- Hàm handleRegistriNotification sẽ được gọi trong : application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) vs param là deviceToken 
+- Hàm handleRegistriNotification sẽ được gọi trong : application(\_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) vs param là deviceToken
+
 ```swift
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         handleRegistriNotification(deviceToken: deviceToken)
     }
 ```
+
 - Xử lý hiện notification như thế này:
+
 ```swift
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         if isEdrMessage(notification: notification) && allowPushNotificationBackground(notification: notification) {
@@ -155,10 +163,12 @@ bật Remoote notification trong Background Modes
         } else {
             //DC app handle
         }
-        
+
     }
 ```
-- Xử lý click vào thông báo như thế này: 
+
+- Xử lý click vào thông báo như thế này:
+
 ```swift
    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         handlePressNotificatin(response: response)
@@ -170,6 +180,3 @@ bật Remoote notification trong Background Modes
 ```swift
     deauthenticateEDROC
 ```
-
-
-

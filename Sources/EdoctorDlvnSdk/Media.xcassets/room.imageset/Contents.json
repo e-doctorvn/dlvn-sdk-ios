@@ -6,12 +6,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "phongtuvan.png@2x.png",
+      "filename" : "phongtuvan@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "phongtuvan.png@3x.png",
+      "filename" : "phongtuvan@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

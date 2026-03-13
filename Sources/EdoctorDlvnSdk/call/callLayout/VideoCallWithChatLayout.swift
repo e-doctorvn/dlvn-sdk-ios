@@ -71,7 +71,7 @@ struct VideoCallWithChatLayout: View {
                                                     .frame(width: 25, height: 25)
                                                     .font(.system(size: 10))
                                                     .foregroundColor(Color.white)
-                                                    .background(Color(red: 0.78, green: 0.51, blue: 0.35))
+                                                    .background(Color(red: 0.0, green: 145.0 / 255.0, blue: 1.0))
                                                     .clipShape(Circle())
                                                 
                                             }
@@ -91,7 +91,7 @@ struct VideoCallWithChatLayout: View {
                                                     .font(.system(size: 10))
                                                     .frame(width: 25, height: 25)
                                                     .foregroundColor(Color.white)
-                                                    .background(Color(red: 0.78, green: 0.51, blue: 0.35))
+                                                    .background(Color(red: 0.0, green: 145.0 / 255.0, blue: 1.0))
                                                     .clipShape(Circle())
                                                 
                                             }
@@ -223,4 +223,3 @@ struct VideoCallWithChatLayout: View {
 //            VideoCallWithChatLayout()
 //        }
 //    }
-
