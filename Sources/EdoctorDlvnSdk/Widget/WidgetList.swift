@@ -43,7 +43,7 @@ struct WidgetList: View {
                                         Font.custom("Inter", size: 16)
                                           .weight(.semibold)
                                       )
-                                      .foregroundColor(Color(red: 0.6, green: 0.35, blue: 0))
+                                      .foregroundColor(Color(red: 23.0 / 255.0, green: 70.0 / 255.0, blue: 1))
                                 }
                             }
                         }
