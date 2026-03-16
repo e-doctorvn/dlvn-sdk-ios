@@ -2,7 +2,15 @@
 
 EDR - DLVN Android IOS 
 
-Latest version: 1.0.18 (Updated: 6/12/2023)
+Latest version: 1.2.15 (Updated: 16/03/2026)
+
+## Version 1.2.15
+- Duy trì line phát hành iOS 11 (`release/ios11`) thay vì hạ `main`
+- Bump `EdoctorDlvnSdk.podspec` lên `1.2.15` (update `version`, `source tag`, `readme` URL)
+- Cập nhật hướng dẫn tích hợp line iOS 11 (`v1.2.x`) và line iOS 13+ (`v1.3.x`) trong `README.md`
+- Update màu header webview sang `#1746FF`
+- Update màu text widget "Lối tắt vào phòng tư vấn" sang `#1746FF`
+- Bổ sung case `DirectCallEndResult.notConnected` để tránh warning switch không đầy đủ
 
 ## Version 1.0.18
 - update lại key bị trùng trong sessionStorage

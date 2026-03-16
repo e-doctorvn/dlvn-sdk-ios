@@ -6,7 +6,12 @@
 - mở webview tư vấn sức khỏe
 - call native
 
-## Yêu cầu: .iOS(.v11)
+## Dòng phát hành
+
+- `v1.2.x` (nhánh `release/ios11`): hỗ trợ iOS 11+
+- `v1.3.x` (nhánh `main`): hỗ trợ iOS 13+
+
+## Yêu cầu của dòng này: iOS 11.0+
 
 ## SDK Integration
 -- Đảm bảo bạn đã được thêm tài khoản vào repo  này
@@ -19,7 +24,7 @@
 - Thêm đoạn mã vào podfile dự án :
     ```swift
     target 'MyApp' do
-      pod 'EdoctorDlvnSdk', '~> 1.2.0' 
+      pod 'EdoctorDlvnSdk', '~> 1.2.15'
     end
     ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -33,6 +38,7 @@
 - Chọn Add Other...
 - Chọn Add Package Dependency
 - Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
+- Với iOS 11, pin version `1.2.15` (Exact) hoặc giới hạn trong `1.2.x` để tránh nhảy sang `1.3.x`
 - Nhập userName và access token được tạo ở bước trên
 - ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
 - Nhấn Add Package
@@ -129,6 +135,9 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 - iOS 14.3 trở lên
 - Swift 5.0 trở lên
 - Xcode 14.1 trở lên
+
+> Lưu ý cho dòng `v1.2.x`: trên iOS 11 chỉ hỗ trợ webview/login/chat; call native bị tắt có chủ đích.
+
 ## Cấu hình
 - Bật "Voice over IP" trong Signing & Capabilities -> "Background Modes"
 ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-12-13%20at%2010.25.15.png?alt=media&token=d69c0009-f0f3-4d4b-98eb-ab15db07dc0b)
@@ -170,6 +179,4 @@ bật Remoote notification trong Background Modes
 ```swift
     deauthenticateEDROC
 ```
-
-
 

@@ -204,7 +204,7 @@ extension CXCallManager: CXProviderDelegate {
 extension DirectCallEndResult {
     var asCXCallEndedReason: CXCallEndedReason? {
         switch self {
-        case .connectionLost, .timedOut, .acceptFailed, .dialFailed, .unknown:
+        case .connectionLost, .timedOut, .acceptFailed, .dialFailed, .unknown, .notConnected:
             return .failed
         case .completed, .canceled:
             return .remoteEnded
@@ -250,4 +250,3 @@ extension CXProvider {
         CXProvider(configuration: .`default`)
     }
 }
-
