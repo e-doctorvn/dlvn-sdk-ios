@@ -9,8 +9,8 @@ spec.author = { "edoctor" => "edoctor.io" }
 spec.platform = :ios, "11.0"
 spec.swift_version = '5.0'
 spec.dependencies = {
-    "SendBirdCalls": ["~> 1.10.13"],
-    "SendbirdChatSDK": ["~> 4.15.1"],
+    "SendBirdCalls": ["= 1.10.17"],
+    "SendbirdChatSDK": ["= 4.15.1"],
   }
 spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.2.15' }
 spec.source_files = [

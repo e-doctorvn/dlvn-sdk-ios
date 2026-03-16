@@ -7,6 +7,9 @@ Latest version: 1.2.15 (Updated: 16/03/2026)
 ## Version 1.2.15
 - Duy trì line phát hành iOS 11 (`release/ios11`) thay vì hạ `main`
 - Bump `EdoctorDlvnSdk.podspec` lên `1.2.15` (update `version`, `source tag`, `readme` URL)
+- Pin dependency Sendbird cho line iOS 11:
+  - `SendBirdCalls` = `1.10.17`
+  - `SendbirdChatSDK` = `4.15.1`
 - Cập nhật hướng dẫn tích hợp line iOS 11 (`v1.2.x`) và line iOS 13+ (`v1.3.x`) trong `README.md`
 - Update màu header webview sang `#1746FF`
 - Update màu text widget "Lối tắt vào phòng tư vấn" sang `#1746FF`

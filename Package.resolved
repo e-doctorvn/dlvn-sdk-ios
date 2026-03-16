@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sendbird/sendbird-calls-ios.git",
       "state" : {
-        "revision" : "602660b7b462396b1167c1580bb1d5c0fe83f981",
-        "version" : "1.10.18"
+        "revision" : "281f60c5613f4517546ea179b10465be43d70ba9",
+        "version" : "1.10.17"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sendbird/sendbird-chat-sdk-ios.git",
       "state" : {
-        "revision" : "481ab3cda4bf85a44d2e25629246b7a7f9d8b2cd",
-        "version" : "4.19.1"
+        "revision" : "9bb38bbd43106b53e7c9f347795b561345379dd7",
+        "version" : "4.15.1"
       }
     },
     {
