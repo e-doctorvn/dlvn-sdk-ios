@@ -31,9 +31,6 @@ let package = Package(
             ]),
         .testTarget(
             name: "EdoctorDlvnSdkTests",
-            dependencies: [
-                .product(name: "SendBirdCalls", package: "sendbird-calls-ios"),
-                .product(name: "SendbirdChatSDK", package: "sendbird-chat-sdk-ios"),
-            ]),
+            dependencies: ["EdoctorDlvnSdk"]),
     ]
 )

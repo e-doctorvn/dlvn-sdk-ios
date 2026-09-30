@@ -1,5 +1,7 @@
 # DlvnSdk
 
+Version: **1.3.4** (tag `v1.3.4`)
+
 ## Hướng dẫn tích hợp SDK
 
 ## Tính năng
@@ -21,7 +23,7 @@
 - Thêm đoạn mã vào podfile dự án :
   ```swift
   target 'MyApp' do
-    pod 'EdoctorDlvnSdk', '~> 1.2.0'
+    pod 'EdoctorDlvnSdk', '~> 1.3.4'
   end
   ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -36,6 +38,7 @@
 - Chọn Add Other...
 - Chọn Add Package Dependency
 - Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
+- Chọn version `1.3.4` (tag `v1.3.4`).
 - Nhập userName và access token được tạo ở bước trên
 - ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
 - Nhấn Add Package
@@ -92,6 +95,14 @@ deleteAccessToken()
 // chuyển đổi môi trường
 changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ```
+
+### Domain và điều hướng WebView
+
+- LIVE: `https://kh.daiichilife.com.vn/tu-van-suc-khoe`
+- SANDBOX: `https://khuat.daiichilife.com.vn/tu-van-suc-khoe`
+- Link HTTP/HTTPS có hostname chính xác `daiichilife.com.vn` hoặc subdomain kết thúc bằng `.daiichilife.com.vn` được mở trong SDK WebView.
+- Link ngoài hệ thống tiếp tục mở bằng trình duyệt/ứng dụng hệ thống. Path, query hoặc fragment chứa `/tu-van-suc-khoe` hay tên domain không làm URL trở thành internal.
+- SDK vẫn hỗ trợ iOS 13.0+; luồng booking/video tiếp tục yêu cầu iOS 14.3+.
 
 ## Gọi mở webView cho objective-C
 

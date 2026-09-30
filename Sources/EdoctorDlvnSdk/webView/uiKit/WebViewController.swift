@@ -179,7 +179,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
          if navigationAction.navigationType == WKNavigationType.linkActivated {
              if let url = navigationAction.request.url {
-                 if (url.host!.contains("dai-ichi-life.com.vn") || url.absoluteString.contains("/tu-van-suc-khoe")) {
+                 if isInternalDaiichiURL(url) {
                      if #available(iOS 14.3, *) {
                          webView.load( URLRequest(url: URL(string:(url.absoluteString + "?from=eDoctor&screen=eDoctorHome"))!))
                      } else {
@@ -381,6 +381,5 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 extension Notification.Name {
     static let handleLoadUrl = Notification.Name("handleLoadUrl")
 }
-
 
 

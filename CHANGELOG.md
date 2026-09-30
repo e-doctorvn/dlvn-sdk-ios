@@ -2,7 +2,15 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.3 (Updated: 13/03/2026)
+Latest version: 1.3.4 (Updated: 30/09/2026)
+
+## Version 1.3.4
+
+- Chuyển LIVE/SANDBOX sang `kh.daiichilife.com.vn` / `khuat.daiichilife.com.vn`, giữ nguyên URL path.
+- WebView nhận diện internal link theo hostname chính xác `daiichilife.com.vn` hoặc subdomain có ranh giới `.`, thay kiểm tra `contains` và bỏ ngoại lệ path `/tu-van-suc-khoe`.
+- Giữ internal link trong SDK WebView và mở external link bằng trình duyệt/ứng dụng hệ thống.
+- Giữ yêu cầu iOS 14.3 cho booking/video; thêm test hostname giả, URL ngoài hệ thống và cấu hình môi trường.
+- Cập nhật README, podspec và tham chiếu tag phát hành `v1.3.4`.
 
 ## Version 1.3.3
 
