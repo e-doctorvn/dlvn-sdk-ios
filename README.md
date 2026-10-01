@@ -11,6 +11,21 @@ Version: **1.3.4** (tag `v1.3.4`)
 
 ## Yêu cầu: iOS 13.0+
 
+- Xcode 26+ để build với Sendbird Chat 4.39.x; Swift language mode vẫn là Swift 5.
+- Dùng Xcode 26.x khi cần deployment target iOS 13; Xcode 27 chỉ hỗ trợ deployment target từ iOS 15.
+- Dependency đã đối chiếu ngày 01/10/2026:
+
+| Thư viện | Swift Package Manager | CocoaPods |
+| --- | --- | --- |
+| SendbirdChatSDK | 4.39.11 trở lên, dưới 5.0 | ~> 4.39.10 |
+| SendbirdAuthSDK (gián tiếp qua Chat) | 1.2.0 | 1.2.0 |
+| SendBirdCalls | 1.10.22 | ~> 1.10.22 |
+| SendBirdWebRTC (gián tiếp qua Calls) | 1.8.1 | ~> 1.8.1 |
+
+Chat 4.39.11 chưa có trên CocoaPods; 4.39.10 là bản mới nhất trên kênh này tại thời điểm cập nhật.
+Giữ Calls 1.10.22 để hỗ trợ iOS 13 và CocoaPods; Calls 1.12.3 yêu cầu iOS 14+ và không hỗ trợ CocoaPods.
+Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Example tham chiếu, nên không nằm trong lần nâng dependency này.
+
 ## SDK Integration
 
 -- Đảm bảo bạn đã được thêm tài khoản vào repo này
@@ -139,8 +154,8 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 ## Yêu cầu:
 
 - iOS 14.3 trở lên
-- Swift 5.0 trở lên
-- Xcode 14.1 trở lên
+- Swift 5.10 trở lên
+- Xcode 26 trở lên
 
 ## Cấu hình
 

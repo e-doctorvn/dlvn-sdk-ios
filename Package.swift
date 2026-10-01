@@ -17,8 +17,9 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        // 1.10.22 is the last Calls release available on CocoaPods.
         .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", exact: "1.10.22"),
-        .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.37.1"),
+        .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.39.11"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

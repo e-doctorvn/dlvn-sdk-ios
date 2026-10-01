@@ -4,6 +4,11 @@ EDR - DLVN Android IOS
 
 Latest version: 1.3.4 (Updated: 30/09/2026)
 
+## Unreleased
+
+- Nâng SendbirdChatSDK từ 4.37.1 lên 4.39.11 (SPM) / 4.39.10 (bản mới nhất trên CocoaPods); SendbirdAuthSDK đi kèm lên 1.2.0.
+- Giữ SendBirdCalls 1.10.22 để duy trì iOS 13 và CocoaPods; cập nhật yêu cầu build lên Xcode 26+ theo Sendbird Chat 4.39.x.
+
 ## Version 1.3.4
 
 - Chuyển LIVE/SANDBOX sang `kh.daiichilife.com.vn` / `khuat.daiichilife.com.vn`, giữ nguyên URL path.

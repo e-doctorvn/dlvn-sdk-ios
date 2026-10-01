@@ -10,7 +10,7 @@ spec.platform = :ios, "13.0"
 spec.swift_version = '5.10'
 spec.dependencies = {
     "SendBirdCalls": ["~> 1.10.22"],
-    "SendbirdChatSDK": ["~> 4.37.1"],
+    "SendbirdChatSDK": ["~> 4.39.10"],
   }
 spec.source = { :git => "https://github.com/e-doctorvn/dlvn-sdk-ios.git", :tag => 'v1.3.4' }
 spec.source_files = [
