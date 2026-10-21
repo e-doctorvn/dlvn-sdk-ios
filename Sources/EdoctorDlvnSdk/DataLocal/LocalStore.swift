@@ -98,3 +98,9 @@ struct DataLogin : Codable {
     let token: String
 }
 
+// Lưu thông tin đăng nhập để WebView mở không kèm data vẫn tự đăng nhập (giống SDK Android)
+func saveDataLogin(_ dataInput: DLVNInputData) {
+    let dataSave = DataLogin(partnerid: dataInput.partnerid ?? "", deviceid: dataInput.deviceid, dcId: dataInput.dcId, token: dataInput.token)
+    LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
+}
+

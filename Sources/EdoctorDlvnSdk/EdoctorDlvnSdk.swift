@@ -89,6 +89,7 @@ public func DLVNSendData(data: [String: Any], completion: @escaping (Bool, Error
                         // Fallback on earlier versions
                     }
 
+                    saveDataLogin(dataInput)
                     completion(true, nil)
                 }
             }
@@ -258,7 +259,8 @@ public func authenticateEDR(data: [String: Any], completion: @escaping (Bool, Er
                                         completion(false, error)
                                     } else {
                                         SendBirdCallManager.shared.firstConfigure()
-                                        
+                                        saveDataLogin(dataInput)
+
                                         completion(true, nil)
                                     }
                                 }

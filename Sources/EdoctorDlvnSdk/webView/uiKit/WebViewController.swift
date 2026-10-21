@@ -214,7 +214,8 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.evaluateJavaScript("sessionStorage.setItem('sdkSupportVideoCall', \(true));");
         
         
-        if (onClose != nil || isFromNotification) {
+        // Không truyền data thì dùng thông tin đã lưu từ DLVNSendData/authenticateEDR
+        if (data == nil || onClose != nil || isFromNotification) {
             let dataTemp: DataLogin? = LocalStore.getData(key: .dataLogin)
             if dataTemp != nil && dataTemp?.deviceid != nil  {
                 data = [
@@ -273,12 +274,7 @@ class WebViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 
                         self.loaded = true
                         webView.reload()
-                        
-                        // save
-                        let dataSave = DataLogin(partnerid: data!["partnerid"] as! String, deviceid: data!["deviceid"] as! String, dcId: data!["dcId"] as! String, token: data!["token"] as! String)
-                        
-                        LocalStore.saveData(dataSave: dataSave, key: .dataLogin)
-                        
+
                         if callAgree == true {
                             let variables : [String: Any] = [
                                 "isAcceptAgreement": true,

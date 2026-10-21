@@ -52,4 +52,22 @@ final class DLVN_SDKTests: XCTestCase {
             XCTAssertFalse(isInternalDaiichiURL(try XCTUnwrap(URL(string: value))), value)
         }
     }
+
+    func testDataLoginSavedForWebViewWithoutData() {
+        let key = storeType.dataLogin.rawValue
+        let previous = UserDefaults.standard.data(forKey: key)
+        defer { UserDefaults.standard.set(previous, forKey: key) }
+
+        saveDataLogin(DLVNInputData(company: nil, partner_code: nil, partnerid: nil, deviceid: "device", dcId: "dc", token: "dlvn-token", role: nil))
+        let saved: DataLogin? = LocalStore.getData(key: .dataLogin)
+        XCTAssertEqual(saved?.partnerid, "")
+        XCTAssertEqual(saved?.deviceid, "device")
+        XCTAssertEqual(saved?.dcId, "dc")
+        XCTAssertEqual(saved?.token, "dlvn-token")
+
+        // deauthenticateEDR xoá dữ liệu này nên WebView không tự đăng nhập lại sau khi đăng xuất
+        LocalStore.deleteAllData()
+        let cleared: DataLogin? = LocalStore.getData(key: .dataLogin)
+        XCTAssertNil(cleared)
+    }
 }

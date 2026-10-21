@@ -76,6 +76,9 @@ openWebView(currentViewController: self)
 | :-------------------- | :---------------- | :---------------------------------------------------------------------------- |
 | currentViewController | UIViewController? | UIViewController to display, if nil will use first view of rootViewController |
 | urlString             | String?           | URL to open in WebView. If nil, use the initialized value in SDK              |
+| data                  | [String: Any]?    | Login data. If nil, use the data saved by the last successful `DLVNSendData` / `authenticateEDR` |
+
+Sau khi `DLVNSendData` hoặc `authenticateEDR` thành công, SDK lưu lại thông tin đăng nhập. Mở webView không truyền `data` vẫn tự đăng nhập (giống SDK Android). Thông tin này bị xoá khi gọi `deauthenticateEDR`.
 
 Gọi hàm:
 
@@ -144,7 +147,7 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 
 - CurrentViewController == nil thì sẽ lấy "first view of rootViewController"
 - withURL == nil thì sẽ lấy url mặc định (truyền url để xử lý phần notification)
-- data == nil thì sẽ ko login được
+- data == nil thì dùng thông tin đăng nhập đã lưu từ lần gọi DLVNSendData / authenticateEDR thành công gần nhất; chưa gọi các hàm này thì sẽ ko login được
 - onSdkRequestLogin: hàm này sẽ callback lại khi request login data là url
 
 ---
