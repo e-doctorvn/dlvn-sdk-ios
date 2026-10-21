@@ -1,6 +1,6 @@
 # DlvnSdk
 
-Version: **1.3.4** (tag `v1.3.4`)
+Version: **1.3.5** (tag `v1.3.5`)
 
 ## Hướng dẫn tích hợp SDK
 
@@ -38,7 +38,7 @@ Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Exampl
 - Thêm đoạn mã vào podfile dự án :
   ```swift
   target 'MyApp' do
-    pod 'EdoctorDlvnSdk', '~> 1.3.4'
+    pod 'EdoctorDlvnSdk', '~> 1.3.5'
   end
   ```
 - sau đó chạy lệnh "pod install" để cài đặt
@@ -53,7 +53,7 @@ Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Exampl
 - Chọn Add Other...
 - Chọn Add Package Dependency
 - Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
-- Chọn version `1.3.4` (tag `v1.3.4`).
+- Chọn version `1.3.5` (tag `v1.3.5`).
 - Nhập userName và access token được tạo ở bước trên
 - ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
 - Nhấn Add Package

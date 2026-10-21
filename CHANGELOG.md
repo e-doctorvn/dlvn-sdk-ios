@@ -2,14 +2,15 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.4 (Updated: 30/09/2026)
+Latest version: 1.3.5 (Updated: 21/10/2026)
 
-## Unreleased
+## Version 1.3.5
 
 - WebView mở không truyền `data` (`openWebView(currentViewController:)`) giờ tự đăng nhập bằng thông tin đã lưu từ `DLVNSendData` / `authenticateEDR` thành công gần nhất, giống SDK Android. Thông tin này bị xoá khi gọi `deauthenticateEDR`.
 - Bỏ đoạn lưu thông tin đăng nhập dùng ép kiểu `as! String` trong WebView (có thể crash khi thiếu `partnerid`).
 - Nâng SendbirdChatSDK từ 4.37.1 lên 4.39.11 (SPM) / 4.39.10 (bản mới nhất trên CocoaPods); SendbirdAuthSDK đi kèm lên 1.2.0.
 - Giữ SendBirdCalls 1.10.22 để duy trì iOS 13 và CocoaPods; cập nhật yêu cầu build lên Xcode 26+ theo Sendbird Chat 4.39.x.
+- Cập nhật README, podspec và tham chiếu tag phát hành `v1.3.5`.
 
 ## Version 1.3.4
 
