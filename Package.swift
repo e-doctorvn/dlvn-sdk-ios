@@ -29,6 +29,10 @@ let package = Package(
             dependencies: [
                 .product(name: "SendBirdCalls", package: "sendbird-calls-ios"),
                 .product(name: "SendbirdChatSDK", package: "sendbird-chat-sdk-ios"),
+            ],
+            resources: [
+                .process("Media.xcassets"),
+                .copy("PrivacyInfo.xcprivacy"),
             ]),
         .testTarget(
             name: "EdoctorDlvnSdkTests",

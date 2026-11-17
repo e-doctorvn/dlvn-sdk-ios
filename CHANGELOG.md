@@ -2,7 +2,16 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.3.5 (Updated: 21/10/2026)
+Latest version: 1.4.0 (Updated: 17/11/2026)
+
+## Version 1.4.0
+
+- **Swift Package Manager là kênh phân phối chính.** CocoaPods chuyển sang deprecated, sẽ ngừng hỗ trợ từ bản 2.0.0.
+- Fix ảnh SDK (`room`, `enterRoom`, `backgroundCall`, `chatImage`) không hiển thị khi tích hợp qua SPM: resource được lấy qua `Bundle.module` khi build bằng SPM.
+- Khai báo rõ resource trong `Package.swift` (`Media.xcassets`, `PrivacyInfo.xcprivacy`).
+- Thêm Privacy Manifest (`PrivacyInfo.xcprivacy`) khai báo UserDefaults (lý do `CA92.1`); CocoaPods đóng gói trong bundle `EdoctorDlvnSdk_Privacy`.
+- Thêm CI GitHub Actions: build + test package, build app Example.
+- README: hướng dẫn SPM, xác thực repo private trên CI, hướng dẫn chuyển từ CocoaPods, ghi chú icon CallKit `icLogoSymbolInverse`.
 
 ## Version 1.3.5
 
