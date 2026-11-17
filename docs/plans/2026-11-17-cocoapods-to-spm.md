@@ -59,7 +59,7 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 > Đã soạn sẵn trên nhánh `feat/spm-only-2.0.0` (PR nháp). **Chỉ merge và tag `v2.0.0` sau khi PR 1.4.0 đã phát hành và app DLVN đã chuyển xong sang SPM (giai đoạn 2).**
 
 - [x] Xoá `EdoctorDlvnSdk.podspec` và hướng dẫn CocoaPods trong README.
-- [ ] Quyết định riêng (tách bước): giữ iOS 13 thì phải dùng Calls 1.10.22; nâng iOS 14 thì dùng được Calls 1.12.x (luồng booking/video vốn đã yêu cầu iOS 14.3).
+- [x] Nâng iOS tối thiểu lên 14.0 và SendBirdCalls lên 1.12.3 trong 2.0.0 (đã đánh giá: không đổi API, test pass; mất simulator x86_64; cần kiểm thử trên máy thật CallKit/PushKit, video, gọi người đang bận).
 
 ### Giai đoạn 4 — Dọn dẹp
 

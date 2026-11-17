@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "EdoctorDlvnSdk",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -17,8 +17,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        // 1.10.22 is the last Calls release available on CocoaPods.
-        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", exact: "1.10.22"),
+        // Calls 1.11+ requires iOS 14 and is SPM-only (1.10.22 was the last CocoaPods release).
+        .package(url: "https://github.com/sendbird/sendbird-calls-ios.git", exact: "1.12.3"),
         .package(url: "https://github.com/sendbird/sendbird-chat-sdk-ios.git", from: "4.39.11"),
     ],
     targets: [

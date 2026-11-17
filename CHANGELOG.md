@@ -10,7 +10,12 @@ Latest version: 2.0.0 (Updated: 17/11/2026)
 - App đã dùng SPM ở bản 1.x: đổi Dependency Rule sang `from: "2.0.0"`.
 - Resource của SDK luôn lấy qua `Bundle.module`.
 - `isCocoapod` được đánh dấu deprecated, không còn tác dụng.
-- Không đổi API, iOS tối thiểu (13.0) và phiên bản Sendbird.
+- **iOS tối thiểu 13.0 → 14.0.** App cần iOS 13 tiếp tục dùng 1.4.0.
+- **SendBirdCalls 1.10.22 → 1.12.3** (SendBirdWebRTC 1.8.1 → 1.10.0, Chromium M137). Không đổi API; có thêm các bản sửa crash của Sendbird: nhận cuộc gọi qua VoIP push khi app đang tắt (1.12.1), đọc `callLog` khi kết thúc cuộc gọi (1.11.2), đóng WebSocket (1.12.3), ghi âm giữa cuộc gọi (1.11.1).
+- Gọi tới người đang bận: cuộc gọi kết thúc ngay thay vì đổ chuông tới hết giờ (thay đổi từ Calls 1.12.3).
+- **Không còn hỗ trợ simulator x86_64** (Mac Intel/Rosetta): SendBirdCalls từ 1.11 chỉ phát hành simulator arm64. Build thiết bị thật và App Store không bị ảnh hưởng.
+- Yêu cầu Xcode 26+ (Xcode 26.x nếu app có deployment target iOS 14).
+- Không đổi API của SDK.
 
 ## Version 1.4.0
 

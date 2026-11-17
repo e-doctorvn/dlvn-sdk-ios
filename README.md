@@ -9,20 +9,21 @@ Version: **2.0.0** (tag `v2.0.0`)
 - mở webview tư vấn sức khỏe
 - call native
 
-## Yêu cầu: iOS 13.0+
+## Yêu cầu: iOS 14.0+
 
 - Xcode 26+ để build với Sendbird Chat 4.39.x; Swift language mode vẫn là Swift 5.
-- Dùng Xcode 26.x khi cần deployment target iOS 13; Xcode 27 chỉ hỗ trợ deployment target từ iOS 15.
-- Dependency đã đối chiếu ngày 01/10/2026:
+- Dùng Xcode 26.x khi app có deployment target iOS 14; Xcode 27 chỉ hỗ trợ deployment target từ iOS 15.
+- Simulator: chỉ chạy trên Mac Apple Silicon (arm64). SendBirdCalls từ 1.11 không còn bản cho simulator x86_64, nên không build được cho simulator trên Mac Intel/Rosetta. Build cho thiết bị thật và App Store không bị ảnh hưởng.
+- Dependency đã đối chiếu ngày 17/11/2026:
 
 | Thư viện | Phiên bản (SPM) |
 | --- | --- |
 | SendbirdChatSDK | 4.39.11 trở lên, dưới 5.0 |
 | SendbirdAuthSDK (gián tiếp qua Chat) | 1.2.0 |
-| SendBirdCalls | 1.10.22 |
-| SendBirdWebRTC (gián tiếp qua Calls) | 1.8.1 |
+| SendBirdCalls | 1.12.3 |
+| SendBirdWebRTC (gián tiếp qua Calls) | 1.10.x |
 
-Giữ Calls 1.10.22 để hỗ trợ iOS 13; Calls 1.12.x yêu cầu iOS 14+.
+Calls được ghim đúng 1.12.3 (yêu cầu iOS 14+). App cần iOS 13 dùng SDK bản 1.4.0.
 
 ## SDK Integration
 
@@ -131,7 +132,7 @@ changeEnv(envUpdate: Env.SANDBOX) // Env is enum: LIVE || SANBOX
 - SANDBOX: `https://khuat.daiichilife.com.vn/tu-van-suc-khoe`
 - Link HTTP/HTTPS có hostname chính xác `daiichilife.com.vn` hoặc subdomain kết thúc bằng `.daiichilife.com.vn` được mở trong SDK WebView.
 - Link ngoài hệ thống tiếp tục mở bằng trình duyệt/ứng dụng hệ thống. Path, query hoặc fragment chứa `/tu-van-suc-khoe` hay tên domain không làm URL trở thành internal.
-- SDK vẫn hỗ trợ iOS 13.0+; luồng booking/video tiếp tục yêu cầu iOS 14.3+.
+- SDK hỗ trợ iOS 14.0+; luồng booking/video tiếp tục yêu cầu iOS 14.3+.
 
 ## Gọi mở webView cho objective-C
 
@@ -230,6 +231,6 @@ SDK chỉ phát hành qua Swift Package Manager: một bản phát hành là m�
 3. Tạo GitHub Release từ tag, nội dung lấy từ mục tương ứng trong CHANGELOG.
 4. Kiểm tra: thêm package với `exact: "X.Y.Z"` vào một project trống, chạy `swift package resolve` và xác nhận resolve đúng commit của tag.
 
-> Xcode 27 chỉ hỗ trợ deployment target từ iOS 15. App tích hợp SDK cần deployment target iOS 13–14 phải build bằng Xcode 26.x.
+> Xcode 27 chỉ hỗ trợ deployment target từ iOS 15. App tích hợp SDK có deployment target iOS 14 phải build bằng Xcode 26.x.
 >
 > Bản cuối cùng trên CocoaPods là 1.4.0 (CocoaPods trunk đã chuyển sang chỉ đọc), không phát hành thêm qua kênh này.
