@@ -39,7 +39,7 @@ jobs:
           import PackageDescription
           let package = Package(
               name: "Consumer",
-              platforms: [.iOS(.v13)],
+              platforms: [.iOS(.v14)],
               products: [.library(name: "Consumer", targets: ["Consumer"])],
               dependencies: [.package(url: "$REPO_URL", exact: "$VERSION")],
               targets: [.target(name: "Consumer", dependencies: [.product(name: "EdoctorDlvnSdk", package: "dlvn-sdk-ios")])]
@@ -68,10 +68,21 @@ jobs:
           echo "Tag v$VERSION: $TAG_SHA"
           case "$RESOLVED" in "$VERSION $TAG_SHA") echo "OK";; *) echo "::error::Resolved revision does not match tag v$VERSION"; exit 1;; esac
 
-      - name: Build for iOS Simulator
+      - name: Build for iOS device
+        working-directory: consumer
+        run: |
+          xcodebuild build \
+            -scheme Consumer \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath ../.build/dd \
+            CODE_SIGNING_ALLOWED=NO
+
+      # Từ 2.0.0, SendBirdCalls chỉ có simulator arm64 (không còn x86_64).
+      - name: Build for iOS Simulator (arm64)
         working-directory: consumer
         run: |
           xcodebuild build \
             -scheme Consumer \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath ../.build/dd
+            -derivedDataPath ../.build/dd \
+            ARCHS=arm64
