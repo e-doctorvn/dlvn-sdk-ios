@@ -24,7 +24,6 @@ Version: **1.4.0** (tag `v1.4.0`)
 
 Chat 4.39.11 chưa có trên CocoaPods; 4.39.10 là bản mới nhất trên kênh này tại thời điểm cập nhật.
 Giữ Calls 1.10.22 để hỗ trợ iOS 13 và CocoaPods; Calls 1.12.3 yêu cầu iOS 14+ và không hỗ trợ CocoaPods.
-Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Example tham chiếu, nên không nằm trong lần nâng dependency này.
 
 ## SDK Integration
 
