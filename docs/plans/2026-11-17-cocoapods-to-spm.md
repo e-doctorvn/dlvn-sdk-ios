@@ -44,7 +44,7 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 
 - [x] Sửa 3 lỗi ở trên.
 - [ ] Thêm CI (GitHub Actions): `xcodebuild build test -scheme EdoctorDlvnSdk -destination 'platform=iOS Simulator,name=<device>'` (`swift build` không dùng được vì SDK cần UIKit).
-- [ ] Thêm job build app Example dựa trên tag remote thay vì local path.
+- [x] Thêm workflow `release-check.yml`: khi push tag, tạo package trống resolve SDK từ tag trên GitHub và build (thay cho việc chuyển app Example sang tag remote).
 - [ ] Viết lại README: SPM là cách 1; hướng dẫn xác thực repo private (PAT trong Keychain của Xcode, `.netrc` cho CI); dùng `@import EdoctorDlvnSdk;` từ Objective-C.
 - [ ] Ghi thông báo deprecation CocoaPods vào CHANGELOG và `spec.description`.
 
