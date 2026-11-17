@@ -13,6 +13,7 @@ public var env: Env = Env.SANDBOX
 
 
 public var targetVersionBooking: String = "14.3"
+@available(*, deprecated, message: "SDK chỉ phân phối qua Swift Package Manager từ 2.0.0; biến này không còn tác dụng.")
 public var isCocoapod: Bool = false
 
 public var isLogEventEnable: Bool = true

@@ -43,10 +43,10 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 ### Giai đoạn 1 — Phát hành 1.4.0: hỗ trợ cả hai kênh, ưu tiên SPM
 
 - [x] Sửa 3 lỗi ở trên.
-- [ ] Thêm CI (GitHub Actions): `xcodebuild build test -scheme EdoctorDlvnSdk -destination 'platform=iOS Simulator,name=<device>'` (`swift build` không dùng được vì SDK cần UIKit).
+- [x] Thêm CI (GitHub Actions): `xcodebuild build test -scheme EdoctorDlvnSdk -destination 'platform=iOS Simulator,name=<device>'` (`swift build` không dùng được vì SDK cần UIKit).
 - [x] Thêm workflow `release-check.yml`: khi push tag, tạo package trống resolve SDK từ tag trên GitHub và build (thay cho việc chuyển app Example sang tag remote).
-- [ ] Viết lại README: SPM là cách 1; hướng dẫn xác thực repo private (PAT trong Keychain của Xcode, `.netrc` cho CI); dùng `@import EdoctorDlvnSdk;` từ Objective-C.
-- [ ] Ghi thông báo deprecation CocoaPods vào CHANGELOG và `spec.description`.
+- [x] Viết lại README: SPM là cách 1; hướng dẫn xác thực repo private (PAT trong Keychain của Xcode, `.netrc` cho CI); dùng `@import EdoctorDlvnSdk;` từ Objective-C.
+- [x] Ghi thông báo deprecation CocoaPods vào CHANGELOG và `spec.description`.
 
 ### Giai đoạn 2 — Chuyển app DLVN đang tích hợp
 
@@ -56,8 +56,10 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 
 ### Giai đoạn 3 — Phát hành 2.0.0: chỉ còn SPM
 
-- [ ] Xoá `EdoctorDlvnSdk.podspec` và hướng dẫn CocoaPods trong README.
-- [ ] Quyết định riêng (tách bước): giữ iOS 13 thì phải dùng Calls 1.10.22; nâng iOS 14 thì dùng được Calls 1.12.x (luồng booking/video vốn đã yêu cầu iOS 14.3).
+> Đã soạn sẵn trên nhánh `feat/spm-only-2.0.0` (PR nháp). **Chỉ merge và tag `v2.0.0` sau khi PR 1.4.0 đã phát hành và app DLVN đã chuyển xong sang SPM (giai đoạn 2).**
+
+- [x] Xoá `EdoctorDlvnSdk.podspec` và hướng dẫn CocoaPods trong README.
+- [x] Nâng iOS tối thiểu lên 14.0 và SendBirdCalls lên 1.12.3 trong 2.0.0 (đã đánh giá: không đổi API, test pass; mất simulator x86_64; cần kiểm thử trên máy thật CallKit/PushKit, video, gọi người đang bận).
 
 ### Giai đoạn 4 — Dọn dẹp
 
