@@ -23,7 +23,6 @@ Version: **2.0.0** (tag `v2.0.0`)
 | SendBirdWebRTC (gián tiếp qua Calls) | 1.8.1 |
 
 Giữ Calls 1.10.22 để hỗ trợ iOS 13; Calls 1.12.x yêu cầu iOS 14+.
-Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Example tham chiếu, nên không nằm trong lần nâng dependency này.
 
 ## SDK Integration
 
@@ -221,3 +220,23 @@ bật Remoote notification trong Background Modes
 ```swift
     deauthenticateEDROC
 ```
+
+## Phát hành (dành cho maintainer)
+
+> ⚠️ **Dùng Xcode 26.x để lint/push lên CocoaPods.** Xcode 27 chỉ hỗ trợ deployment target từ iOS 15, nên `pod spec lint` / `pod trunk push` sẽ lỗi `IPHONEOS_DEPLOYMENT_TARGET is set to 13.0, but the range of supported deployment target versions is 15.0 to ...` vì SDK (iOS 13) và Sendbird (iOS 11–13) đặt target thấp hơn. Lỗi này không phải do SDK.
+
+Chọn Xcode 26.x riêng cho lệnh bằng `DEVELOPER_DIR` (không cần đổi `xcode-select`):
+
+```sh
+export DEVELOPER_DIR=/Applications/Xcode-26.2.0.app/Contents/Developer
+```
+
+Các bước:
+
+1. Cập nhật `spec.version`, `:tag` và `spec.readme` trong `EdoctorDlvnSdk.podspec`, phiên bản trong README và CHANGELOG; merge vào `main`.
+2. Gắn tag `vX.Y.Z` lên commit trên `main` và push tag (SPM dùng tag này).
+3. Kiểm tra podspec build được: `LANG=en_US.UTF-8 pod spec lint EdoctorDlvnSdk.podspec --allow-warnings`
+4. Đăng nhập trunk bằng tài khoản owner (`pod trunk register <email>`, xác nhận qua email), rồi đẩy pod: `LANG=en_US.UTF-8 pod trunk push EdoctorDlvnSdk.podspec --allow-warnings`
+5. Kiểm tra: `LANG=en_US.UTF-8 pod trunk info EdoctorDlvnSdk`
+
+Cảnh báo `ENABLE_USER_SCRIPT_SANDBOXING` khi lint đến từ app tạm CocoaPods tự sinh, có thể bỏ qua.

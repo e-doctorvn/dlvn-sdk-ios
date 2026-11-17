@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate
+*.xcbkptlist
+
+# SwiftPM
+.build/
+.swiftpm/
+/Packages/
+
+# Xcode build output
+DerivedData/
+build/
+
+# CocoaPods (lint/test artifacts)
+Pods/
