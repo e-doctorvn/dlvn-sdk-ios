@@ -54,12 +54,17 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 - [ ] **Rủi ro:** nếu app vẫn kéo Sendbird qua Pods trong khi SDK kéo Sendbird qua SPM → trùng symbol/class. Chuyển toàn bộ Sendbird sang SPM cùng lúc.
 - [ ] Kiểm thử: mở WebView, đăng nhập bằng dữ liệu đã lưu, gọi video + CallKit/PushKit, ảnh ở widget và màn hình gọi.
 
-### Giai đoạn 3 — Phát hành 2.0.0: chỉ còn SPM
+### Giai đoạn 3 — Phát hành 2.0.0: chỉ còn SPM ✅
 
-> Đã soạn sẵn trên nhánh `feat/spm-only-2.0.0` (PR nháp). **Chỉ merge và tag `v2.0.0` sau khi PR 1.4.0 đã phát hành và app DLVN đã chuyển xong sang SPM (giai đoạn 2).**
+> **Hoàn thành 17/11/2026.** PR e-doctorvn/dlvn-sdk-ios#3 merge (`4cc5266`), tag `v2.0.0`, GitHub Release v2.0.0 (Latest). Workflow Release check cho 2.0.0 pass (resolve đúng tag, build thiết bị + simulator arm64).
+>
+> Phát hành **trước** khi xong giai đoạn 2 và trước khi kiểm thử trên máy thật, theo quyết định của team. App đang dùng không bị ảnh hưởng: CocoaPods dừng ở 1.4.0, SPM rule 1.x không tự lên 2.0.0.
 
 - [x] Xoá `EdoctorDlvnSdk.podspec` và hướng dẫn CocoaPods trong README.
 - [x] Nâng iOS tối thiểu lên 14.0 và SendBirdCalls lên 1.12.3 trong 2.0.0 (đã đánh giá: không đổi API, test pass; mất simulator x86_64; cần kiểm thử trên máy thật CallKit/PushKit, video, gọi người đang bận).
+- [x] Merge, gắn tag `v2.0.0`, tạo GitHub Release.
+- [x] Sửa workflow Release check build thiết bị + simulator arm64 (e-doctorvn/dlvn-sdk-ios#9).
+- [ ] Còn lại: kiểm thử trên máy thật với SendBirdCalls 1.12.3 — CallKit/PushKit (app tắt, nền, khoá màn hình), đăng ký VoIP token, gọi người đang bận, chất lượng video, kết nối lại khi mạng yếu.
 
 ### Giai đoạn 4 — Dọn dẹp
 
