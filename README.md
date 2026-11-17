@@ -1,6 +1,6 @@
 # DlvnSdk
 
-Version: **1.4.0** (tag `v1.4.0`)
+Version: **2.0.0** (tag `v2.0.0`)
 
 ## Hướng dẫn tích hợp SDK
 
@@ -15,15 +15,14 @@ Version: **1.4.0** (tag `v1.4.0`)
 - Dùng Xcode 26.x khi cần deployment target iOS 13; Xcode 27 chỉ hỗ trợ deployment target từ iOS 15.
 - Dependency đã đối chiếu ngày 01/10/2026:
 
-| Thư viện | Swift Package Manager | CocoaPods |
-| --- | --- | --- |
-| SendbirdChatSDK | 4.39.11 trở lên, dưới 5.0 | ~> 4.39.10 |
-| SendbirdAuthSDK (gián tiếp qua Chat) | 1.2.0 | 1.2.0 |
-| SendBirdCalls | 1.10.22 | ~> 1.10.22 |
-| SendBirdWebRTC (gián tiếp qua Calls) | 1.8.1 | ~> 1.8.1 |
+| Thư viện | Phiên bản (SPM) |
+| --- | --- |
+| SendbirdChatSDK | 4.39.11 trở lên, dưới 5.0 |
+| SendbirdAuthSDK (gián tiếp qua Chat) | 1.2.0 |
+| SendBirdCalls | 1.10.22 |
+| SendBirdWebRTC (gián tiếp qua Calls) | 1.8.1 |
 
-Chat 4.39.11 chưa có trên CocoaPods; 4.39.10 là bản mới nhất trên kênh này tại thời điểm cập nhật.
-Giữ Calls 1.10.22 để hỗ trợ iOS 13 và CocoaPods; Calls 1.12.3 yêu cầu iOS 14+ và không hỗ trợ CocoaPods.
+Giữ Calls 1.10.22 để hỗ trợ iOS 13; Calls 1.12.x yêu cầu iOS 14+.
 Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Example tham chiếu, nên không nằm trong lần nâng dependency này.
 
 ## SDK Integration
@@ -31,20 +30,20 @@ Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Exampl
 - Đảm bảo tài khoản GitHub của bạn đã được thêm vào repo này.
 - Tạo Personal Access Token (quyền đọc repo): https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
-> ⚠️ **CocoaPods đã deprecated.** Từ bản **2.0.0** SDK chỉ phát hành qua Swift Package Manager. Vui lòng chuyển sang SPM (cách 1).
+> ⚠️ Từ bản **2.0.0** SDK chỉ phát hành qua **Swift Package Manager**. CocoaPods không còn được hỗ trợ; bản cuối cùng trên CocoaPods là `1.4.0`.
 
-## Cách 1 (khuyến nghị): Swift Package Manager
+## Cài đặt bằng Swift Package Manager
 
 1. Trong Xcode: **File → Add Package Dependencies…**
 2. Nhập URL `https://github.com/e-doctorvn/dlvn-sdk-ios`
-3. Chọn Dependency Rule **Up to Next Major Version** từ `1.4.0`.
+3. Chọn Dependency Rule **Up to Next Major Version** từ `2.0.0`.
 4. Khi Xcode hỏi đăng nhập, nhập username GitHub và **access token** (không phải mật khẩu). Có thể thêm sẵn tài khoản tại **Xcode → Settings → Accounts → + → GitHub**.
 5. Chọn product `EdoctorDlvnSdk` cho target app → **Add Package**.
 
 Hoặc trong `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/e-doctorvn/dlvn-sdk-ios.git", from: "1.4.0")
+.package(url: "https://github.com/e-doctorvn/dlvn-sdk-ios.git", from: "2.0.0")
 ```
 
 **CI (repo private):** cấp quyền đọc qua `~/.netrc`:
@@ -59,22 +58,13 @@ và build với `xcodebuild -resolvePackageDependencies` trước khi build/test
 
 ### Chuyển từ CocoaPods sang SPM
 
+App đang dùng `pod 'EdoctorDlvnSdk'` (≤ 1.4.0) cần chuyển sang SPM để nhận bản 2.0.0 trở đi:
+
 1. Xoá `pod 'EdoctorDlvnSdk'` (và các pod `SendBirdCalls`, `SendbirdChatSDK` nếu app khai báo trực tiếp) khỏi `Podfile`, chạy `pod install` (hoặc `pod deintegrate` nếu không còn pod nào).
 2. Thêm SDK bằng SPM như trên. Nếu app dùng Sendbird trực tiếp, thêm Sendbird cũng qua SPM — **không** để Sendbird đồng thời ở cả Pods và SPM (gây trùng symbol/class).
-3. `import EdoctorDlvnSdk` (Swift) và `@import EdoctorDlvnSdk;` (Objective-C) giữ nguyên.
-4. Kiểm tra lại: mở WebView, đăng nhập, gọi video (CallKit/PushKit), ảnh ở widget và màn hình gọi.
-
-## Cách 2 (deprecated): CocoaPods
-
-```ruby
-target 'MyApp' do
-  pod 'EdoctorDlvnSdk', '~> 1.4.0'
-end
-```
-
-- Chạy `pod install`, nhập username GitHub và access token khi được hỏi.
-- Mở file `.xcworkspace`.
-- Lưu ý: SendbirdChatSDK trên CocoaPods chỉ có tới 4.39.10 (SPM dùng 4.39.11).
+3. App đã dùng SDK qua SPM ở bản 1.x: đổi Dependency Rule sang `from: "2.0.0"` (rule "Up to Next Major" từ 1.x không tự lên 2.0.0).
+4. `import EdoctorDlvnSdk` (Swift) và `@import EdoctorDlvnSdk;` (Objective-C) giữ nguyên.
+5. Kiểm tra lại: mở WebView, đăng nhập, gọi video (CallKit/PushKit), ảnh ở widget và màn hình gọi.
 
 ### Icon CallKit
 

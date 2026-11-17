@@ -2,7 +2,15 @@
 
 EDR - DLVN Android IOS
 
-Latest version: 1.4.0 (Updated: 17/11/2026)
+Latest version: 2.0.0 (Updated: 17/11/2026)
+
+## Version 2.0.0 ⚠️ BREAKING CHANGES
+
+- **Chỉ phân phối qua Swift Package Manager.** Xoá `EdoctorDlvnSdk.podspec`; bản cuối cùng trên CocoaPods là 1.4.0. Hướng dẫn chuyển: mục "Chuyển từ CocoaPods sang SPM" trong README.
+- App đã dùng SPM ở bản 1.x: đổi Dependency Rule sang `from: "2.0.0"`.
+- Resource của SDK luôn lấy qua `Bundle.module`.
+- `isCocoapod` được đánh dấu deprecated, không còn tác dụng.
+- Không đổi API, iOS tối thiểu (13.0) và phiên bản Sendbird.
 
 ## Version 1.4.0
 
