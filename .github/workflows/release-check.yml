@@ -1,0 +1,77 @@
+name: Release check
+
+# Kiểm tra người dùng SPM tải và build được bản vừa phát hành:
+# tạo một package trống phụ thuộc vào SDK theo tag trên GitHub, resolve rồi build.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Phiên bản cần kiểm tra, vd. 1.4.0 (không có tiền tố v)"
+        required: true
+
+jobs:
+  resolve-and-build:
+    name: Resolve & build from tag
+    runs-on: macos-latest
+    steps:
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Determine version
+        id: ver
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then V="$INPUT_VERSION"; else V="${GITHUB_REF_NAME#v}"; fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "Checking EdoctorDlvnSdk $V"
+
+      - name: Create consumer package
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+          REPO_URL: https://github.com/${{ github.repository }}.git
+        run: |
+          mkdir -p consumer/Sources/Consumer
+          cat > consumer/Package.swift <<SWIFT
+          // swift-tools-version: 5.10
+          import PackageDescription
+          let package = Package(
+              name: "Consumer",
+              platforms: [.iOS(.v13)],
+              products: [.library(name: "Consumer", targets: ["Consumer"])],
+              dependencies: [.package(url: "$REPO_URL", exact: "$VERSION")],
+              targets: [.target(name: "Consumer", dependencies: [.product(name: "EdoctorDlvnSdk", package: "dlvn-sdk-ios")])]
+          )
+          SWIFT
+          cat > consumer/Sources/Consumer/Consumer.swift <<'SWIFT'
+          import EdoctorDlvnSdk
+          public func edoctorSdkLinked() -> String { getUrlDefault() }
+          SWIFT
+
+      - name: Resolve
+        working-directory: consumer
+        run: swift package resolve
+
+      - name: Verify resolved revision matches tag
+        working-directory: consumer
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          RESOLVED=$(python3 -c 'import json;p=[x for x in json.load(open("Package.resolved"))["pins"] if x["identity"]=="dlvn-sdk-ios"][0];print(p["state"]["version"], p["state"]["revision"])')
+          echo "Resolved: $RESOLVED"
+          # Tag annotated có thêm dòng "^{}" trỏ tới commit; tag nhẹ thì chỉ có một dòng.
+          REFS=$(git ls-remote "https://github.com/${{ github.repository }}.git" "refs/tags/v$VERSION" "refs/tags/v$VERSION^{}")
+          TAG_SHA=$(echo "$REFS" | grep '\^{}$' | cut -f1)
+          [ -n "$TAG_SHA" ] || TAG_SHA=$(echo "$REFS" | head -1 | cut -f1)
+          echo "Tag v$VERSION: $TAG_SHA"
+          case "$RESOLVED" in "$VERSION $TAG_SHA") echo "OK";; *) echo "::error::Resolved revision does not match tag v$VERSION"; exit 1;; esac
+
+      - name: Build for iOS Simulator
+        working-directory: consumer
+        run: |
+          xcodebuild build \
+            -scheme Consumer \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ../.build/dd
