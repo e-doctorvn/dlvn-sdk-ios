@@ -61,8 +61,8 @@ Ngày lập: 17/11/2026 — phiên bản hiện tại: 1.3.5 (tag `v1.3.5`)
 
 ### Giai đoạn 4 — Dọn dẹp
 
-- [ ] Xử lý package `API/` (Apollo), hiện không được tham chiếu.
-- [ ] Thêm `.gitignore` cho `.DS_Store`, `xcuserdata`.
+- [x] Xoá package `API/` (Apollo), không được tham chiếu.
+- [x] Thêm `.gitignore`, gỡ `.DS_Store`, `xcuserdata`, `.swiftpm/` khỏi git.
 
 ## Bảo mật
 
