@@ -100,7 +100,7 @@ footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line)
     <div class="facts">
       <div class="fact"><b>1.4.0</b><span>Bản cuối cùng trên CocoaPods</span></div>
       <div class="fact"><b>2.0.0</b><span>Chỉ còn SPM</span></div>
-      <div class="fact"><b>iOS 13.0+</b><span>Không đổi</span></div>
+      <div class="fact"><b>iOS 13 → 14</b><span>1.4.0: iOS 13 · 2.0.0: iOS 14</span></div>
       <div class="fact"><b>0 dòng</b><span>Code cần sửa trong app</span></div>
     </div>
   </header>
@@ -112,7 +112,7 @@ footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line)
       <li>Thư viện gọi video SendBirdCalls đã ngừng phát hành trên CocoaPods từ 1.11.0. Các bản sửa lỗi và nâng cấp Sendbird sau này chỉ có qua SPM.</li>
       <li>Trên SPM, SDK đã dùng SendbirdChatSDK mới hơn bản có trên CocoaPods (4.39.11 trở lên so với 4.39.10).</li>
     </ul>
-    <p class="note"><strong>Đề nghị:</strong> chuyển sang SPM ở bản <code>1.4.0</code> rồi phát hành app như bình thường. Bản <code>2.0.0</code> giữ nguyên API; eDoctor sẽ phát hành sau khi DLVN xác nhận app đã chuyển xong.</p>
+    <p class="note"><strong>Đề nghị:</strong> chuyển sang SPM ở bản <code>1.4.0</code> rồi phát hành app như bình thường. Bản <code>2.0.0</code> giữ nguyên API nhưng yêu cầu iOS 14 (xem mục "Chuẩn bị cho 2.0.0"); eDoctor sẽ phát hành sau khi DLVN xác nhận app đã chuyển xong.</p>
   </section>
 
   <section>
@@ -120,6 +120,7 @@ footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line)
     <ul>
       <li><strong>Xcode 26 trở lên.</strong> Sendbird Chat 4.39.x cần Xcode 26.</li>
       <li><strong>App có deployment target iOS 13 hoặc 14 phải build bằng Xcode 26.x.</strong> Xcode 27 chỉ hỗ trợ deployment target từ iOS 15.</li>
+      <li><strong>Bản 1.4.0 hỗ trợ iOS 13.0+; bản 2.0.0 yêu cầu iOS 14.0+</strong> và chỉ build được cho simulator trên Mac Apple Silicon.</li>
       <li>Repo <code>github.com/e-doctorvn/dlvn-sdk-ios</code> hiện để công khai, nên không cần access token để tải package.</li>
     </ul>
   </section>
@@ -170,6 +171,7 @@ pod 'SendbirdChatSDK'    # nếu có</pre></div>
               </tbody>
             </table>
           </div>
+          <p>Bảng trên áp dụng cho SDK 1.4.0. Từ 2.0.0, SendBirdCalls lên đúng <code>1.12.3</code> và SendBirdWebRTC lên <code>1.10.0</code>.</p>
           <p>Bản SDK 1.4.0 được kiểm thử với Chat 4.39.11 và Auth 1.2.0. Khi tải mới, SPM sẽ lấy Chat 4.39.14 và Auth 1.2.2, nên cần test kỹ luồng chat và gọi video (xem checklist).</p>
         </div>
       </li>
@@ -199,6 +201,17 @@ xcodebuild build -project MyApp.xcodeproj -scheme MyApp -destination 'generic/pl
         </div>
       </li>
     </ol>
+  </section>
+
+  <section>
+    <h2>Chuẩn bị cho 2.0.0</h2>
+    <p>Sau khi app đã chạy ổn với 1.4.0 qua SPM, bản 2.0.0 chỉ cần đổi phiên bản package. API không đổi, nhưng có ba thay đổi app cần biết:</p>
+    <ul>
+      <li><strong>iOS tối thiểu 14.0.</strong> Nếu app vẫn hỗ trợ iOS 13, hãy giữ SDK ở 1.4.0 cho tới khi nâng deployment target.</li>
+      <li><strong>SendBirdCalls 1.12.3.</strong> Bản này sửa một số crash khi nhận cuộc gọi qua VoIP push lúc app đang tắt và khi kết thúc cuộc gọi. Gọi tới người đang bận giờ kết thúc ngay, thay vì đổ chuông tới hết giờ.</li>
+      <li><strong>Không build được cho simulator trên Mac Intel hoặc Rosetta.</strong> SendBirdCalls chỉ còn phát hành simulator arm64. Build cho thiết bị thật và App Store không bị ảnh hưởng. CI build simulator cần chạy trên máy Apple Silicon.</li>
+    </ul>
+    <p>Khi lên 2.0.0, đổi Dependency Rule thành <code>from: "2.0.0"</code>, rồi chạy lại checklist bên dưới, đặc biệt các mục về cuộc gọi.</p>
   </section>
 
   <section>
@@ -239,7 +252,11 @@ xcodebuild build -project MyApp.xcodeproj -scheme MyApp -destination 'generic/pl
       </details>
       <details>
         <summary>Lên 2.0.0 nhưng Xcode vẫn giữ 1.x</summary>
-        <div><p>Rule "Up to Next Major" đặt từ 1.4.0 sẽ không tự lên 2.0.0. Khi eDoctor phát hành 2.0.0, đổi rule thành <code>from: "2.0.0"</code>.</p></div>
+        <div><p>Rule "Up to Next Major" đặt từ 1.4.0 sẽ không tự lên 2.0.0. Khi eDoctor phát hành 2.0.0, đổi rule thành <code>from: "2.0.0"</code>. Nếu Xcode báo package yêu cầu iOS 14, nâng deployment target của app lên iOS 14 trước.</p></div>
+      </details>
+      <details>
+        <summary>Với 2.0.0: lỗi "unsupported Swift architecture" trong SendBirdCalls-Swift.h khi build simulator</summary>
+        <div><p>Đang build cho simulator x86_64 (Mac Intel, Rosetta, hoặc build simulator với <code>ONLY_ACTIVE_ARCH=NO</code>). Build trên Mac Apple Silicon, hoặc chỉ build kiến trúc arm64 cho simulator.</p></div>
       </details>
     </div>
   </section>
