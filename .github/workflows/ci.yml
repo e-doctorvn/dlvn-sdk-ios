@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spm:
+    name: SPM build & test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Pick iPhone simulator
+        id: sim
+        run: |
+          ID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          print(next(x["udid"] for r, xs in d.items() if "iOS" in r for x in xs if x["name"].startswith("iPhone")))')
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+
+      - name: Test package
+        run: |
+          xcodebuild test \
+            -scheme EdoctorDlvnSdk \
+            -destination "id=${{ steps.sim.outputs.id }}" \
+            -derivedDataPath .build/dd
+
+      - name: Build Example app
+        run: |
+          xcodebuild build \
+            -project Example/EdoctorDlvnSdkExample.xcodeproj \
+            -scheme EdoctorDlvnSdkExample \
+            -destination "id=${{ steps.sim.outputs.id }}" \
+            -derivedDataPath .build/dd \
+            CODE_SIGNING_ALLOWED=NO

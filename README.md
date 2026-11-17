@@ -1,6 +1,6 @@
 # DlvnSdk
 
-Version: **1.3.5** (tag `v1.3.5`)
+Version: **1.4.0** (tag `v1.4.0`)
 
 ## Hướng dẫn tích hợp SDK
 
@@ -28,35 +28,57 @@ Package `API/` chứa mã Apollo độc lập, không được SDK hoặc Exampl
 
 ## SDK Integration
 
--- Đảm bảo bạn đã được thêm tài khoản vào repo này
--- Hướng dẫn lấy access Token tại đây : https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+- Đảm bảo tài khoản GitHub của bạn đã được thêm vào repo này.
+- Tạo Personal Access Token (quyền đọc repo): https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
--- Dưới đây là 2 cách để tích hợp sdk vào dự án
+> ⚠️ **CocoaPods đã deprecated.** Từ bản **2.0.0** SDK chỉ phát hành qua Swift Package Manager. Vui lòng chuyển sang SPM (cách 1).
 
-## -- Cách 1 dùng Cocoapod:
+## Cách 1 (khuyến nghị): Swift Package Manager
 
-- Thêm đoạn mã vào podfile dự án :
-  ```swift
-  target 'MyApp' do
-    pod 'EdoctorDlvnSdk', '~> 1.3.5'
-  end
-  ```
-- sau đó chạy lệnh "pod install" để cài đặt
-- Nhập username
-- Nhập password là access token đã tạo ở bước trên (không phải nhập password git)
+1. Trong Xcode: **File → Add Package Dependencies…**
+2. Nhập URL `https://github.com/e-doctorvn/dlvn-sdk-ios`
+3. Chọn Dependency Rule **Up to Next Major Version** từ `1.4.0`.
+4. Khi Xcode hỏi đăng nhập, nhập username GitHub và **access token** (không phải mật khẩu). Có thể thêm sẵn tài khoản tại **Xcode → Settings → Accounts → + → GitHub**.
+5. Chọn product `EdoctorDlvnSdk` cho target app → **Add Package**.
 
-* lưu ý: Nếu dùng cách này thì phải mở file .xcworkspace
+Hoặc trong `Package.swift`:
 
-## -- Cách 2 Package Dependency:
+```swift
+.package(url: "https://github.com/e-doctorvn/dlvn-sdk-ios.git", from: "1.4.0")
+```
 
-- Nhấn vào biểu tượng "+" tại mục `Farmeworks, Libraries, and Embedded Content`.
-- Chọn Add Other...
-- Chọn Add Package Dependency
-- Nhập "https://github.com/e-doctorvn/dlvn-sdk-ios" vào ô tìm kiếm
-- Chọn version `1.3.5` (tag `v1.3.5`).
-- Nhập userName và access token được tạo ở bước trên
-- ![N|Solid](https://firebasestorage.googleapis.com/v0/b/application-18caf.appspot.com/o/Screenshot%202023-08-30%20at%2016.17.54.png?alt=media&token=1604d9b7-8c55-42db-9645-82260b5fa423)
-- Nhấn Add Package
+**CI (repo private):** cấp quyền đọc qua `~/.netrc`:
+
+```
+machine github.com
+  login <github-username>
+  password <access-token>
+```
+
+và build với `xcodebuild -resolvePackageDependencies` trước khi build/test.
+
+### Chuyển từ CocoaPods sang SPM
+
+1. Xoá `pod 'EdoctorDlvnSdk'` (và các pod `SendBirdCalls`, `SendbirdChatSDK` nếu app khai báo trực tiếp) khỏi `Podfile`, chạy `pod install` (hoặc `pod deintegrate` nếu không còn pod nào).
+2. Thêm SDK bằng SPM như trên. Nếu app dùng Sendbird trực tiếp, thêm Sendbird cũng qua SPM — **không** để Sendbird đồng thời ở cả Pods và SPM (gây trùng symbol/class).
+3. `import EdoctorDlvnSdk` (Swift) và `@import EdoctorDlvnSdk;` (Objective-C) giữ nguyên.
+4. Kiểm tra lại: mở WebView, đăng nhập, gọi video (CallKit/PushKit), ảnh ở widget và màn hình gọi.
+
+## Cách 2 (deprecated): CocoaPods
+
+```ruby
+target 'MyApp' do
+  pod 'EdoctorDlvnSdk', '~> 1.4.0'
+end
+```
+
+- Chạy `pod install`, nhập username GitHub và access token khi được hỏi.
+- Mở file `.xcworkspace`.
+- Lưu ý: SendbirdChatSDK trên CocoaPods chỉ có tới 4.39.10 (SPM dùng 4.39.11).
+
+### Icon CallKit
+
+Màn hình cuộc gọi hệ thống (CallKit) dùng ảnh `icLogoSymbolInverse` từ asset catalog **của app host**. Thêm ảnh template (đơn sắc, nền trong suốt) với tên này vào `Assets.xcassets` của app để hiển thị logo.
 
 ## Sử dụng
 

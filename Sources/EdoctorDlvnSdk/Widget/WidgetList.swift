@@ -30,11 +30,11 @@ struct WidgetList: View {
                             
                             VStack(alignment: .center, spacing: 8) {
                                 
-                                Image("room", bundle: Bundle(for: WebViewController.self))
+                                Image("room", bundle: .edoctorSdk)
                                     .frame(width: 92, height: 92)
                                 
                                 HStack(spacing: 8) {
-                                    Image("enterRoom", bundle: Bundle(for: WebViewController.self))
+                                    Image("enterRoom", bundle: .edoctorSdk)
                                         .frame(width: 50, height: 50)
                                         .font(.system(size: 22))
                         

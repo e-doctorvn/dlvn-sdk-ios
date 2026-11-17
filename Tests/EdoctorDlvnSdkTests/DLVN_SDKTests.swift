@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import EdoctorDlvnSdk
 
 final class DLVN_SDKTests: XCTestCase {
@@ -69,5 +70,15 @@ final class DLVN_SDKTests: XCTestCase {
         LocalStore.deleteAllData()
         let cleared: DataLogin? = LocalStore.getData(key: .dataLogin)
         XCTAssertNil(cleared)
+    }
+
+    func testSdkImagesLoadFromResourceBundle() {
+        for name in ["room", "enterRoom", "backgroundCall", "chatImage"] {
+            XCTAssertNotNil(UIImage(named: name, in: .edoctorSdk, compatibleWith: nil), name)
+        }
+    }
+
+    func testPrivacyManifestIsBundled() {
+        XCTAssertNotNil(Bundle.edoctorSdk.url(forResource: "PrivacyInfo", withExtension: "xcprivacy"))
     }
 }
