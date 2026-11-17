@@ -223,20 +223,13 @@ bật Remoote notification trong Background Modes
 
 ## Phát hành (dành cho maintainer)
 
-> ⚠️ **Dùng Xcode 26.x để lint/push lên CocoaPods.** Xcode 27 chỉ hỗ trợ deployment target từ iOS 15, nên `pod spec lint` / `pod trunk push` sẽ lỗi `IPHONEOS_DEPLOYMENT_TARGET is set to 13.0, but the range of supported deployment target versions is 15.0 to ...` vì SDK (iOS 13) và Sendbird (iOS 11–13) đặt target thấp hơn. Lỗi này không phải do SDK.
+SDK chỉ phát hành qua Swift Package Manager: một bản phát hành là một git tag `vX.Y.Z` trên `main`.
 
-Chọn Xcode 26.x riêng cho lệnh bằng `DEVELOPER_DIR` (không cần đổi `xcode-select`):
+1. Cập nhật phiên bản trong README và thêm mục mới trong CHANGELOG; merge vào `main` (CI `SPM build & test` phải pass).
+2. Gắn tag `vX.Y.Z` lên commit trên `main` và push tag.
+3. Tạo GitHub Release từ tag, nội dung lấy từ mục tương ứng trong CHANGELOG.
+4. Kiểm tra: thêm package với `exact: "X.Y.Z"` vào một project trống, chạy `swift package resolve` và xác nhận resolve đúng commit của tag.
 
-```sh
-export DEVELOPER_DIR=/Applications/Xcode-26.2.0.app/Contents/Developer
-```
-
-Các bước:
-
-1. Cập nhật `spec.version`, `:tag` và `spec.readme` trong `EdoctorDlvnSdk.podspec`, phiên bản trong README và CHANGELOG; merge vào `main`.
-2. Gắn tag `vX.Y.Z` lên commit trên `main` và push tag (SPM dùng tag này).
-3. Kiểm tra podspec build được: `LANG=en_US.UTF-8 pod spec lint EdoctorDlvnSdk.podspec --allow-warnings`
-4. Đăng nhập trunk bằng tài khoản owner (`pod trunk register <email>`, xác nhận qua email), rồi đẩy pod: `LANG=en_US.UTF-8 pod trunk push EdoctorDlvnSdk.podspec --allow-warnings`
-5. Kiểm tra: `LANG=en_US.UTF-8 pod trunk info EdoctorDlvnSdk`
-
-Cảnh báo `ENABLE_USER_SCRIPT_SANDBOXING` khi lint đến từ app tạm CocoaPods tự sinh, có thể bỏ qua.
+> Xcode 27 chỉ hỗ trợ deployment target từ iOS 15. App tích hợp SDK cần deployment target iOS 13–14 phải build bằng Xcode 26.x.
+>
+> Bản cuối cùng trên CocoaPods là 1.4.0 (CocoaPods trunk đã chuyển sang chỉ đọc), không phát hành thêm qua kênh này.
